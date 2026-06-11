@@ -56,15 +56,8 @@ function sampleVB(maxCount: number): Cloud | null {
   const disperse = new Float32Array(n * 3);
   const colors = new Float32Array(n * 3);
   const phases = new Float32Array(n);
-  // mostly bone, with hits of the brand palette so the monogram shimmers in color
-  const bone = new THREE.Color("#EDE4D3");
-  const palette = [
-    new THREE.Color("#E8A33D"), // amber
-    new THREE.Color("#5cb88a"), // corvo green
-    new THREE.Color("#87A5B4"), // teal
-    new THREE.Color("#5d9ce4"), // fbla blue
-    new THREE.Color("#8b5cf6"), // violet
-  ];
+  // pure white monogram — black & white, bright and crisp against the dark bg
+  const white = new THREE.Color("#ffffff");
   const scale = 8.5 / S;
 
   for (let i = 0; i < n; i++) {
@@ -88,11 +81,10 @@ function sampleVB(maxCount: number): Cloud | null {
     disperse[i * 3 + 1] = ty - (12 + rnd() * 30);
     disperse[i * 3 + 2] = (rnd() - 0.5) * 4;
 
-    // ~30% of particles take a brand color, the rest stay bone
-    const c = i % 10 < 3 ? palette[i % palette.length] : bone;
-    colors[i * 3] = c.r;
-    colors[i * 3 + 1] = c.g;
-    colors[i * 3 + 2] = c.b;
+    // every particle is pure white
+    colors[i * 3] = white.r;
+    colors[i * 3 + 1] = white.g;
+    colors[i * 3 + 2] = white.b;
     phases[i] = rnd() * Math.PI * 2;
   }
   return { n, targets, starts, disperse, colors, phases };
@@ -139,11 +131,11 @@ function Monogram({
     geom.setAttribute("position", new THREE.BufferAttribute(pos, 3));
     geom.setAttribute("color", new THREE.BufferAttribute(cloud.colors, 3));
     const material = new THREE.PointsMaterial({
-      size: 0.085,
+      size: 0.12,
       map: discTexture(),
       vertexColors: true,
       transparent: true,
-      opacity: 0.95,
+      opacity: 1,
       depthWrite: false,
       sizeAttenuation: true,
     });
@@ -193,7 +185,7 @@ function Monogram({
       arr[k + 2] = z;
     }
     geom.attributes.position.needsUpdate = true;
-    material.opacity = 0.95 * (1 - de);
+    material.opacity = 1 - de;
 
     if (group.current && !reduced) {
       // tilt is centered on the monogram itself (not screen center), so it
