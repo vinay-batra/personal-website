@@ -54,6 +54,65 @@ export function TypeOn({ text }: { text: string }) {
   );
 }
 
+const GLYPHS = "ABCDEFGHJKLMNPQRSTUVWXYZ0123456789#%/·";
+
+/**
+ * Decode-in label: holds a scrambled cipher until it scrolls into view, then
+ * resolves character-by-character left-to-right. Fits the mono section labels
+ * ("01 / ABOUT"). SSR renders the final text, so it's hydration-safe; the
+ * scramble is installed in an effect after mount.
+ */
+export function Scramble({ text, className }: { text: string; className?: string }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-60px" });
+  const reduced = useReducedMotionSafe();
+  const [display, setDisplay] = useState(text);
+
+  // deterministic-ish cipher for the holding state (kept stable per render)
+  const cipher = (src: string) =>
+    src
+      .split("")
+      .map((c) => (c === " " ? " " : GLYPHS[Math.floor(Math.random() * GLYPHS.length)]))
+      .join("");
+
+  useEffect(() => {
+    if (reduced) {
+      setDisplay(text);
+      return;
+    }
+    if (!inView) {
+      setDisplay(cipher(text)); // encrypted until the reader arrives
+      return;
+    }
+    let frame = 0;
+    const id = setInterval(() => {
+      frame += 1;
+      const revealed = frame / 2; // ~2 frames per resolved character
+      const out = text
+        .split("")
+        .map((c, i) => {
+          if (c === " ") return " ";
+          if (i < revealed) return c;
+          return GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+        })
+        .join("");
+      setDisplay(out);
+      if (revealed >= text.length) {
+        setDisplay(text);
+        clearInterval(id);
+      }
+    }, 45);
+    return () => clearInterval(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inView, text, reduced]);
+
+  return (
+    <span ref={ref} aria-label={text} className={className}>
+      <span aria-hidden>{display}</span>
+    </span>
+  );
+}
+
 /**
  * The two-deck headline lockup: mono eyebrow above a Fraunces headline.
  * The in-view trigger lives on the (unclipped) h2 — a translated child inside
@@ -94,7 +153,7 @@ export default function SectionHeading({
           className="inline-block h-1.5 w-1.5 rounded-full"
           style={{ backgroundColor: accent }}
         />
-        <TypeOn text={`${index} / ${eyebrow}`} />
+        <Scramble text={`${index} / ${eyebrow}`} />
       </p>
       <motion.h2
         className="serif-head font-serif text-[clamp(2.75rem,8vw,6.5rem)] leading-[0.95] font-semibold tracking-tight"
