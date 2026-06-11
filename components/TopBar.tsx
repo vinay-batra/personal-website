@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useLenis } from "lenis/react";
+import VBMark from "./VBMark";
 
 const LINKS: [string, string, string][] = [
   ["01", "ABOUT", "#about"],
@@ -60,10 +61,13 @@ export default function TopBar() {
             e.preventDefault();
             lenis?.scrollTo(0, { duration: 1.4 });
           }}
-          className="font-mono text-[11px] font-medium tracking-[0.22em] text-bone uppercase"
+          className="flex items-center gap-2.5"
           aria-label="Back to top"
         >
-          Vinay Batra
+          <VBMark className="h-5 w-auto" />
+          <span className="font-mono text-[11px] font-medium tracking-[0.22em] text-bone uppercase">
+            Vinay Batra
+          </span>
         </a>
 
         <div className="hidden items-center gap-6 lg:flex">
