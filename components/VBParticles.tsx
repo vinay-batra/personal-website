@@ -37,20 +37,37 @@ function sampleVB(maxCount: number): Cloud | null {
 
   const data = ctx.getImageData(0, 0, S, S).data;
   const filled: [number, number][] = [];
-  for (let y = 0; y < S; y += 2) {
-    for (let x = 0; x < S; x += 2) {
-      if (data[(y * S + x) * 4 + 3] > 130) filled.push([x, y]);
+  const set = new Set<number>();
+  for (let y = 0; y < S; y++) {
+    for (let x = 0; x < S; x++) {
+      if (data[(y * S + x) * 4 + 3] > 120) {
+        filled.push([x, y]);
+        set.add(y * S + x);
+      }
     }
   }
   if (filled.length === 0) return null;
 
+  // Density-weighted sampling: a serif "V" has one thick and one thin
+  // diagonal, so uniform sampling leaves the thin right stroke faint. Weight
+  // each pixel inversely to how many neighbors it has, so thin strokes and
+  // edges get boosted to roughly the same particle density as thick strokes.
   const rnd = seeded(1907);
-  for (let i = filled.length - 1; i > 0; i--) {
-    const j = Math.floor(rnd() * (i + 1));
-    [filled[i], filled[j]] = [filled[j], filled[i]];
-  }
-
-  const n = Math.min(maxCount, filled.length);
+  const R = 4;
+  const keyed = filled.map(([x, y], i) => {
+    let cnt = 0;
+    for (let dy = -R; dy <= R; dy++) {
+      for (let dx = -R; dx <= R; dx++) {
+        if (set.has((y + dy) * S + (x + dx))) cnt++;
+      }
+    }
+    const weight = 1 / Math.pow(cnt, 0.7);
+    // Efraimidis–Spirakis weighted sampling without replacement
+    return { i, k: Math.pow(rnd() || 1e-9, 1 / weight) };
+  });
+  keyed.sort((a, b) => b.k - a.k);
+  const n = Math.min(maxCount, keyed.length);
+  const pick = keyed.slice(0, n).map((o) => filled[o.i]);
   const targets = new Float32Array(n * 3);
   const starts = new Float32Array(n * 3);
   const disperse = new Float32Array(n * 3);
@@ -61,7 +78,7 @@ function sampleVB(maxCount: number): Cloud | null {
   const scale = 8.5 / S;
 
   for (let i = 0; i < n; i++) {
-    const [px, py] = filled[i];
+    const [px, py] = pick[i];
     const tx = (px - S / 2) * scale;
     const ty = -(py - S / 2) * scale;
     targets[i * 3] = tx;
@@ -227,7 +244,7 @@ export default function VBParticles({
     let alive = true;
     const build = () => {
       if (!alive) return;
-      const c = sampleVB(3200);
+      const c = sampleVB(4200);
       if (c) setCloud(c);
     };
     // sample once Fraunces is ready so the glyph shape is correct
