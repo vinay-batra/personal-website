@@ -21,6 +21,7 @@ interface Graph {
   base: Float32Array; // relaxed node positions (N*3)
   phases: Float32Array; // per-node wobble phase
   edges: [number, number][];
+  radius: number; // max node distance from origin, for fit-to-canvas scaling
 }
 
 /** A FBLA chapter network: nodes scattered in a sphere, force-relaxed into an
@@ -115,7 +116,13 @@ function buildGraph(): Graph {
 
   const phases = new Float32Array(N);
   for (let i = 0; i < N; i++) phases[i] = rnd() * Math.PI * 2;
-  return { base: pos, phases, edges };
+
+  let radius = 0.001;
+  for (let i = 0; i < N; i++) {
+    const d = Math.hypot(pos[i * 3], pos[i * 3 + 1], pos[i * 3 + 2]);
+    if (d > radius) radius = d;
+  }
+  return { base: pos, phases, edges, radius };
 }
 
 function Graph3D({
@@ -236,15 +243,19 @@ function Graph3D({
     const a = reduced ? 1 : easeOut(Math.min(1, Math.max(0, sp * 1.6)));
 
     // spin: drag inertia when idle, plus a slow baseline drift
-    if (group.current && !reduced) {
-      if (!drag.current.on) {
+    if (group.current) {
+      if (!reduced && !drag.current.on) {
         drag.current.vx *= 0.94;
         drag.current.vy *= 0.94;
         group.current.rotation.y += drag.current.vy + 0.0016;
         group.current.rotation.x += drag.current.vx;
         group.current.rotation.x *= 0.999;
       }
-      group.current.scale.setScalar((0.7 + a * 0.3) * 1.22);
+      // fit the graph to whatever size/aspect the card is, filling the
+      // smaller dimension so it's centered and never marooned in one corner
+      const vp = state.viewport;
+      const fit = (Math.min(vp.width, vp.height) * 0.46) / graph.radius;
+      group.current.scale.setScalar(fit * (0.6 + a * 0.4));
     }
 
     // wobble live positions for a touch of life
@@ -341,9 +352,9 @@ export default function FblaNetwork({ progress }: { progress?: MotionValue<numbe
   }, []);
 
   return (
-    <div ref={wrap} className="relative h-full w-full" data-cursor="drag to spin">
+    <div ref={wrap} className="absolute inset-0" data-cursor="drag to spin">
       <Canvas
-        camera={{ position: [0, 0, 4.9], fov: 45 }}
+        camera={{ position: [0, 0, 5], fov: 45 }}
         dpr={[1, 1.5]}
         frameloop={onScreen ? "always" : "never"}
         gl={{ antialias: true, alpha: true }}
