@@ -6,7 +6,7 @@ import type { MotionValue } from "framer-motion";
 import * as THREE from "three";
 import { useReducedMotionSafe } from "@/lib/useReducedMotionSafe";
 
-const N = 22;
+const N = 34;
 const BLUE = new THREE.Color("#5d9ce4");
 const GOLD = new THREE.Color("#ffb81c");
 const easeOut = (x: number) => 1 - Math.pow(1 - x, 3);
@@ -38,10 +38,18 @@ function buildGraph(): Graph {
     pos[i * 3 + 2] = Math.sin(ph) * Math.sin(th) * r;
   }
 
-  // edges: each node to its 2 nearest neighbors (deduped, undirected)
+  // edges: each node to its 3 nearest neighbors, plus a few longer-range
+  // links so the network reads as a richer mesh (deduped, undirected)
   const key = (a: number, b: number) => (a < b ? `${a}-${b}` : `${b}-${a}`);
   const seen = new Set<string>();
   const edges: [number, number][] = [];
+  const add = (a: number, b: number) => {
+    const kk = key(a, b);
+    if (a !== b && !seen.has(kk)) {
+      seen.add(kk);
+      edges.push([a, b]);
+    }
+  };
   for (let i = 0; i < N; i++) {
     const dists: { j: number; d: number }[] = [];
     for (let j = 0; j < N; j++) {
@@ -52,14 +60,9 @@ function buildGraph(): Graph {
       dists.push({ j, d: dx * dx + dy * dy + dz * dz });
     }
     dists.sort((a, b) => a.d - b.d);
-    for (let k = 0; k < 2; k++) {
-      const j = dists[k].j;
-      const kk = key(i, j);
-      if (!seen.has(kk)) {
-        seen.add(kk);
-        edges.push([i, j]);
-      }
-    }
+    for (let k = 0; k < 3; k++) add(i, dists[k].j);
+    // one medium-range tie for extra cross-linking
+    if (rnd() < 0.7) add(i, dists[4 + Math.floor(rnd() * 4)].j);
   }
 
   // relax: edge springs to a rest length + global repulsion + centering
@@ -156,7 +159,7 @@ function Graph3D({
     if (nodes.current) {
       for (let i = 0; i < N; i++) {
         dummy.position.set(base[i * 3], base[i * 3 + 1], base[i * 3 + 2]);
-        dummy.scale.setScalar(0.085);
+        dummy.scale.setScalar(0.1);
         dummy.updateMatrix();
         nodes.current.setMatrixAt(i, dummy.matrix);
         nodes.current.setColorAt(i, BLUE);
@@ -241,7 +244,7 @@ function Graph3D({
         group.current.rotation.x += drag.current.vx;
         group.current.rotation.x *= 0.999;
       }
-      group.current.scale.setScalar(0.7 + a * 0.3);
+      group.current.scale.setScalar((0.7 + a * 0.3) * 1.22);
     }
 
     // wobble live positions for a touch of life
@@ -259,7 +262,7 @@ function Graph3D({
         const hot = i === hover;
         dummy.position.set(p[i * 3], p[i * 3 + 1], p[i * 3 + 2]);
         const pulse = reduced ? 0.5 : Math.sin(t * 1.6 + phases[i]) * 0.5 + 0.5;
-        const s = (hot ? 0.16 : 0.075 + pulse * 0.02) * a;
+        const s = (hot ? 0.2 : 0.095 + pulse * 0.025) * a;
         dummy.scale.setScalar(s);
         dummy.updateMatrix();
         nodes.current.setMatrixAt(i, dummy.matrix);
@@ -322,12 +325,27 @@ function Graph3D({
 export default function FblaNetwork({ progress }: { progress?: MotionValue<number> }) {
   const reduced = useReducedMotionSafe();
   const graph = useMemo(buildGraph, []);
+  const wrap = useRef<HTMLDivElement>(null);
+  const [onScreen, setOnScreen] = useState(true);
+
+  // only render while the card is actually visible — a parked 3D canvas
+  // otherwise burns a full rAF loop for nothing
+  useEffect(() => {
+    const el = wrap.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([e]) => setOnScreen(e.isIntersecting), {
+      rootMargin: "120px",
+    });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   return (
-    <div className="relative h-full w-full" data-cursor="drag to spin">
+    <div ref={wrap} className="relative h-full w-full" data-cursor="drag to spin">
       <Canvas
-        camera={{ position: [0, 0, 6], fov: 45 }}
-        dpr={[1, 1.75]}
+        camera={{ position: [0, 0, 4.9], fov: 45 }}
+        dpr={[1, 1.5]}
+        frameloop={onScreen ? "always" : "never"}
         gl={{ antialias: true, alpha: true }}
         style={{ cursor: "grab", touchAction: "pan-y" }}
       >

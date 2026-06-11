@@ -137,7 +137,7 @@ export default function Contact() {
             Vinay Batra
           </p>
           <p className="font-mono text-[10px] tracking-[0.12em] text-dim uppercase">
-            © 2026 · Greater Philadelphia
+            © 2026
           </p>
         </footer>
       </div>

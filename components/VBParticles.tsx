@@ -261,7 +261,7 @@ export default function VBParticles({
       {cloud && (
         <Canvas
           camera={{ position: [0, 0, 14], fov: 45 }}
-          dpr={[1, 1.75]}
+          dpr={[1, 1.5]}
           frameloop={active ? "always" : "never"}
           gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
         >
@@ -273,7 +273,7 @@ export default function VBParticles({
             groupY={groupY}
           />
           {/* glow: let the white particles bleed light against the dark bg */}
-          <EffectComposer enableNormalPass={false}>
+          <EffectComposer enableNormalPass={false} multisampling={0}>
             <Bloom
               intensity={0.9}
               luminanceThreshold={0.15}
