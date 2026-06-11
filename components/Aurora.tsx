@@ -30,7 +30,13 @@ float fbm(vec2 p){
 
 void main(){
   vec2 uv = gl_FragCoord.xy/uRes;
-  vec2 p = uv*vec2(uRes.x/uRes.y,1.0)*1.6;
+  // On a narrow (portrait) screen the old aspect scaling zoomed the smoke in
+  // until one blob filled everything. Clamp the horizontal scale and add detail
+  // in portrait so it stays a field of small wisps, like the desktop version.
+  float aspect = uRes.x/uRes.y;
+  float ax = max(aspect, 1.0);
+  float detail = aspect < 1.0 ? 1.5 : 1.0;
+  vec2 p = uv*vec2(ax,1.0)*1.6*detail;
   float t = uTime*0.025;
 
   // domain-warped flow
@@ -143,7 +149,7 @@ export default function Aurora() {
     <canvas
       ref={ref}
       aria-hidden
-      className="pointer-events-none fixed inset-0 z-0 h-full w-full"
+      className="pointer-events-none fixed inset-0 z-0 h-full w-full opacity-45 md:opacity-100"
       style={{ filter: "blur(1px)" }}
     />
   );

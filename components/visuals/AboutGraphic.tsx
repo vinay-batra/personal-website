@@ -153,7 +153,12 @@ export default function AboutGraphic() {
       ctx.fillStyle = fact ? AMBER : BONE;
       ctx.font = `${fact ? "600 " : ""}${fact ? 11 : 10}px 'IBM Plex Mono', monospace`;
       ctx.textAlign = "center";
-      ctx.fillText(n.label.toUpperCase(), p.x, p.y - 10);
+      // keep the (centered) label inside the canvas on narrow screens so wide
+      // labels like "3 PRODUCTS SHIPPED" don't clip off the edge
+      const text = n.label.toUpperCase();
+      const half = ctx.measureText(text).width / 2;
+      const lx = Math.max(half + 6, Math.min(w - half - 6, p.x));
+      ctx.fillText(text, lx, p.y - 10);
       ctx.globalAlpha = 1;
     });
 
@@ -163,5 +168,5 @@ export default function AboutGraphic() {
     ctx.fillText("A MAP OF ME", 14, 16);
   });
 
-  return <canvas ref={ref} className="h-full w-full" />;
+  return <canvas ref={ref} className="absolute inset-0 h-full w-full" />;
 }
