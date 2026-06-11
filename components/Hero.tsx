@@ -1,9 +1,10 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import {
   motion,
+  useMotionValue,
   useMotionValueEvent,
   useReducedMotion,
   useScroll,
@@ -12,6 +13,7 @@ import {
 import { useLenis } from "lenis/react";
 import { EASE } from "@/lib/motion";
 import { TypeOn } from "./SectionHeading";
+import Magnetic from "./Magnetic";
 
 const VBParticles = dynamic(() => import("./VBParticles"), { ssr: false });
 
@@ -31,6 +33,22 @@ export default function Hero() {
   // pause the canvas once the hero is fully scrolled away
   const [active, setActive] = useState(true);
   useMotionValueEvent(scrollYProgress, "change", (v) => setActive(v < 0.99));
+
+  // subtle 3D parallax on the headline — keeps the crisp Fraunces type but
+  // lets the whole lockup lean toward the cursor in perspective
+  const tiltX = useMotionValue(0);
+  const tiltY = useMotionValue(0);
+  useEffect(() => {
+    if (reduced || !window.matchMedia("(pointer: fine)").matches) return;
+    const onMove = (e: PointerEvent) => {
+      const nx = (e.clientX / window.innerWidth) * 2 - 1;
+      const ny = (e.clientY / window.innerHeight) * 2 - 1;
+      tiltY.set(nx * 6);
+      tiltX.set(-ny * 4.5);
+    };
+    window.addEventListener("pointermove", onMove, { passive: true });
+    return () => window.removeEventListener("pointermove", onMove);
+  }, [reduced, tiltX, tiltY]);
 
   const lines = ["I build software", "and invest for", "the long run."];
 
@@ -58,7 +76,16 @@ export default function Hero() {
           <span className="mb-5 block font-mono text-[11px] font-medium tracking-[0.22em] text-amber uppercase">
             <TypeOn text="VINAY BATRA · HIGH SCHOOL QUANT · GREATER PHILADELPHIA" />
           </span>
-          <span className="serif-head block font-serif text-[clamp(2.6rem,7.5vw,6.25rem)] leading-[1.0] font-semibold tracking-tight">
+          <motion.span
+            style={{
+              rotateX: tiltX,
+              rotateY: tiltY,
+              transformPerspective: 900,
+              transformOrigin: "left center",
+              transition: "transform 0.35s ease-out",
+            }}
+            className="serif-head block font-serif text-[clamp(2.6rem,7.5vw,6.25rem)] leading-[1.0] font-semibold tracking-tight"
+          >
             {lines.map((line, i) => (
               <span key={i} className="block overflow-hidden pb-[0.06em]">
                 <motion.span
@@ -71,7 +98,7 @@ export default function Hero() {
                 </motion.span>
               </span>
             ))}
-          </span>
+          </motion.span>
         </h1>
 
         <motion.p
@@ -91,30 +118,36 @@ export default function Hero() {
           transition={{ duration: 0.8, delay: 1.05, ease: EASE }}
           className="mt-8 flex flex-wrap items-center gap-7"
         >
-          <a
-            href="#work"
-            onClick={(e) => {
-              e.preventDefault();
-              lenis?.scrollTo("#work", { offset: -56, duration: 1.4 });
-            }}
-            className="font-mono text-[11px] tracking-[0.18em] text-amber uppercase hover:text-bone"
-          >
-            → View my work
-          </a>
-          <a
-            href="https://www.linkedin.com/in/vinay-batra"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inklink font-mono text-[11px] tracking-[0.18em] text-dim uppercase"
-          >
-            LinkedIn
-          </a>
-          <a
-            href="mailto:vinaybatra2010@gmail.com"
-            className="inklink font-mono text-[11px] tracking-[0.18em] text-dim uppercase"
-          >
-            Email
-          </a>
+          <Magnetic>
+            <a
+              href="#work"
+              onClick={(e) => {
+                e.preventDefault();
+                lenis?.scrollTo("#work", { offset: -56, duration: 1.4 });
+              }}
+              className="font-mono text-[11px] tracking-[0.18em] text-amber uppercase hover:text-bone"
+            >
+              → View my work
+            </a>
+          </Magnetic>
+          <Magnetic>
+            <a
+              href="https://www.linkedin.com/in/vinay-batra"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inklink font-mono text-[11px] tracking-[0.18em] text-dim uppercase"
+            >
+              LinkedIn
+            </a>
+          </Magnetic>
+          <Magnetic>
+            <a
+              href="mailto:vinaybatra2010@gmail.com"
+              className="inklink font-mono text-[11px] tracking-[0.18em] text-dim uppercase"
+            >
+              Email
+            </a>
+          </Magnetic>
         </motion.div>
       </motion.div>
 
