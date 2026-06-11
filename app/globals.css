@@ -1,26 +1,149 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-serif: var(--font-fraunces);
+  --font-sans: var(--font-plex);
+  --font-mono: var(--font-plex-mono);
+
+  --color-ink: #0f0d0a;
+  --color-surface: #1a1712;
+  --color-bone: #ede4d3;
+  --color-dim: #9c9080;
+  --color-amber: #e8a33d;
+  --color-sheen: #87a5b4;
+  --color-up: #5da271;
+  --color-down: #d14d41;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root {
+  color-scheme: dark;
+}
+
+html {
+  background: #0f0d0a;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #0f0d0a;
+  color: #ede4d3;
+  overflow-x: hidden;
+  font-family: var(--font-plex), ui-sans-serif, system-ui, sans-serif;
+  font-optical-sizing: auto;
+}
+
+::selection {
+  background: #e8a33d;
+  color: #0f0d0a;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #0f0d0a;
+}
+::-webkit-scrollbar-thumb {
+  background: #2a251e;
+  border-radius: 0;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3a332a;
+}
+
+/* ---------- custom crosshair cursor (enabled by Cursor.tsx on pointer:fine) ---------- */
+html.xcursor,
+html.xcursor * {
+  cursor: none !important;
+}
+
+/* ---------- film grain — also masks banding on cheap panels ---------- */
+.noise {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  pointer-events: none;
+  opacity: 0.055;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ---------- ledger grammar ---------- */
+.dotlead {
+  flex: 1;
+  min-width: 2ch;
+  margin: 0 0.6em;
+  border-bottom: 1px dotted rgba(237, 228, 211, 0.3);
+  transform: translateY(-0.3em);
+}
+
+.rule-double {
+  border-bottom: 3px double rgba(237, 228, 211, 0.4);
+}
+
+.inklink {
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-decoration-color: rgba(237, 228, 211, 0.35);
+  text-underline-offset: 4px;
+  transition: text-decoration-color 0.2s, color 0.2s;
+}
+.inklink:hover {
+  color: #e8a33d;
+  text-decoration-style: solid;
+  text-decoration-color: #e8a33d;
+}
+.inklink:hover::after {
+  content: " ↗";
+}
+
+/* drop cap for the About editorial spread */
+.dropcap::first-letter {
+  font-family: var(--font-fraunces), serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 4.6em;
+  line-height: 0.78;
+  float: left;
+  padding-right: 0.08em;
+  padding-top: 0.05em;
+  color: #e8a33d;
+}
+
+/* headline italic word treatment */
+.serif-head i {
+  font-style: italic;
+  font-weight: 400;
+  color: #ede4d3;
+}
+
+/* blinking block cursor for typed eyebrows */
+@keyframes blink2 {
+  0%, 24% { opacity: 1; }
+  25%, 49% { opacity: 0; }
+  50%, 74% { opacity: 1; }
+  75%, 100% { opacity: 0; }
+}
+.cursor-block {
+  animation: blink2 1.2s steps(1) forwards;
+}
+
+/* ink stamp entrance — used exactly once (footer seal) */
+@keyframes stamp {
+  0% { opacity: 0; transform: scale(1.15) rotate(-4deg); }
+  60% { opacity: 1; transform: scale(0.98) rotate(0.5deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+.stamp-in {
+  animation: stamp 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* github heatmap cell fade-in */
+@keyframes ghfade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor-block { animation: none; opacity: 0; }
+  .stamp-in { animation: none; opacity: 1; }
+  .gh-cell { animation: none !important; opacity: 1 !important; }
 }
