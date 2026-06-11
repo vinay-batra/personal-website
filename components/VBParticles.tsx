@@ -1,6 +1,7 @@
 "use client";
 
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { MotionValue } from "framer-motion";
 import * as THREE from "three";
@@ -271,6 +272,16 @@ export default function VBParticles({
             groupX={groupX}
             groupY={groupY}
           />
+          {/* glow: let the white particles bleed light against the dark bg */}
+          <EffectComposer enableNormalPass={false}>
+            <Bloom
+              intensity={0.9}
+              luminanceThreshold={0.15}
+              luminanceSmoothing={0.5}
+              mipmapBlur
+              radius={0.7}
+            />
+          </EffectComposer>
         </Canvas>
       )}
     </div>
