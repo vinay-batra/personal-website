@@ -6,7 +6,7 @@ import type { MotionValue } from "framer-motion";
 import * as THREE from "three";
 import { useReducedMotionSafe } from "@/lib/useReducedMotionSafe";
 
-const N = 34;
+const N = 48;
 const BLUE = new THREE.Color("#5d9ce4");
 const GOLD = new THREE.Color("#ffb81c");
 const easeOut = (x: number) => 1 - Math.pow(1 - x, 3);
@@ -62,8 +62,13 @@ function buildGraph(): Graph {
     }
     dists.sort((a, b) => a.d - b.d);
     for (let k = 0; k < 3; k++) add(i, dists[k].j);
-    // one medium-range tie for extra cross-linking
-    if (rnd() < 0.7) add(i, dists[4 + Math.floor(rnd() * 4)].j);
+    // medium-range ties — these branch the network out beyond the local cluster
+    if (rnd() < 0.85) add(i, dists[4 + Math.floor(rnd() * 4)].j);
+    if (rnd() < 0.5) add(i, dists[7 + Math.floor(rnd() * 5)].j);
+  }
+  // a few long-range hub links so distant clusters reach across the structure
+  for (let h = 0; h < 5; h++) {
+    add(Math.floor(rnd() * N), Math.floor(rnd() * N));
   }
 
   // relax: edge springs to a rest length + global repulsion + centering
@@ -187,9 +192,9 @@ function Graph3D({
       pa[o + 4] = base[bi * 3 + 1];
       pa[o + 5] = base[bi * 3 + 2];
       for (let c = 0; c < 6; c += 3) {
-        ca[o + c] = BLUE.r * 0.42;
-        ca[o + c + 1] = BLUE.g * 0.42;
-        ca[o + c + 2] = BLUE.b * 0.42;
+        ca[o + c] = BLUE.r * 0.32;
+        ca[o + c + 1] = BLUE.g * 0.32;
+        ca[o + c + 2] = BLUE.b * 0.32;
       }
     });
     posAttr.needsUpdate = true;
@@ -297,7 +302,7 @@ function Graph3D({
       pa[o + 4] = p[bi * 3 + 1];
       pa[o + 5] = p[bi * 3 + 2];
       const hot = ai === hover || bi === hover;
-      colorA.copy(hot ? GOLD : BLUE).multiplyScalar((hot ? 0.9 : 0.42) * a);
+      colorA.copy(hot ? GOLD : BLUE).multiplyScalar((hot ? 0.9 : 0.32) * a);
       ca[o] = ca[o + 3] = colorA.r;
       ca[o + 1] = ca[o + 4] = colorA.g;
       ca[o + 2] = ca[o + 5] = colorA.b;
