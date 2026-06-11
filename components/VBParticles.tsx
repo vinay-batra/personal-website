@@ -141,7 +141,9 @@ function Monogram({
   const ref = useRef<THREE.Points>(null!);
   const group = useRef<THREE.Group>(null!);
   const prog = useRef(reduced ? 1 : 0);
-  const pointer = useRef({ x: 0, y: 0 });
+  const pointer = useRef({ x: 0, y: 0, inside: false });
+  const burstStart = useRef(-100); // clock time of the last shatter click
+  const burstQueued = useRef(false);
 
   const { geom, material } = useMemo(() => {
     const geom = new THREE.BufferGeometry();
@@ -166,9 +168,18 @@ function Monogram({
     const onMove = (e: PointerEvent) => {
       pointer.current.x = (e.clientX / window.innerWidth) * 2 - 1;
       pointer.current.y = -((e.clientY / window.innerHeight) * 2 - 1);
+      pointer.current.inside = true;
+    };
+    // click near the monogram shatters it; the frame loop validates the region
+    const onDown = () => {
+      burstQueued.current = true;
     };
     window.addEventListener("pointermove", onMove, { passive: true });
-    return () => window.removeEventListener("pointermove", onMove);
+    window.addEventListener("pointerdown", onDown, { passive: true });
+    return () => {
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerdown", onDown);
+    };
   }, []);
 
   useFrame((state, dt) => {
@@ -185,6 +196,25 @@ function Monogram({
     const dissolve = Math.min(1, Math.max(0, (sp - 0.12) / 0.85));
     const de = dissolve * dissolve; // ease-in: hold the letters, then break
 
+    // cursor position in the group's local XY (approx — ignores the gentle tilt)
+    const vp = state.viewport;
+    const clx = pointer.current.x * (vp.width / 2) - groupX;
+    const cly = pointer.current.y * (vp.height / 2) - groupY;
+
+    // click-to-shatter: validate the click landed over the monogram, then fling
+    // every particle out toward its scatter-sphere home and back (sin envelope)
+    if (burstQueued.current) {
+      burstQueued.current = false;
+      if (Math.abs(clx) < 5.5 && Math.abs(cly) < 4.5 && de < 0.3) burstStart.current = t;
+    }
+    const tau = (t - burstStart.current) / 1.5;
+    const burst = tau >= 0 && tau <= 1 ? Math.sin(Math.PI * tau) : 0;
+
+    // force-field: part the cloud around the cursor (with a little swirl), but
+    // not while it's shattering or dissolving away
+    const repelOn = !reduced && de < 0.4 && burst < 0.02 && pointer.current.inside;
+    const R = 1.7;
+
     for (let i = 0; i < n; i++) {
       const k = i * 3;
       let x = starts[k] + (targets[k] - starts[k]) * e;
@@ -198,8 +228,32 @@ function Monogram({
         z += (disperse[k + 2] - z) * de;
       }
 
-      arr[k] = x + Math.sin(t * 0.6 + phases[i]) * wob;
-      arr[k + 1] = y + Math.cos(t * 0.7 + phases[i]) * wob;
+      // shatter: blend out toward the scatter sphere, then reform
+      if (burst > 0.0001) {
+        x += (starts[k] - x) * burst;
+        y += (starts[k + 1] - y) * burst;
+        z += (starts[k + 2] - z) * burst;
+      }
+
+      x += Math.sin(t * 0.6 + phases[i]) * wob;
+      y += Math.cos(t * 0.7 + phases[i]) * wob;
+
+      // force-field: push particles out of a bubble around the cursor + swirl
+      if (repelOn) {
+        const dx = x - clx;
+        const dy = y - cly;
+        const d2 = dx * dx + dy * dy;
+        if (d2 < R * R && d2 > 1e-4) {
+          const d = Math.sqrt(d2);
+          const f = 1 - d / R;
+          const push = f * f * 1.25;
+          x += (dx / d) * push - (dy / d) * push * 0.35;
+          y += (dy / d) * push + (dx / d) * push * 0.35;
+        }
+      }
+
+      arr[k] = x;
+      arr[k + 1] = y;
       arr[k + 2] = z;
     }
     geom.attributes.position.needsUpdate = true;
@@ -208,7 +262,6 @@ function Monogram({
     if (group.current && !reduced) {
       // tilt is centered on the monogram itself (not screen center), so it
       // leans evenly whether the cursor is to its left or right
-      const vp = state.viewport;
       const relX = pointer.current.x - groupX / (vp.width / 2);
       const relY = pointer.current.y - groupY / (vp.height / 2);
       group.current.rotation.y += (relX * 0.32 - group.current.rotation.y) * 0.05;
