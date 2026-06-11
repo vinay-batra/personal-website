@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Fraunces, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
@@ -40,6 +40,14 @@ export const metadata: Metadata = {
     description:
       "High school student who builds software (Corvo, Lark, FBLA One) and invests for the long run.",
   },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover", // extend under the iPhone notch / home indicator
+  colorScheme: "dark",
+  themeColor: "#0f0d0a", // match the ink bg so Safari's chrome blends in
 };
 
 export default function RootLayout({

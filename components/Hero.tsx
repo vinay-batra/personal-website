@@ -38,7 +38,7 @@ export default function Hero() {
     <section
       ref={ref}
       data-section="MASTHEAD"
-      className="relative flex min-h-screen flex-col justify-center pt-20 pb-16"
+      className="relative flex min-h-[100svh] flex-col justify-center pt-20 pb-16"
     >
       {/* VB monogram — a fixed full-viewport layer so the dissolve streams down
           behind the next section instead of clipping at the hero's edge */}
