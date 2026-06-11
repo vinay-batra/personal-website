@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { getAccent, hexToRgb } from "@/lib/accent";
 
 /**
  * A fixed, full-page flowing-gradient aurora rendered with a single WebGL
@@ -12,6 +13,7 @@ const FRAG = `
 precision highp float;
 uniform vec2 uRes;
 uniform float uTime;
+uniform vec3 uAccent;
 
 float hash(vec2 p){ p = fract(p*vec2(123.34,456.21)); p += dot(p,p+45.32); return fract(p.x*p.y); }
 float noise(vec2 p){
@@ -46,6 +48,10 @@ void main(){
   col += teal  * smoothstep(0.55,1.0, q.x)       * 0.12;
   col += emer  * smoothstep(0.6, 1.0, q.y)       * 0.10;
   col += viol  * smoothstep(0.65,1.05,n*q.x*1.5) * 0.10;
+
+  // section accent wash — tints the brightest part of the flow toward the
+  // hue of whatever section the reader is on, lerped smoothly on the JS side
+  col += uAccent * smoothstep(0.5,1.05,n) * 0.18;
 
   // keep edges dark
   float vig = smoothstep(1.25,0.25,length(uv-0.5));
@@ -92,6 +98,8 @@ export default function Aurora() {
 
     const uRes = gl.getUniformLocation(prog, "uRes");
     const uTime = gl.getUniformLocation(prog, "uTime");
+    const uAccent = gl.getUniformLocation(prog, "uAccent");
+    const accent = hexToRgb(getAccent()); // current shown color, eased each frame
 
     const SCALE = 0.4; // quarter-ish resolution — soft and cheap
     const resize = () => {
@@ -113,6 +121,11 @@ export default function Aurora() {
     const loop = (ts: number) => {
       raf = requestAnimationFrame(loop);
       if (hidden) return;
+      const target = hexToRgb(getAccent());
+      accent[0] += (target[0] - accent[0]) * 0.04;
+      accent[1] += (target[1] - accent[1]) * 0.04;
+      accent[2] += (target[2] - accent[2]) * 0.04;
+      gl.uniform3f(uAccent, accent[0], accent[1], accent[2]);
       gl.uniform1f(uTime, ts / 1000);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
     };

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion, useScroll, useTransform, useMotionValueEvent } from "framer-motion";
+import { useAccent, hexToRgb } from "@/lib/accent";
 
 /**
  * A fixed, glowing progress spine on the left edge that tracks scroll through
@@ -12,6 +13,9 @@ export default function ScrollSpine() {
   const { scrollYProgress } = useScroll();
   const [ticks, setTicks] = useState<number[]>([]);
   const [progress, setProgress] = useState(0);
+  const accent = useAccent();
+  const [r, g, b] = hexToRgb(accent).map((v) => Math.round(v * 255));
+  const rgba = (a: number) => `rgba(${r},${g},${b},${a})`;
 
   useEffect(() => {
     const measure = () => {
@@ -46,8 +50,13 @@ export default function ScrollSpine() {
       <div className="absolute inset-0 bg-bone/10" />
       {/* fill */}
       <motion.div
-        className="absolute inset-x-0 top-0 h-full origin-top bg-gradient-to-b from-amber to-amber/30 shadow-[0_0_10px_rgba(232,163,61,0.4)]"
-        style={{ scaleY: fillScale }}
+        className="absolute inset-x-0 top-0 h-full origin-top"
+        style={{
+          scaleY: fillScale,
+          backgroundImage: `linear-gradient(to bottom, ${rgba(1)}, ${rgba(0.3)})`,
+          boxShadow: `0 0 10px ${rgba(0.4)}`,
+          transition: "background-image 0.5s ease, box-shadow 0.5s ease",
+        }}
       />
       {/* section markers */}
       {ticks.map((f, i) => {
@@ -58,20 +67,21 @@ export default function ScrollSpine() {
             className="absolute left-1/2 h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rotate-45 border transition-all duration-300"
             style={{
               top: `${f * 100}%`,
-              borderColor: passed ? "#E8A33D" : "rgba(237,228,211,0.25)",
-              backgroundColor: passed ? "#E8A33D" : "transparent",
-              boxShadow: passed ? "0 0 8px 1px rgba(232,163,61,0.5)" : "none",
+              borderColor: passed ? accent : "rgba(237,228,211,0.25)",
+              backgroundColor: passed ? accent : "transparent",
+              boxShadow: passed ? `0 0 8px 1px ${rgba(0.5)}` : "none",
             }}
           />
         );
       })}
       {/* glowing playhead */}
       <motion.div
-        className="absolute left-1/2 h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-amber"
+        className="absolute left-1/2 h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full"
         style={{
           top: headTop,
-          boxShadow:
-            "0 0 14px 4px rgba(232,163,61,0.5), 0 0 4px 1px rgba(232,163,61,0.95)",
+          backgroundColor: accent,
+          boxShadow: `0 0 14px 4px ${rgba(0.5)}, 0 0 4px 1px ${rgba(0.95)}`,
+          transition: "background-color 0.5s ease",
         }}
       />
     </div>

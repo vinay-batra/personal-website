@@ -1,4 +1,5 @@
 import Aurora from "@/components/Aurora";
+import AccentTracker from "@/components/AccentTracker";
 import Loader from "@/components/Loader";
 import Cursor from "@/components/Cursor";
 import ScrollSpine from "@/components/ScrollSpine";
@@ -18,6 +19,7 @@ export default function Home() {
     <main className="relative">
       <Loader />
       <Aurora />
+      <AccentTracker />
       <div className="noise" />
       <Cursor />
       <ScrollSpine />

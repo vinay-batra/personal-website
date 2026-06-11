@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion, useMotionValue, useSpring } from "framer-motion";
+import { useAccent } from "@/lib/accent";
 
 /**
  * Hairline crosshair cursor (pointer:fine only). Over links / buttons /
@@ -11,6 +12,7 @@ export default function Cursor() {
   const [enabled, setEnabled] = useState(false);
   const [over, setOver] = useState(false);
   const [label, setLabel] = useState("open");
+  const accent = useAccent();
   const x = useMotionValue(-100);
   const y = useMotionValue(-100);
   const rx = useSpring(x, { stiffness: 500, damping: 38 });
@@ -62,7 +64,8 @@ export default function Cursor() {
       {/* springy ring that blooms over interactive elements */}
       <motion.div style={{ x: rx, y: ry }} className="absolute top-0 left-0">
         <motion.div
-          className="absolute -top-[19px] -left-[19px] h-[38px] w-[38px] rounded-full border border-amber/80"
+          className="absolute -top-[19px] -left-[19px] h-[38px] w-[38px] rounded-full border"
+          style={{ borderColor: accent, transition: "border-color 0.5s ease" }}
           initial={false}
           animate={{ scale: over ? 1 : 0.2, opacity: over ? 1 : 0 }}
           transition={{ type: "spring", stiffness: 320, damping: 24 }}
@@ -72,7 +75,8 @@ export default function Cursor() {
       {/* label */}
       <motion.div style={{ x: rx, y: ry }} className="absolute top-0 left-0">
         <motion.span
-          className="absolute -left-1/2 top-[26px] block translate-x-[-50%] font-mono text-[9px] tracking-[0.25em] text-amber uppercase whitespace-nowrap"
+          className="absolute -left-1/2 top-[26px] block translate-x-[-50%] font-mono text-[9px] tracking-[0.25em] uppercase whitespace-nowrap"
+          style={{ color: accent, transition: "color 0.5s ease" }}
           animate={{ opacity: over ? 1 : 0, y: over ? 0 : 4 }}
           transition={{ duration: 0.2 }}
         >
