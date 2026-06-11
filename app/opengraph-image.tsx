@@ -1,0 +1,102 @@
+import { ImageResponse } from "next/og";
+
+// Dynamic Open Graph card — the particle VB monogram (same dots as the
+// favicon) glowing over the ink background, with the name and tagline.
+export const alt = "Vinay Batra — I build software and invest for the long run.";
+export const size = { width: 1200, height: 630 };
+export const contentType = "image/png";
+
+// the 227-dot "VB" monogram in white, 0..100 x 0..56 space
+const MONOGRAM_SVG =
+  "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 56\"><circle cx=\"67.5\" cy=\"24.7\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"87.0\" cy=\"3.9\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"10.4\" cy=\"10.4\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"92.2\" cy=\"6.5\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"40.3\" cy=\"1.3\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"18.2\" cy=\"24.7\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"57.1\" cy=\"13.0\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"96.1\" cy=\"22.1\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"88.3\" cy=\"11.7\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"5.2\" cy=\"0.0\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"18.2\" cy=\"41.6\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"23.4\" cy=\"31.2\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"23.4\" cy=\"51.9\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"70.1\" cy=\"1.3\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"100.0\" cy=\"36.4\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"87.0\" cy=\"2.6\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"98.7\" cy=\"49.4\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"16.9\" cy=\"54.5\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"61.0\" cy=\"27.3\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"89.6\" cy=\"39.0\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"87.0\" cy=\"22.1\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"18.2\" cy=\"44.2\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"94.8\" cy=\"6.5\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"26.0\" cy=\"42.9\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"84.4\" cy=\"29.9\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"94.8\" cy=\"14.3\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"59.7\" cy=\"32.5\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"68.8\" cy=\"40.3\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"66.2\" cy=\"5.2\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"59.7\" cy=\"0.0\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"96.1\" cy=\"50.6\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"64.9\" cy=\"49.4\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"63.6\" cy=\"5.2\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"84.4\" cy=\"2.6\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"70.1\" cy=\"18.2\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"68.8\" cy=\"23.4\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"61.0\" cy=\"54.5\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"96.1\" cy=\"49.4\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"26.0\" cy=\"41.6\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"58.4\" cy=\"27.3\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"9.1\" cy=\"13.0\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"5.2\" cy=\"9.1\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"88.3\" cy=\"16.9\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"93.5\" cy=\"11.7\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"67.5\" cy=\"3.9\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"54.5\" cy=\"55.8\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"96.1\" cy=\"20.8\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"64.9\" cy=\"23.4\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"70.1\" cy=\"6.5\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"67.5\" cy=\"6.5\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"64.9\" cy=\"1.3\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"90.9\" cy=\"37.7\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"64.9\" cy=\"20.8\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"66.2\" cy=\"37.7\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"94.8\" cy=\"35.1\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"67.5\" cy=\"44.2\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"61.0\" cy=\"50.6\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"18.2\" cy=\"32.5\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"14.3\" cy=\"29.9\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"13.0\" cy=\"2.6\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"97.4\" cy=\"41.6\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"59.7\" cy=\"6.5\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"22.1\" cy=\"42.9\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"67.5\" cy=\"29.9\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"46.8\" cy=\"1.3\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"89.6\" cy=\"16.9\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"92.2\" cy=\"40.3\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"64.9\" cy=\"53.2\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"9.1\" cy=\"11.7\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"87.0\" cy=\"54.5\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"14.3\" cy=\"42.9\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"88.3\" cy=\"9.1\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"88.3\" cy=\"49.4\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"85.7\" cy=\"24.7\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"83.1\" cy=\"54.5\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"63.6\" cy=\"3.9\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"67.5\" cy=\"41.6\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"26.0\" cy=\"53.2\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"96.1\" cy=\"44.2\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"93.5\" cy=\"15.6\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"62.3\" cy=\"26.0\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"16.9\" cy=\"46.8\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"92.2\" cy=\"54.5\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"98.7\" cy=\"45.5\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"94.8\" cy=\"39.0\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"66.2\" cy=\"44.2\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"13.0\" cy=\"1.3\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"88.3\" cy=\"54.5\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"64.9\" cy=\"42.9\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"92.2\" cy=\"3.9\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"67.5\" cy=\"53.2\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"89.6\" cy=\"40.3\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"58.4\" cy=\"23.4\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"70.1\" cy=\"16.9\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"22.1\" cy=\"32.5\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"55.8\" cy=\"0.0\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"63.6\" cy=\"33.8\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"66.2\" cy=\"9.1\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"22.1\" cy=\"22.1\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"97.4\" cy=\"16.9\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"57.1\" cy=\"6.5\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"97.4\" cy=\"14.3\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"31.2\" cy=\"48.1\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"67.5\" cy=\"33.8\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"64.9\" cy=\"55.8\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"16.9\" cy=\"13.0\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"89.6\" cy=\"15.6\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"22.1\" cy=\"46.8\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"98.7\" cy=\"16.9\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"19.5\" cy=\"36.4\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"57.1\" cy=\"48.1\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"22.1\" cy=\"54.5\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"13.0\" cy=\"33.8\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"62.3\" cy=\"24.7\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"62.3\" cy=\"40.3\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"19.5\" cy=\"14.3\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"93.5\" cy=\"41.6\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"63.6\" cy=\"29.9\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"9.1\" cy=\"1.3\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"62.3\" cy=\"5.2\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"15.6\" cy=\"7.8\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"9.1\" cy=\"22.1\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"14.3\" cy=\"20.8\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"13.0\" cy=\"35.1\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"22.1\" cy=\"33.8\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"68.8\" cy=\"24.7\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"14.3\" cy=\"5.2\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"7.8\" cy=\"1.3\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"23.4\" cy=\"54.5\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"14.3\" cy=\"19.5\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"62.3\" cy=\"1.3\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"22.1\" cy=\"49.4\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"19.5\" cy=\"26.0\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"33.8\" cy=\"37.7\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"0.0\" cy=\"0.0\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"57.1\" cy=\"19.5\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"92.2\" cy=\"42.9\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"20.8\" cy=\"49.4\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"87.0\" cy=\"18.2\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"89.6\" cy=\"3.9\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"93.5\" cy=\"51.9\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"28.6\" cy=\"48.1\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"59.7\" cy=\"44.2\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"11.7\" cy=\"33.8\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"66.2\" cy=\"36.4\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"16.9\" cy=\"22.1\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"32.5\" cy=\"40.3\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"14.3\" cy=\"36.4\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"68.8\" cy=\"33.8\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"19.5\" cy=\"0.0\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"70.1\" cy=\"11.7\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"58.4\" cy=\"41.6\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"71.4\" cy=\"0.0\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"89.6\" cy=\"35.1\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"87.0\" cy=\"32.5\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"13.0\" cy=\"7.8\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"64.9\" cy=\"31.2\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"66.2\" cy=\"10.4\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"59.7\" cy=\"39.0\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"72.7\" cy=\"55.8\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"58.4\" cy=\"37.7\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"63.6\" cy=\"31.2\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"88.3\" cy=\"36.4\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"80.5\" cy=\"2.6\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"61.0\" cy=\"24.7\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"61.0\" cy=\"2.6\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"88.3\" cy=\"32.5\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"15.6\" cy=\"32.5\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"89.6\" cy=\"27.3\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"93.5\" cy=\"40.3\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"59.7\" cy=\"20.8\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"22.1\" cy=\"27.3\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"84.4\" cy=\"53.2\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"89.6\" cy=\"5.2\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"62.3\" cy=\"42.9\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"68.8\" cy=\"15.6\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"9.1\" cy=\"15.6\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"23.4\" cy=\"53.2\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"19.5\" cy=\"24.7\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"79.2\" cy=\"0.0\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"90.9\" cy=\"23.4\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"90.9\" cy=\"31.2\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"92.2\" cy=\"31.2\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"24.7\" cy=\"37.7\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"16.9\" cy=\"31.2\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"10.4\" cy=\"0.0\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"70.1\" cy=\"13.0\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"15.6\" cy=\"41.6\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"57.1\" cy=\"0.0\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"68.8\" cy=\"41.6\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"13.0\" cy=\"0.0\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"68.8\" cy=\"9.1\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"7.8\" cy=\"13.0\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"96.1\" cy=\"37.7\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"7.8\" cy=\"5.2\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"64.9\" cy=\"6.5\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"68.8\" cy=\"0.0\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"75.3\" cy=\"55.8\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"85.7\" cy=\"5.2\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"87.0\" cy=\"6.5\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"3.9\" cy=\"2.6\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"59.7\" cy=\"13.0\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"49.4\" cy=\"0.0\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"32.5\" cy=\"42.9\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"19.5\" cy=\"53.2\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"53.2\" cy=\"55.8\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"58.4\" cy=\"9.1\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"13.0\" cy=\"31.2\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"18.2\" cy=\"19.5\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"9.1\" cy=\"14.3\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"45.3\" cy=\"4.0\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"43.5\" cy=\"3.0\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"43.8\" cy=\"6.7\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"42.0\" cy=\"9.2\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"40.8\" cy=\"12.1\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"39.1\" cy=\"11.1\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"39.3\" cy=\"14.8\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"37.9\" cy=\"17.5\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"36.1\" cy=\"20.0\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"35.0\" cy=\"22.9\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"33.4\" cy=\"25.6\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"31.9\" cy=\"24.7\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"31.4\" cy=\"28.0\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"33.0\" cy=\"28.9\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"30.4\" cy=\"31.0\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"31.4\" cy=\"31.5\" r=\"1.05\" fill=\"#ffffff\"/><circle cx=\"28.3\" cy=\"33.3\" r=\"1.05\" fill=\"#ffffff\"/></svg>";
+
+export default function OpengraphImage() {
+  const monogram = `data:image/svg+xml;utf8,${encodeURIComponent(MONOGRAM_SVG)}`;
+  return new ImageResponse(
+    (
+      <div
+        style={{
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          background: "#0F0D0A",
+          color: "#EDE4D3",
+          fontFamily: "sans-serif",
+          position: "relative",
+        }}
+      >
+        {/* soft glow behind the monogram, echoing the bloom on the site */}
+        <div
+          style={{
+            position: "absolute",
+            right: 40,
+            top: 90,
+            width: 520,
+            height: 450,
+            background:
+              "radial-gradient(circle, rgba(237,228,211,0.16), rgba(237,228,211,0) 70%)",
+            display: "flex",
+          }}
+        />
+        {/* left: name + tagline */}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            padding: "0 72px",
+            width: 720,
+          }}
+        >
+          <div
+            style={{
+              fontSize: 19,
+              letterSpacing: 6,
+              color: "#E8A33D",
+              textTransform: "uppercase",
+            }}
+          >
+            Vinay Batra · Greater Philadelphia
+          </div>
+          <div
+            style={{
+              fontSize: 74,
+              fontWeight: 700,
+              lineHeight: 1.05,
+              marginTop: 26,
+              letterSpacing: -1,
+            }}
+          >
+            I build software and invest for the long run.
+          </div>
+          <div
+            style={{
+              fontSize: 22,
+              color: "rgba(237,228,211,0.6)",
+              marginTop: 30,
+              letterSpacing: 3,
+              textTransform: "uppercase",
+            }}
+          >
+            Corvo · Lark · FBLA One
+          </div>
+        </div>
+        {/* right: the glowing VB monogram */}
+        <div
+          style={{
+            position: "absolute",
+            right: 70,
+            top: 150,
+            width: 460,
+            height: 330,
+            display: "flex",
+          }}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={monogram} width={460} height={258} alt="VB" />
+        </div>
+      </div>
+    ),
+    { ...size }
+  );
+}

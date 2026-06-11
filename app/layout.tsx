@@ -24,6 +24,7 @@ const plexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://personal-website-mu-nine-34.vercel.app"),
   title: "Vinay Batra",
   description:
     "High school student in the Philadelphia area. I build software (Corvo, Lark, and FBLA One) and I've managed my own investment portfolio since 2021.",
@@ -32,6 +33,12 @@ export const metadata: Metadata = {
     description:
       "High school student who builds software (Corvo, Lark, FBLA One) and invests for the long run.",
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Vinay Batra",
+    description:
+      "High school student who builds software (Corvo, Lark, FBLA One) and invests for the long run.",
   },
 };
 
