@@ -15,6 +15,7 @@ type Channel = {
   href: string;
   external: boolean;
   accent: boolean;
+  note?: string;
 };
 
 const CHANNELS: Channel[] = [
@@ -54,6 +55,7 @@ const CHANNELS: Channel[] = [
     href: "https://www.linkedin.com/in/vinay-batra",
     external: true,
     accent: false,
+    note: "2.3K followers · 2.3K connections",
   },
   {
     label: "EMAIL",
@@ -99,12 +101,19 @@ export default function Contact() {
                 {c.label}
               </span>
               <span className="dotlead" aria-hidden />
-              <span
-                className={`font-mono text-[13px] tracking-wide uppercase ${
-                  c.accent ? "text-amber" : "text-bone"
-                }`}
-              >
-                {c.value}
+              <span className="flex flex-col items-end leading-tight">
+                <span
+                  className={`font-mono text-[13px] tracking-wide uppercase ${
+                    c.accent ? "text-amber" : "text-bone"
+                  }`}
+                >
+                  {c.value}
+                </span>
+                {c.note && (
+                  <span className="mt-1 font-mono text-[9px] tracking-[0.1em] text-dim uppercase">
+                    {c.note}
+                  </span>
+                )}
               </span>
               <span
                 aria-hidden

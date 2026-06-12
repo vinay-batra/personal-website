@@ -9,6 +9,18 @@ const AboutGraphic = dynamic(() => import("./visuals/AboutGraphic"), { ssr: fals
 
 const VIEWPORT = { once: true, margin: "-80px" } as const;
 
+const SCORES = [
+  { test: "ACT", score: "35", max: "36", note: "99th · Feb 2026" },
+  { test: "SSAT", score: "2398", max: "2400", note: "99th · Apr 2025" },
+];
+
+const LANGS = [
+  { name: "English", level: "Native" },
+  { name: "Hindi", level: "Native" },
+  { name: "Spanish", level: "Professional · Duolingo 115" },
+  { name: "Urdu", level: "Professional" },
+];
+
 export default function About() {
   return (
     <section
@@ -48,6 +60,64 @@ export default function About() {
               Outside of that I lead a few clubs, volunteer around my community,
               and read a lot. Hover the map to see what I&rsquo;m into.
             </motion.p>
+          </div>
+
+          {/* test scores + languages */}
+          <div className="mt-9 grid grid-cols-1 gap-8 sm:grid-cols-2">
+            <motion.div
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="show"
+              viewport={VIEWPORT}
+              custom={2}
+            >
+              <p className="font-mono text-[10px] tracking-[0.25em] text-dim uppercase">
+                Test Scores
+              </p>
+              <div className="mt-3.5 space-y-3">
+                {SCORES.map((s) => (
+                  <div key={s.test} className="flex items-baseline gap-2.5">
+                    <span className="w-11 font-mono text-[11px] tracking-[0.14em] text-bone/65 uppercase">
+                      {s.test}
+                    </span>
+                    <span className="font-serif text-2xl leading-none text-amber tabular-nums">
+                      {s.score}
+                    </span>
+                    <span className="font-mono text-[10px] text-dim">/{s.max}</span>
+                    <span className="font-mono text-[9px] tracking-[0.1em] text-dim uppercase">
+                      {s.note}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+
+            <motion.div
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="show"
+              viewport={VIEWPORT}
+              custom={3}
+            >
+              <p className="font-mono text-[10px] tracking-[0.25em] text-dim uppercase">
+                Languages
+              </p>
+              <ul className="mt-3.5 space-y-2.5">
+                {LANGS.map((l) => (
+                  <li
+                    key={l.name}
+                    className="flex items-baseline justify-between gap-3"
+                  >
+                    <span className="font-sans text-[14px] text-bone/85">
+                      {l.name}
+                    </span>
+                    <span className="text-right font-mono text-[9px] tracking-[0.1em] text-dim uppercase">
+                      {l.level}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
           </div>
         </div>
 

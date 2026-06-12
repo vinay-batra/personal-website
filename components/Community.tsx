@@ -13,23 +13,23 @@ type Position = {
 
 const POSITIONS: Position[] = [
   {
-    org: "Free Library of Northampton Twp",
-    mandate: "YA Book Reviews, Monthly",
+    org: "Northampton Area Public Library",
+    mandate: "Education · Young Readers Program",
     hours: 75,
   },
   {
-    org: "Trenton Area Soup Kitchen",
-    mandate: "Meal Prep & Service",
+    org: "Council Rock High School South",
+    mandate: "Environment · E-Waste & Toner Drives",
     hours: 60,
   },
   {
-    org: "Environmental Initiatives",
-    mandate: "E-Waste · Earth Week · Adopt-A-Hwy",
-    hours: 60,
+    org: "Trenton Area Soup Kitchen",
+    mandate: "Economic Empowerment · Meal Service",
+    hours: 50,
   },
 ];
 
-const TOTAL_HOURS = 195;
+const TOTAL_HOURS = 185;
 
 /** 75hrs ≈ 10 glyphs, 60hrs ≈ 8 — one block per 7.5 hours held. */
 const HOURS_PER_GLYPH = 7.5;
