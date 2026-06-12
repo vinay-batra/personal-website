@@ -210,11 +210,6 @@ function Monogram({
     const tau = (t - burstStart.current) / 1.5;
     const burst = tau >= 0 && tau <= 1 ? Math.sin(Math.PI * tau) : 0;
 
-    // force-field: part the cloud around the cursor (with a little swirl), but
-    // not while it's shattering or dissolving away
-    const repelOn = !reduced && de < 0.4 && burst < 0.02 && pointer.current.inside;
-    const R = 1.7;
-
     for (let i = 0; i < n; i++) {
       const k = i * 3;
       let x = starts[k] + (targets[k] - starts[k]) * e;
@@ -237,20 +232,6 @@ function Monogram({
 
       x += Math.sin(t * 0.6 + phases[i]) * wob;
       y += Math.cos(t * 0.7 + phases[i]) * wob;
-
-      // force-field: push particles out of a bubble around the cursor + swirl
-      if (repelOn) {
-        const dx = x - clx;
-        const dy = y - cly;
-        const d2 = dx * dx + dy * dy;
-        if (d2 < R * R && d2 > 1e-4) {
-          const d = Math.sqrt(d2);
-          const f = 1 - d / R;
-          const push = f * f * 1.25;
-          x += (dx / d) * push - (dy / d) * push * 0.35;
-          y += (dy / d) * push + (dx / d) * push * 0.35;
-        }
-      }
 
       arr[k] = x;
       arr[k + 1] = y;
