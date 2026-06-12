@@ -84,7 +84,7 @@ export default function Hero() {
               transformOrigin: "left center",
               transition: "transform 0.35s ease-out",
             }}
-            className="serif-head block font-serif text-[clamp(2.6rem,7.5vw,6.25rem)] leading-[1.0] font-semibold tracking-tight"
+            className="serif-head headline-3d block font-serif text-[clamp(2.6rem,7.5vw,6.25rem)] leading-[1.0] font-semibold tracking-tight"
           >
             {lines.map((line, i) => (
               <span key={i} className="block overflow-hidden pb-[0.06em]">
