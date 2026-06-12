@@ -16,6 +16,8 @@ const item: Variants = {
   show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE } },
 };
 
+// when true, the page-level ParticleSpine replaces the in-card visuals
+const SPINE = true;
 const CorvoChart = dynamic(() => import("./visuals/CorvoChart"), { ssr: false });
 const LarkStrings = dynamic(() => import("./visuals/LarkStrings"), { ssr: false });
 const FblaNetwork = dynamic(() => import("./visuals/FblaNetwork"), { ssr: false });
@@ -217,7 +219,7 @@ function ProjectBlock({ project, flip }: { project: Project; flip: boolean }) {
       className="group grid items-center gap-8 border-t border-bone/20 py-12 md:grid-cols-2 md:gap-14 md:py-20"
     >
       {text}
-      {visual}
+      {SPINE ? <div aria-hidden /> : visual}
     </motion.article>
   );
 }

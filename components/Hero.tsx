@@ -16,6 +16,8 @@ import { TypeOn } from "./SectionHeading";
 import Magnetic from "./Magnetic";
 
 const VBParticles = dynamic(() => import("./VBParticles"), { ssr: false });
+// when true, the page-level ParticleSpine renders the monogram instead
+const SPINE = true;
 
 export default function Hero() {
   const ref = useRef<HTMLElement>(null);
@@ -58,15 +60,17 @@ export default function Hero() {
       data-section="MASTHEAD"
       className="relative flex min-h-[100svh] flex-col justify-center pt-20 pb-16"
     >
-      {/* VB monogram — a fixed full-viewport layer so the dissolve streams down
-          behind the next section instead of clipping at the hero's edge */}
-      <motion.div
-        style={{ opacity: sceneOpacity }}
-        className="pointer-events-none fixed inset-0 z-0 hidden md:block"
-        aria-hidden
-      >
-        <VBParticles reduced={!!reduced} scroll={scrollYProgress} active={active} />
-      </motion.div>
+      {/* VB monogram — disabled while the page-level ParticleSpine is active,
+          which forms VB in the hero and morphs it through the sections */}
+      {!SPINE && (
+        <motion.div
+          style={{ opacity: sceneOpacity }}
+          className="pointer-events-none fixed inset-0 z-0 hidden md:block"
+          aria-hidden
+        >
+          <VBParticles reduced={!!reduced} scroll={scrollYProgress} active={active} />
+        </motion.div>
+      )}
 
       <motion.div
         style={{ y: exitY, opacity: exitOpacity }}

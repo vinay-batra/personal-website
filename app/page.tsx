@@ -1,5 +1,6 @@
 import Aurora from "@/components/Aurora";
 import AccentTracker from "@/components/AccentTracker";
+import ParticleSpine from "@/components/ParticleSpine";
 import Loader from "@/components/Loader";
 import Cursor from "@/components/Cursor";
 import ScrollSpine from "@/components/ScrollSpine";
@@ -20,6 +21,7 @@ export default function Home() {
     <main className="relative overflow-x-clip">
       <Loader />
       <Aurora />
+      <ParticleSpine />
       <AccentTracker />
       <div className="noise" />
       <Cursor />
