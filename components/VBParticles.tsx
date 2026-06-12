@@ -426,14 +426,14 @@ function Monogram({
     const sig = u.uSignature.value as number;
 
     // click-to-shatter: validate the click landed over the monogram, then fling.
-    // ~4s silent cooldown keeps it from being spam-clicked.
+    // ~3s silent cooldown keeps it from being spam-clicked.
     if (burstQueued.current) {
       burstQueued.current = false;
       if (
         Math.abs(clx) < 5.5 &&
         Math.abs(cly) < 4.5 &&
         sig < 0.25 &&
-        t - burstStart.current >= 4
+        t - burstStart.current >= 3
       )
         burstStart.current = t;
     }

@@ -1,10 +1,9 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import {
   motion,
-  useMotionValueEvent,
   useReducedMotion,
   useScroll,
   useTransform,
@@ -28,9 +27,20 @@ export default function Hero() {
   // the particles dissolve + fade themselves; just hide the canvas once fully past
   const sceneOpacity = useTransform(scrollYProgress, [0, 0.92, 1], [1, 1, 0]);
 
-  // pause the canvas once the hero is fully scrolled away
+  // Keep the canvas live whenever any part of the hero is on screen, so the
+  // click-to-shatter always works, including after you scroll away and back.
+  // An IntersectionObserver fires reliably on re-entry where a scroll-progress
+  // threshold could stay latched at "scrolled past."
   const [active, setActive] = useState(true);
-  useMotionValueEvent(scrollYProgress, "change", (v) => setActive(v < 0.99));
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([e]) => setActive(e.isIntersecting), {
+      threshold: 0,
+    });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   const lines = ["I build software", "and invest for", "the long run."];
 

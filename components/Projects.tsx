@@ -2,9 +2,13 @@
 
 import { useRef } from "react";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 import { motion, useScroll, type Variants } from "framer-motion";
 import SectionHeading from "./SectionHeading";
 import { EASE } from "@/lib/motion";
+
+// Every product shares the same core stack — shown identically on each block.
+const STACK = ["Next.js", "TypeScript", "FastAPI", "Python", "Supabase", "Claude API"];
 
 const container: Variants = {
   hidden: {},
@@ -29,6 +33,7 @@ type Project = {
   features: string[];
   tags: string[];
   links: { label: string; href: string; primary?: boolean }[];
+  preview?: { src: string; href: string };
   kind: "corvo" | "lark" | "fbla";
 };
 
@@ -47,11 +52,11 @@ const PROJECTS: Project[] = [
       "AI analyst on your holdings",
       "News sentiment + PDF reports",
     ],
-    tags: ["Next.js", "TypeScript", "FastAPI", "Python", "Supabase", "Claude API"],
+    tags: STACK,
     links: [
       { label: "Visit corvo.capital", href: "https://corvo.capital", primary: true },
-      { label: "Source (BUSL-1.1)", href: "https://github.com/vinay-batra" },
     ],
+    preview: { src: "/corvo-preview.png", href: "https://corvo.capital" },
     kind: "corvo",
   },
   {
@@ -68,7 +73,7 @@ const PROJECTS: Project[] = [
       "AI coach + chat",
       "On-demand tab generation",
     ],
-    tags: ["Next.js", "Supabase", "AI"],
+    tags: STACK,
     links: [{ label: "Visit lark.coach", href: "https://lark.coach", primary: true }],
     kind: "lark",
   },
@@ -85,8 +90,9 @@ const PROJECTS: Project[] = [
       "Competitive-prep resources",
       "Chapter dashboards",
     ],
-    tags: ["Next.js", "Supabase", "Postgres"],
+    tags: STACK,
     links: [{ label: "Visit fbla.one", href: "https://fbla.one", primary: true }],
+    preview: { src: "/fbla-preview.png", href: "https://fbla.one" },
     kind: "fbla",
   },
 ];
@@ -146,18 +152,21 @@ function ProjectBlock({ project, flip }: { project: Project; flip: boolean }) {
           </motion.li>
         ))}
       </motion.ul>
-      <motion.div
-        variants={item}
-        className="mt-7 flex flex-wrap items-center gap-x-3 gap-y-2"
-      >
-        {project.tags.map((t) => (
-          <span
-            key={t}
-            className="font-mono text-[10px] tracking-[0.16em] text-dim uppercase"
-          >
-            {t}
-          </span>
-        ))}
+      <motion.div variants={item} className="mt-7">
+        <p className="font-mono text-[10px] tracking-[0.25em] text-dim uppercase">
+          Built with
+        </p>
+        <div className="mt-2.5 flex flex-wrap items-center gap-2">
+          {project.tags.map((t) => (
+            <span
+              key={t}
+              className="border px-2 py-1 font-mono text-[10px] tracking-[0.14em] uppercase"
+              style={{ borderColor: `${project.brand}40`, color: "var(--bone, #EDE4D3)" }}
+            >
+              {t}
+            </span>
+          ))}
+        </div>
       </motion.div>
       <motion.div variants={item} className="mt-7 flex flex-wrap gap-7">
         {project.links.map((l) =>
@@ -188,19 +197,51 @@ function ProjectBlock({ project, flip }: { project: Project; flip: boolean }) {
     </motion.div>
   );
 
+  const cardSlide = {
+    hidden: { opacity: 0, x: flip ? -50 : 50 },
+    show: { opacity: 1, x: 0, transition: { duration: 0.8, ease: EASE } },
+  };
+
   const visual = (
-    <motion.div
-      variants={{
-        hidden: { opacity: 0, x: flip ? -50 : 50 },
-        show: { opacity: 1, x: 0, transition: { duration: 0.8, ease: EASE } },
-      }}
-      className={`relative min-h-[260px] overflow-hidden border border-[var(--brand)]/25 transition-[box-shadow,border-color,transform] duration-500 group-hover:-translate-y-1 group-hover:border-[var(--brand)]/60 group-hover:[box-shadow:0_0_60px_-18px_var(--brand)] md:min-h-[340px] ${
-        flip ? "md:order-1" : ""
-      }`}
-      style={{ background: `linear-gradient(180deg, ${project.brand}14, transparent 72%)` }}
-    >
-      <Visual progress={scrollYProgress} />
-    </motion.div>
+    <div className={`flex flex-col gap-5 ${flip ? "md:order-1" : ""}`}>
+      <motion.div
+        variants={cardSlide}
+        className="relative min-h-[260px] overflow-hidden border border-[var(--brand)]/25 transition-[box-shadow,border-color,transform] duration-500 group-hover:-translate-y-1 group-hover:border-[var(--brand)]/60 group-hover:[box-shadow:0_0_60px_-18px_var(--brand)] md:min-h-[340px]"
+        style={{ background: `linear-gradient(180deg, ${project.brand}14, transparent 72%)` }}
+      >
+        <Visual progress={scrollYProgress} />
+      </motion.div>
+
+      {/* live website preview — same size as the graphic, opens the site */}
+      {project.preview && (
+        <motion.a
+          variants={{
+            hidden: { opacity: 0, x: flip ? -50 : 50 },
+            show: { opacity: 1, x: 0, transition: { duration: 0.8, delay: 0.12, ease: EASE } },
+          }}
+          href={project.preview.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`Open ${project.name} website`}
+          className="group/prev relative block min-h-[260px] overflow-hidden border border-[var(--brand)]/25 transition-[box-shadow,border-color,transform] duration-500 hover:-translate-y-1 hover:border-[var(--brand)]/60 hover:[box-shadow:0_0_60px_-18px_var(--brand)] md:min-h-[340px]"
+        >
+          <Image
+            src={project.preview.src}
+            alt={`${project.name} website`}
+            fill
+            sizes="(max-width: 768px) 100vw, 520px"
+            className="object-cover object-top transition-transform duration-[1.2s] ease-out group-hover/prev:scale-[1.05]"
+          />
+          <span
+            className="pointer-events-none absolute inset-x-0 bottom-0 flex items-center justify-between gap-2 bg-gradient-to-t from-ink via-ink/70 to-transparent px-4 pb-3 pt-12 font-mono text-[10px] tracking-[0.16em] uppercase"
+            style={{ color: project.brand }}
+          >
+            <span>Live preview</span>
+            <span aria-hidden>{project.preview.href.replace("https://", "")} ↗</span>
+          </span>
+        </motion.a>
+      )}
+    </div>
   );
 
   return (
@@ -211,7 +252,7 @@ function ProjectBlock({ project, flip }: { project: Project; flip: boolean }) {
       whileInView="show"
       viewport={{ once: true, margin: "-120px" }}
       style={{ ["--brand" as string]: project.brand } as React.CSSProperties}
-      className="group grid items-center gap-8 border-t border-bone/20 py-12 md:grid-cols-2 md:gap-14 md:py-20"
+      className="group grid items-start gap-8 border-t border-bone/20 py-12 md:grid-cols-2 md:gap-14 md:py-20"
     >
       {text}
       {visual}
