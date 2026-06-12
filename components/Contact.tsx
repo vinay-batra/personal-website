@@ -48,7 +48,7 @@ const CHANNELS: Channel[] = [
     href: "https://github.com/vinay-batra",
     external: true,
     accent: false,
-    note: "2.2K commits",
+    note: "2.8K commits",
   },
   {
     label: "LINKEDIN",
