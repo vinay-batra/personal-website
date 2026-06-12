@@ -8,42 +8,68 @@ Fraunces + IBM Plex, and lots of scroll-driven / generative / cursor-reactive mo
 
 ## Stack
 - **Next.js 16** (App Router, TypeScript, Tailwind v4), static route, push-to-deploy on Vercel
-- **React Three Fiber + three.js** — the "VB" particle monogram (assembles on load, dissolves on
-  scroll) and the page-load intro
+- **React Three Fiber + three.js** — the "VB" particle monogram (hero + intro) with **bloom**
+  post-processing (`@react-three/postprocessing`), and the FBLA 3D force-graph
 - **Framer Motion** — scroll-scrubbed visuals, reveals, scroll-velocity skew, scroll spine, count-ups
 - **Lenis** — smooth scroll (lerp 0.14)
-- 2D `<canvas>` for the interactive section visuals (no extra WebGL contexts)
+- 2D `<canvas>` for most section visuals (cheap; pause when off-screen)
 
 ## The pieces
-- **Hero** (`Hero.tsx` + `VBParticles.tsx`) — particle "VB" that assembles on load, tilts to the
-  cursor, and dissolves/streams downward as you scroll (fixed full-viewport layer behind content).
-- **Loader** (`Loader.tsx`) — black intro; the VB assembles, holds ~1.5s, then the site lifts away.
+- **Hero** (`Hero.tsx` + `VBParticles.tsx`) — a **static "VB"** particle monogram on the right that
+  assembles on load, tilts to the cursor, **glows (bloom)**, and dissolves/streams downward on
+  scroll (fixed full-viewport layer behind content). **Click it to shatter** — particles fling out
+  to a scatter sphere and reform over ~2.2s, with a silent ~4s cooldown (no spam). The "V"'s thin
+  right serif is density-weighted so it reads as bright as the thick stroke. Pure white.
+- **Loader** (`Loader.tsx`) — black intro; the VB assembles from particles scattered **across the
+  whole viewport** (full-screen canvas, camera pulled back via `camZ`), holds, then the curtain lifts.
+- **Nav** (`TopBar.tsx`) — wordmark "VINAY BATRA" only (no glyph), left-aligned to the hero headline;
+  active-section highlight. Collapses to wordmark + "06 CONTACT" below `lg`.
 - **About** (`visuals/AboutGraphic.tsx`) — interactive "map of me": facts + interests as a drifting,
-  cursor-linking constellation (organically scattered, no label collisions — seed 164).
+  cursor-linking constellation; fills its card, labels clamped so wide ones don't clip on mobile.
 - **Work** (`Projects.tsx` + `visuals/`) — Corvo / Lark / FBLA One, each with a brand-colored visual
-  that **builds on scroll**: Corvo equity chart draws + Monte Carlo fan, Lark strings draw in then
-  pluck, FBLA network assembles from a point. Brand-glow hover.
-- **GitHub** (`GithubActivity.tsx`) — real contribution heatmap fetched live from
-  `github-contributions-api.jogruber.de` (with a seeded fallback), animated reveal + count-up.
-- **Leadership** — scroll-scrubbed glowing timeline with a playhead + igniting nodes; live year readout.
-- **Community / Recommendations / Contact** — service ledger, pull-quotes, links to all sites + email.
-- Site-wide: `Aurora.tsx` (WebGL flowing-gradient backdrop), `ScrollSpine.tsx` (left-edge progress
-  spine), `Cursor.tsx` (crosshair that blooms a ring over links/nav), per-section accent colors.
+  that builds on scroll: **Corvo** equity chart + Monte Carlo fan (2D canvas), **Lark** plucked
+  strings (2D), **FBLA One** a **draggable 3D force-graph network** (R3F — grab to spin). Brand-glow hover.
+- **GitHub** (`GithubActivity.tsx`) — real contribution heatmap fetched live (seeded fallback), reveal + count-up.
+- **Leadership / Community / Recommendations** — scroll-scrubbed glowing timeline; service ledger; pull-quotes.
+- **Contact** (`Contact.tsx`) — links + email, a **"Greater Philadelphia" constellation**, footer reads just "© 2026".
+- Site-wide: `Aurora.tsx` (WebGL flowing-gradient backdrop; subtler on mobile), `ScrollSpine.tsx`
+  (left-edge progress spine), `Cursor.tsx` (crosshair that blooms a ring over links),
+  `AccentTracker.tsx` — **section-accent theming**: cursor ring, scroll spine, and aurora tint all
+  shift hue per section (amber→green→blue→teal→violet→amber). Section labels **decode/scramble** in
+  on enter (`SectionHeading.tsx`).
 
-## Brand mark
-`components/VBMark.tsx` (nav) and `app/icon.svg` (favicon / bookmark / Vercel icon) are the same
-particle "VB," 210 dots sampled from the Fraunces glyph. Regenerate via browser canvas sampling
-(Node has no canvas) — see project memory.
+## Brand mark / meta
+- **Favicon**: `app/icon.svg` — white particle "VB" on a dark rounded square (210 seeded dots).
+- **OG share image**: `app/opengraph-image` (dynamic, from the monogram); `metadataBase` +
+  `twitter:card` set in `app/layout.tsx`; `viewport` exports `themeColor #0f0d0a` + `viewportFit cover`.
+- The standalone `components/VBMark.tsx` static SVG is **no longer used in the nav** (kept in repo).
+- Regenerate the dot positions via browser canvas glyph sampling (Node has no canvas/Fraunces).
 
 ## Develop
 ```bash
-npm run dev    # http://localhost:3000
+npm run dev    # http://localhost:3000 (launch.json entry "portfolio" → port 3002)
 npm run build  # static production build
 ```
 Everything respects `prefers-reduced-motion`. No env vars (the GitHub fetch is public, client-side).
 
+## Branches
+- `main` — current production.
+- `morph-spine` — **parked experiment** (not adopted): a single persistent `ParticleSpine.tsx` cloud
+  that forms VB then morphs through chart → strings → network → constellation on scroll, with the
+  in-card project visuals hidden. Rejected in favor of the static hero; kept for reference.
+
+## Tried & deliberately removed (don't re-add without asking)
+magnetic CTAs / nav links · 3D/extruded headline (+ cursor perspective tilt on the headline) ·
+gravity "playground" of product chips · liquid-displacement hover on cards · the VB→BUILD→INVEST
+particle re-spell · cursor force-field that repelled the particles · the Corvo "volatility surface"
+(reverted to the Monte Carlo chart).
+
 ## Notes / gotchas
-- Vercel didn't auto-detect Next.js → `vercel.json` pins `"framework": "nextjs"` (otherwise 404).
-- Vercel team Deployment Protection (SAML) is on by default — disable it for the project to make
-  production public.
-- `DESIGN.md` documents an earlier design direction ("The Corvid Ledger") and is kept for reference.
+- **Preview/harness can't verify motion**: the Claude preview pauses rAF/`useFrame` (page treated as
+  hidden) and Lenis blocks programmatic scroll, so canvases freeze at t≈0 and below-the-fold scroll
+  views are unreachable. Verify via DOM-state evals (element existence, sizes, computed styles), the
+  production build, and the user's own localhost — not screenshots. Long sessions with many dev-server
+  restarts also exhaust WebGL contexts → blank-white / tiny-corner render glitches (restart fixes it).
+- Vercel didn't auto-detect Next.js → `vercel.json` pins `"framework": "nextjs"` (else 404).
+- Vercel team Deployment Protection (SAML) is on by default — disable per-project for a public prod.
+- `DESIGN.md` documents the earlier "Corvid Ledger" direction; kept for reference.
