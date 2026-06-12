@@ -38,8 +38,10 @@ export default function Loader() {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         >
-          <div className="h-[42vh] w-[64vw] max-w-2xl">
-            <VBParticles reduced={!!reduced} groupX={0} groupY={0} />
+          {/* full-viewport canvas so the particles scatter in from across the
+              whole page, not out of a visible box in the middle */}
+          <div className="absolute inset-0">
+            <VBParticles reduced={!!reduced} groupX={0} groupY={0} camZ={22} />
           </div>
           <motion.span
             className="absolute bottom-[16%] font-mono text-[10px] tracking-[0.45em] text-dim uppercase"

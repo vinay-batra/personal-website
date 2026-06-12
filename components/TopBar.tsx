@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { useLenis } from "lenis/react";
-import Magnetic from "./Magnetic";
 
 const LINKS: [string, string, string][] = [
   ["01", "ABOUT", "#about"],
@@ -73,24 +72,23 @@ export default function TopBar() {
           {LINKS.map(([idx, label, href]) => {
             const isActive = active === href;
             return (
-              <Magnetic key={href} strength={0.5}>
-                <a
-                  href={href}
-                  onClick={(e) => go(e, href)}
-                  className={`group font-mono text-[10px] tracking-[0.18em] uppercase transition-colors ${
-                    isActive ? "text-bone" : "text-dim hover:text-bone"
+              <a
+                key={href}
+                href={href}
+                onClick={(e) => go(e, href)}
+                className={`group font-mono text-[10px] tracking-[0.18em] uppercase transition-colors ${
+                  isActive ? "text-bone" : "text-dim hover:text-bone"
+                }`}
+              >
+                <span
+                  className={`transition-colors ${
+                    isActive ? "text-amber" : "text-amber/50 group-hover:text-amber"
                   }`}
                 >
-                  <span
-                    className={`transition-colors ${
-                      isActive ? "text-amber" : "text-amber/50 group-hover:text-amber"
-                    }`}
-                  >
-                    {idx}
-                  </span>{" "}
-                  {label}
-                </a>
-              </Magnetic>
+                  {idx}
+                </span>{" "}
+                {label}
+              </a>
             );
           })}
         </div>

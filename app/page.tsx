@@ -12,7 +12,6 @@ import GithubActivity from "@/components/GithubActivity";
 import Leadership from "@/components/Leadership";
 import Community from "@/components/Community";
 import Recommendations from "@/components/Recommendations";
-import Playground from "@/components/Playground";
 import Contact from "@/components/Contact";
 
 export default function Home() {
@@ -38,7 +37,6 @@ export default function Home() {
         <Community />
         <Divider index="05" label="RECOMMENDATIONS" accent="#8b5cf6" />
         <Recommendations />
-        <Playground />
         <Divider index="06" label="CONTACT" accent="#E8A33D" />
         <Contact />
       </div>

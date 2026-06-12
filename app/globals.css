@@ -115,15 +115,6 @@ html.xcursor * {
   color: #ede4d3;
 }
 
-/* extruded 3D face — em-sized so the depth fits inside the line padding and
-   never clips the reveal masks; pairs with the cursor perspective tilt */
-.headline-3d {
-  text-shadow:
-    0 0.008em 0 rgba(255, 250, 242, 0.16),
-    0.008em 0.011em 0 rgba(22, 16, 8, 0.45),
-    0.014em 0.02em 0 rgba(18, 13, 6, 0.34),
-    0.02em 0.03em 0.05em rgba(0, 0, 0, 0.45);
-}
 
 /* blinking block cursor for typed eyebrows */
 @keyframes blink2 {
