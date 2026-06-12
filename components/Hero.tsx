@@ -50,8 +50,8 @@ export default function Hero() {
       data-section="MASTHEAD"
       className="relative flex min-h-[100svh] flex-col justify-center pt-20 pb-16"
     >
-      {/* VB monogram — a fixed full-viewport layer so it can collapse up into
-          the nav wordmark on scroll without clipping at the hero's edge */}
+      {/* VB monogram — a fixed full-viewport layer so the dissolve streams down
+          behind the next section instead of clipping at the hero's edge */}
       <motion.div
         style={{ opacity: sceneOpacity }}
         className="pointer-events-none fixed inset-0 z-0 hidden md:block"

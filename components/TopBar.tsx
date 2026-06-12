@@ -63,10 +63,7 @@ export default function TopBar() {
           className="flex items-center"
           aria-label="Back to top"
         >
-          <span
-            data-navmark
-            className="font-mono text-[11px] font-medium tracking-[0.22em] text-bone uppercase"
-          >
+          <span className="font-mono text-[11px] font-medium tracking-[0.22em] text-bone uppercase">
             Vinay Batra
           </span>
         </a>
