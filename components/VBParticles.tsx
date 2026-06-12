@@ -1,12 +1,12 @@
 "use client";
 
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { Canvas, useFrame } from "@react-three/fiber";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { MotionValue } from "framer-motion";
 import * as THREE from "three";
 
-/* deterministic PRNG so the scatter + amber picks are identical every load */
+/* deterministic PRNG so the scatter + sampling are identical every load */
 function seeded(seed: number) {
   let s = seed % 2147483647;
   if (s <= 0) s += 2147483646;
@@ -15,26 +15,30 @@ function seeded(seed: number) {
 
 interface Cloud {
   n: number;
-  targets: Float32Array;
+  shapes: Float32Array[]; // one normalized target layout per word
   starts: Float32Array;
   disperse: Float32Array; // downward-stream target for the scroll dissolve
   colors: Float32Array;
   phases: Float32Array;
 }
 
-/** Rasterize "VB" and sample its filled pixels into a 3D point cloud. */
-function sampleVB(maxCount: number): Cloud | null {
-  const S = 500;
-  const cv = document.createElement("canvas");
-  cv.width = S;
-  cv.height = S;
-  const ctx = cv.getContext("2d");
-  if (!ctx) return null;
+const HALF_W = 4.3; // each word is normalized to fit this half-box, centered
+const HALF_H = 2.7;
+
+/** Rasterize a word and density-weight-rank its filled pixels. Density
+ *  weighting boosts thin serif strokes so they read at the same density. */
+function rankWord(ctx: CanvasRenderingContext2D, S: number, word: string, seed: number) {
+  ctx.clearRect(0, 0, S, S);
   ctx.fillStyle = "#fff";
-  ctx.font = '700 280px "Fraunces", Georgia, serif';
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.fillText("VB", S / 2, S / 2 + 8);
+  let fs = 300;
+  ctx.font = `700 ${fs}px "Fraunces", Georgia, serif`;
+  const measured = ctx.measureText(word).width;
+  if (measured > S * 0.86) fs = (fs * (S * 0.86)) / measured;
+  fs = Math.min(fs, S * 0.6);
+  ctx.font = `700 ${fs}px "Fraunces", Georgia, serif`;
+  ctx.fillText(word, S / 2, S / 2);
 
   const data = ctx.getImageData(0, 0, S, S).data;
   const filled: [number, number][] = [];
@@ -49,11 +53,7 @@ function sampleVB(maxCount: number): Cloud | null {
   }
   if (filled.length === 0) return null;
 
-  // Density-weighted sampling: a serif "V" has one thick and one thin
-  // diagonal, so uniform sampling leaves the thin right stroke faint. Weight
-  // each pixel inversely to how many neighbors it has, so thin strokes and
-  // edges get boosted to roughly the same particle density as thick strokes.
-  const rnd = seeded(1907);
+  const rnd = seeded(seed);
   const R = 4;
   const keyed = filled.map(([x, y], i) => {
     let cnt = 0;
@@ -63,30 +63,59 @@ function sampleVB(maxCount: number): Cloud | null {
       }
     }
     const weight = 1 / Math.pow(cnt, 0.7);
-    // Efraimidis–Spirakis weighted sampling without replacement
     return { i, k: Math.pow(rnd() || 1e-9, 1 / weight) };
   });
   keyed.sort((a, b) => b.k - a.k);
-  const n = Math.min(maxCount, keyed.length);
-  const pick = keyed.slice(0, n).map((o) => filled[o.i]);
-  const targets = new Float32Array(n * 3);
+  return { filled, keyed };
+}
+
+/** Sample several words into matched point clouds that morph into each other. */
+function sampleShapes(words: string[], maxCount: number): Cloud | null {
+  const S = 500;
+  const cv = document.createElement("canvas");
+  cv.width = cv.height = S;
+  const ctx = cv.getContext("2d");
+  if (!ctx) return null;
+
+  const ranked = words.map((w, wi) => rankWord(ctx, S, w, 1907 + wi * 101));
+  if (ranked.some((r) => !r)) return null;
+  const ok = ranked as { filled: [number, number][]; keyed: { i: number; k: number }[] }[];
+
+  const n = Math.min(maxCount, ...ok.map((r) => r.keyed.length));
+
+  // normalize each word to the same centered box so VB and INVEST share a footprint
+  const zrnd = seeded(9001);
+  const shapes = ok.map((r) => {
+    const pick = r.keyed.slice(0, n).map((o) => r.filled[o.i]);
+    let minx = Infinity, maxx = -Infinity, miny = Infinity, maxy = -Infinity;
+    for (const [x, y] of pick) {
+      if (x < minx) minx = x;
+      if (x > maxx) maxx = x;
+      if (y < miny) miny = y;
+      if (y > maxy) maxy = y;
+    }
+    const sc = Math.min((2 * HALF_W) / ((maxx - minx) || 1), (2 * HALF_H) / ((maxy - miny) || 1));
+    const cx = (minx + maxx) / 2;
+    const cy = (miny + maxy) / 2;
+    const arr = new Float32Array(n * 3);
+    for (let i = 0; i < n; i++) {
+      const [px, py] = pick[i];
+      arr[i * 3] = (px - cx) * sc;
+      arr[i * 3 + 1] = -(py - cy) * sc;
+      arr[i * 3 + 2] = (zrnd() - 0.5) * 0.7;
+    }
+    return arr;
+  });
+
+  const rnd = seeded(2024);
   const starts = new Float32Array(n * 3);
   const disperse = new Float32Array(n * 3);
   const colors = new Float32Array(n * 3);
   const phases = new Float32Array(n);
-  // pure white monogram — black & white, bright and crisp against the dark bg
   const white = new THREE.Color("#ffffff");
-  const scale = 8.5 / S;
+  const home = shapes[0]; // dissolve streams from the VB layout
 
   for (let i = 0; i < n; i++) {
-    const [px, py] = pick[i];
-    const tx = (px - S / 2) * scale;
-    const ty = -(py - S / 2) * scale;
-    targets[i * 3] = tx;
-    targets[i * 3 + 1] = ty;
-    targets[i * 3 + 2] = (rnd() - 0.5) * 0.7;
-
-    // scattered start — a loose sphere the glyph condenses out of
     const r = 9 + rnd() * 9;
     const th = rnd() * Math.PI * 2;
     const ph = Math.acos(2 * rnd() - 1);
@@ -94,18 +123,16 @@ function sampleVB(maxCount: number): Cloud | null {
     starts[i * 3 + 1] = Math.cos(ph) * r;
     starts[i * 3 + 2] = Math.sin(ph) * Math.sin(th) * r - 3;
 
-    // dissolve target — the letters break apart and stream well below the fold
-    disperse[i * 3] = tx + (rnd() - 0.5) * 6;
-    disperse[i * 3 + 1] = ty - (12 + rnd() * 30);
+    disperse[i * 3] = home[i * 3] + (rnd() - 0.5) * 6;
+    disperse[i * 3 + 1] = home[i * 3 + 1] - (12 + rnd() * 30);
     disperse[i * 3 + 2] = (rnd() - 0.5) * 4;
 
-    // every particle is pure white
     colors[i * 3] = white.r;
     colors[i * 3 + 1] = white.g;
     colors[i * 3 + 2] = white.b;
     phases[i] = rnd() * Math.PI * 2;
   }
-  return { n, targets, starts, disperse, colors, phases };
+  return { n, shapes, starts, disperse, colors, phases };
 }
 
 function discTexture(): THREE.Texture {
@@ -124,6 +151,12 @@ function discTexture(): THREE.Texture {
 }
 
 const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
+const smooth = (t: number) => (t <= 0 ? 0 : t >= 1 ? 1 : t * t * (3 - 2 * t));
+
+// word display rhythm: hold a word, then morph to the next
+const HOLD = 3.0;
+const MORPH = 1.7;
+const CYCLE = HOLD + MORPH;
 
 function Monogram({
   cloud,
@@ -141,6 +174,7 @@ function Monogram({
   const ref = useRef<THREE.Points>(null!);
   const group = useRef<THREE.Group>(null!);
   const prog = useRef(reduced ? 1 : 0);
+  const morphClock = useRef(0); // advances only while the hero is in view
   const pointer = useRef({ x: 0, y: 0, inside: false });
   const burstStart = useRef(-100); // clock time of the last shatter click
   const burstQueued = useRef(false);
@@ -187,22 +221,30 @@ function Monogram({
     const e = easeOut(prog.current);
     const t = state.clock.elapsedTime;
     const arr = geom.attributes.position.array as Float32Array;
-    const { starts, targets, disperse, phases, n } = cloud;
+    const { starts, shapes, disperse, phases, n } = cloud;
     const wob = reduced ? 0 : e * 0.045;
 
-    // scroll dissolve: 0 while the hero is in view, → 1 as it scrolls away.
-    // stretched across most of the hero exit so it fades out gradually
+    // scroll dissolve: 0 while the hero is in view, → 1 as it scrolls away
     const sp = scroll ? scroll.get() : 0;
     const dissolve = Math.min(1, Math.max(0, (sp - 0.12) / 0.85));
-    const de = dissolve * dissolve; // ease-in: hold the letters, then break
+    const de = dissolve * dissolve;
 
-    // cursor position in the group's local XY (approx — ignores the gentle tilt)
+    // word re-spell: cycle VB → BUILD → INVEST while the hero is on screen
+    if (!reduced && de < 0.15) morphClock.current += dt;
+    const NW = shapes.length;
+    const tc = morphClock.current;
+    const idx = Math.floor(tc / CYCLE) % NW;
+    const nxt = (idx + 1) % NW;
+    const local = tc % CYCLE;
+    const me = local <= HOLD ? 0 : smooth((local - HOLD) / MORPH);
+    const A = shapes[idx];
+    const B = shapes[nxt];
+
+    // cursor position in the group's local XY (for the shatter region test)
     const vp = state.viewport;
     const clx = pointer.current.x * (vp.width / 2) - groupX;
     const cly = pointer.current.y * (vp.height / 2) - groupY;
 
-    // click-to-shatter: validate the click landed over the monogram, then fling
-    // every particle out toward its scatter-sphere home and back (sin envelope)
     if (burstQueued.current) {
       burstQueued.current = false;
       if (Math.abs(clx) < 5.5 && Math.abs(cly) < 4.5 && de < 0.3) burstStart.current = t;
@@ -212,9 +254,14 @@ function Monogram({
 
     for (let i = 0; i < n; i++) {
       const k = i * 3;
-      let x = starts[k] + (targets[k] - starts[k]) * e;
-      let y = starts[k + 1] + (targets[k + 1] - starts[k + 1]) * e;
-      let z = starts[k + 2] + (targets[k + 2] - starts[k + 2]) * e;
+      // current formed target = morph between the two active words
+      const tx = A[k] + (B[k] - A[k]) * me;
+      const ty = A[k + 1] + (B[k + 1] - A[k + 1]) * me;
+      const tz = A[k + 2] + (B[k + 2] - A[k + 2]) * me;
+
+      let x = starts[k] + (tx - starts[k]) * e;
+      let y = starts[k + 1] + (ty - starts[k + 1]) * e;
+      let z = starts[k + 2] + (tz - starts[k + 2]) * e;
 
       // dissolve: break apart and stream downward
       if (de > 0) {
@@ -241,13 +288,10 @@ function Monogram({
     material.opacity = 1 - de;
 
     if (group.current && !reduced) {
-      // tilt is centered on the monogram itself (not screen center), so it
-      // leans evenly whether the cursor is to its left or right
       const relX = pointer.current.x - groupX / (vp.width / 2);
       const relY = pointer.current.y - groupY / (vp.height / 2);
       group.current.rotation.y += (relX * 0.32 - group.current.rotation.y) * 0.05;
       group.current.rotation.x += (-relY * 0.24 - group.current.rotation.x) * 0.05;
-      // gentle breathing
       const s = 1 + Math.sin(t * 0.5) * 0.012;
       group.current.scale.set(s, s, s);
     }
@@ -279,10 +323,10 @@ export default function VBParticles({
     let alive = true;
     const build = () => {
       if (!alive) return;
-      const c = sampleVB(4200);
+      const c = sampleShapes(["VB", "BUILD", "INVEST"], 4200);
       if (c) setCloud(c);
     };
-    // sample once Fraunces is ready so the glyph shape is correct
+    // sample once Fraunces is ready so the glyph shapes are correct
     if (document.fonts?.ready) document.fonts.ready.then(build);
     else build();
     return () => {
