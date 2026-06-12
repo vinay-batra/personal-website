@@ -4,6 +4,7 @@ import { useRef } from "react";
 import dynamic from "next/dynamic";
 import { motion, useScroll, type Variants } from "framer-motion";
 import SectionHeading from "./SectionHeading";
+import LiquidHover from "./LiquidHover";
 import { EASE } from "@/lib/motion";
 
 const container: Variants = {
@@ -199,7 +200,9 @@ function ProjectBlock({ project, flip }: { project: Project; flip: boolean }) {
       }`}
       style={{ background: `linear-gradient(180deg, ${project.brand}14, transparent 72%)` }}
     >
-      <Visual progress={scrollYProgress} />
+      <LiquidHover className="absolute inset-0">
+        <Visual progress={scrollYProgress} />
+      </LiquidHover>
     </motion.div>
   );
 
