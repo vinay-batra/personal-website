@@ -15,7 +15,7 @@ const item: Variants = {
   show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE } },
 };
 
-const CorvoChart = dynamic(() => import("./visuals/CorvoChart"), { ssr: false });
+const MarketsSurface = dynamic(() => import("./visuals/MarketsSurface"), { ssr: false });
 const LarkStrings = dynamic(() => import("./visuals/LarkStrings"), { ssr: false });
 const FblaNetwork = dynamic(() => import("./visuals/FblaNetwork"), { ssr: false });
 
@@ -91,7 +91,7 @@ const PROJECTS: Project[] = [
   },
 ];
 
-const VISUALS = { corvo: CorvoChart, lark: LarkStrings, fbla: FblaNetwork };
+const VISUALS = { corvo: MarketsSurface, lark: LarkStrings, fbla: FblaNetwork };
 
 function ProjectBlock({ project, flip }: { project: Project; flip: boolean }) {
   const ref = useRef<HTMLElement>(null);
