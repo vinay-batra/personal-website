@@ -21,7 +21,7 @@ function seeded(seed: number) {
 function useCrystalGeometry() {
   return useMemo(() => {
     const r = seeded(2026);
-    const N = 12;
+    const N = 16; // more points → more facets
     const pts: THREE.Vector3[] = [];
     for (let i = 0; i < N; i++) {
       const y = 1 - (i / (N - 1)) * 2;
@@ -54,7 +54,7 @@ function radialTexture(inner: string, outer: string): THREE.Texture {
 function Backdrop() {
   // just a soft amber glow behind the crystal — the bars were removed; the
   // environment Lightformers still give the gem its reflections/fire.
-  const glow = useMemo(() => radialTexture("rgba(232,163,61,0.85)", "rgba(232,163,61,0)"), []);
+  const glow = useMemo(() => radialTexture("rgba(139,92,246,0.8)", "rgba(124,58,237,0)"), []);
   return (
     <group position={[0, 0, -2.4]}>
       <mesh position={[0, 0, -0.6]}>
@@ -129,22 +129,22 @@ function Crystal({ reduced, hi }: { reduced: boolean; hi: boolean }) {
     <mesh ref={mesh} geometry={geom} scale={0.92}>
       <MeshTransmissionMaterial
         transmission={1}
-        thickness={1.7}
-        roughness={0.05}
-        ior={2.2}
-        chromaticAberration={0.55}
-        anisotropicBlur={0.3}
-        distortion={0.35}
+        thickness={1.85}
+        roughness={0.015}
+        ior={2.42}
+        chromaticAberration={0.42}
+        anisotropicBlur={0.2}
+        distortion={0.28}
         distortionScale={0.4}
-        temporalDistortion={0.08}
-        color="#d8b083"
-        attenuationColor="#E8A33D"
-        attenuationDistance={0.7}
-        background={new THREE.Color("#080706")}
-        resolution={hi ? 1024 : 512}
-        samples={hi ? 6 : 4}
+        temporalDistortion={0.06}
+        color="#c4b3e0"
+        attenuationColor="#7c3aed"
+        attenuationDistance={0.5}
+        background={new THREE.Color("#060409")}
+        resolution={hi ? 1024 : 640}
+        samples={hi ? 8 : 5}
         clearcoat={1}
-        clearcoatRoughness={0.12}
+        clearcoatRoughness={0.04}
       />
     </mesh>
   );
@@ -157,11 +157,15 @@ function Scene({ reduced, hi }: { reduced: boolean; hi: boolean }) {
       <Backdrop />
       <Crystal reduced={reduced} hi={hi} />
       <Environment resolution={256}>
-        <color attach="background" args={["#070605"]} />
-        <Lightformer intensity={2.2} color="#E8A33D" position={[-3, 1.5, -1]} scale={[3, 4, 1]} />
-        <Lightformer intensity={1.1} color="#cfe0ea" position={[3, 2, 1]} scale={[2, 5, 1]} />
-        <Lightformer intensity={1.6} color="#E8A33D" position={[0, -3, 2]} scale={[5, 2, 1]} form="ring" />
-        <Lightformer intensity={0.8} color="#ffffff" position={[1, 3, -2]} scale={[2, 2, 1]} />
+        {/* near-black world so the crystal reads as obsidian where unlit */}
+        <color attach="background" args={["#050308"]} />
+        {/* violet fire */}
+        <Lightformer intensity={2.6} color="#7c3aed" position={[-3, 1.5, -1]} scale={[3, 4, 1]} />
+        <Lightformer intensity={1.6} color="#a78bfa" position={[3, 2, 1]} scale={[2, 5, 1]} />
+        <Lightformer intensity={1.8} color="#8b5cf6" position={[0, -3, 2]} scale={[5, 2, 1]} form="ring" />
+        {/* small, bright white sources = sharp specular glints → reads "real" */}
+        <Lightformer intensity={3} color="#ffffff" position={[1.6, 3, -2]} scale={[0.9, 0.9, 1]} />
+        <Lightformer intensity={2} color="#ffffff" position={[-2, -1.5, 3]} scale={[0.6, 0.6, 1]} />
       </Environment>
     </>
   );

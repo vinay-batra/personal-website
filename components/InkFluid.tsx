@@ -16,6 +16,8 @@ export interface InkParams {
   curl: number; // vorticity — swirliness
   density: number; // dye dissipation per step (→1 = lingers)
   force: number; // splat force from cursor movement
+  radius: number; // splat size
+  brightness: number; // ink glow / intensity
   colorA: [number, number, number];
   colorB: [number, number, number];
 }
@@ -23,6 +25,8 @@ export const DEFAULT_INK: InkParams = {
   curl: 30,
   density: 0.97,
   force: 6200,
+  radius: 0.2,
+  brightness: 0.22,
   colorA: [0.91, 0.64, 0.24], // amber
   colorB: [0.5, 0.66, 0.73], // sheen teal
 };
@@ -32,7 +36,6 @@ const SIM_RESOLUTION = 128;
 const DYE_RESOLUTION = 600;
 const VELOCITY_DISSIPATION = 0.2;
 const PRESSURE_ITERATIONS = 22;
-const SPLAT_RADIUS = 0.2;
 
 const BASE_VERT = `
   precision highp float;
@@ -386,7 +389,7 @@ export default function InkCanvas({
       gl.uniform1f(splatP.uniforms.aspectRatio, canvas.width / canvas.height);
       gl.uniform2f(splatP.uniforms.point, x, y);
       gl.uniform3f(splatP.uniforms.color, dx, dy, 0);
-      gl.uniform1f(splatP.uniforms.radius, SPLAT_RADIUS / 100);
+      gl.uniform1f(splatP.uniforms.radius, paramsRef.current.radius / 100);
       blit(velocity.write);
       velocity.swap();
 
@@ -476,10 +479,11 @@ export default function InkCanvas({
     const palette = (t: number): [number, number, number] => {
       const P = paramsRef.current;
       const m = 0.5 + 0.5 * Math.sin(t * 0.0006);
+      const b = P.brightness;
       return [
-        (P.colorA[0] * (1 - m) + P.colorB[0] * m) * 0.22,
-        (P.colorA[1] * (1 - m) + P.colorB[1] * m) * 0.22,
-        (P.colorA[2] * (1 - m) + P.colorB[2] * m) * 0.22,
+        (P.colorA[0] * (1 - m) + P.colorB[0] * m) * b,
+        (P.colorA[1] * (1 - m) + P.colorB[1] * m) * b,
+        (P.colorA[2] * (1 - m) + P.colorB[2] * m) * b,
       ];
     };
     const ptr = { px: 0, py: 0, has: false };

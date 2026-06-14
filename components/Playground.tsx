@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import InkCanvas, { DEFAULT_INK, type InkParams } from "./InkFluid";
 import ObsidianGem from "./ObsidianGem";
+import ShaderToy, { METABALLS_FRAG, KALEIDO_FRAG } from "./ShaderToy";
 import LazyVisual from "./LazyVisual";
 import { fadeUp } from "@/lib/motion";
 
@@ -21,6 +22,8 @@ export default function Playground() {
   const [pal, setPal] = useState(0);
   const [swirl, setSwirl] = useState(DEFAULT_INK.curl);
   const [linger, setLinger] = useState(DEFAULT_INK.density);
+  const [size, setSize] = useState(DEFAULT_INK.radius);
+  const [glow, setGlow] = useState(DEFAULT_INK.brightness);
 
   const pickPalette = (i: number) => {
     setPal(i);
@@ -34,6 +37,14 @@ export default function Playground() {
   const onLinger = (v: number) => {
     setLinger(v);
     paramsRef.current.density = v;
+  };
+  const onSize = (v: number) => {
+    setSize(v);
+    paramsRef.current.radius = v;
+  };
+  const onGlow = (v: number) => {
+    setGlow(v);
+    paramsRef.current.brightness = v;
   };
 
   return (
@@ -56,7 +67,7 @@ export default function Playground() {
           For fun.
         </h2>
         <p className="mx-auto mt-4 max-w-md font-sans text-[15px] leading-[1.7] text-bone/60">
-          A couple of WebGL toys I built. Stir the ink, spin the stone.
+          A few WebGL toys I built. Stir the ink, push the lava, spin the stone.
         </p>
       </motion.header>
 
@@ -133,6 +144,38 @@ export default function Playground() {
                 />
               </label>
             </div>
+            <div className="flex gap-6">
+              <label className="flex-1">
+                <span className="mb-1.5 flex justify-between font-mono text-[10px] tracking-[0.16em] text-dim uppercase">
+                  <span>Size</span>
+                  <span className="tabular-nums text-bone/45">{Math.round(size * 100)}</span>
+                </span>
+                <input
+                  type="range"
+                  min={0.05}
+                  max={0.5}
+                  step={0.01}
+                  value={size}
+                  onChange={(e) => onSize(+e.target.value)}
+                  className="w-full accent-amber"
+                />
+              </label>
+              <label className="flex-1">
+                <span className="mb-1.5 flex justify-between font-mono text-[10px] tracking-[0.16em] text-dim uppercase">
+                  <span>Glow</span>
+                  <span className="tabular-nums text-bone/45">{Math.round(glow * 100)}</span>
+                </span>
+                <input
+                  type="range"
+                  min={0.08}
+                  max={0.5}
+                  step={0.01}
+                  value={glow}
+                  onChange={(e) => onGlow(+e.target.value)}
+                  className="w-full accent-amber"
+                />
+              </label>
+            </div>
           </div>
         </motion.div>
 
@@ -157,8 +200,50 @@ export default function Playground() {
           </div>
           <p className="mt-4 font-sans text-[13px] leading-[1.6] text-bone/55">
             A faceted crystal that refracts the light behind it — real-time
-            transmission, chromatic split, amber fire inside.
+            transmission, chromatic split, violet fire inside.
           </p>
+        </motion.div>
+
+        {/* ---- metaballs / lava ---- */}
+        <motion.div
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-60px" }}
+          custom={2}
+        >
+          <div className="relative h-[340px] overflow-hidden rounded-2xl border border-bone/10 bg-[#070509] shadow-[inset_0_1px_0_rgba(237,228,211,0.05),0_30px_70px_-40px_rgba(0,0,0,0.85)] md:h-[380px]">
+            <LazyVisual className="absolute inset-0">
+              <ShaderToy frag={METABALLS_FRAG} name="lava" />
+            </LazyVisual>
+            <span className="pointer-events-none absolute left-4 top-3.5 font-mono text-[10px] tracking-[0.2em] text-bone/45 uppercase">
+              Lava
+            </span>
+            <span className="pointer-events-none absolute bottom-4 left-1/2 -translate-x-1/2 font-mono text-[10px] tracking-[0.2em] text-bone/40 uppercase">
+              Move to push
+            </span>
+          </div>
+        </motion.div>
+
+        {/* ---- kaleidoscope ---- */}
+        <motion.div
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-60px" }}
+          custom={3}
+        >
+          <div className="relative h-[340px] overflow-hidden rounded-2xl border border-bone/10 bg-[#060509] shadow-[inset_0_1px_0_rgba(237,228,211,0.05),0_30px_70px_-40px_rgba(0,0,0,0.85)] md:h-[380px]">
+            <LazyVisual className="absolute inset-0">
+              <ShaderToy frag={KALEIDO_FRAG} name="kaleido" />
+            </LazyVisual>
+            <span className="pointer-events-none absolute left-4 top-3.5 font-mono text-[10px] tracking-[0.2em] text-bone/45 uppercase">
+              Kaleidoscope
+            </span>
+            <span className="pointer-events-none absolute bottom-4 left-1/2 -translate-x-1/2 font-mono text-[10px] tracking-[0.2em] text-bone/40 uppercase">
+              Drag to spin
+            </span>
+          </div>
         </motion.div>
       </div>
     </section>
