@@ -9,6 +9,7 @@ import Hero from "@/components/Hero";
 import Divider from "@/components/Divider";
 import About from "@/components/About";
 import Projects from "@/components/Projects";
+import Experiments from "@/components/Experiments";
 import GithubActivity from "@/components/GithubActivity";
 import Leadership from "@/components/Leadership";
 import Community from "@/components/Community";
@@ -34,6 +35,7 @@ export default function Home() {
         <About />
         <Divider index="02" label="WORK" accent="#5cb88a" />
         <Projects />
+        <Experiments />
         <GithubActivity />
         <Divider index="03" label="LEADERSHIP" accent="#5d9ce4" />
         <Leadership />

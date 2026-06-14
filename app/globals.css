@@ -143,8 +143,27 @@ html.xcursor * {
   to { opacity: 1; }
 }
 
+/* algorithm visualizer — staggered reveal (delay is set inline per cell).
+   0% holds the empty-cell look through the delay; the pop fires at 0.01%. */
+@keyframes algo-visit {
+  0% { transform: scale(1); background-color: #0b0907; }
+  0.01% { transform: scale(0.3); background-color: rgba(135, 165, 180, 0.85); }
+  55% { transform: scale(1.12); background-color: rgba(135, 165, 180, 0.55); }
+  100% { transform: scale(1); background-color: rgba(135, 165, 180, 0.3); }
+}
+.algo-visited { animation: algo-visit 0.42s cubic-bezier(0.16, 1, 0.3, 1) both; }
+@keyframes algo-path {
+  0% { transform: scale(1); background-color: #0b0907; }
+  0.01% { transform: scale(0.35); background-color: rgba(232, 163, 61, 1); }
+  55% { transform: scale(1.18); background-color: rgba(232, 163, 61, 1); }
+  100% { transform: scale(1); background-color: rgba(232, 163, 61, 0.92); }
+}
+.algo-path { animation: algo-path 0.34s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
 @media (prefers-reduced-motion: reduce) {
   .cursor-block { animation: none; opacity: 0; }
   .stamp-in { animation: none; opacity: 1; }
   .gh-cell { animation: none !important; opacity: 1 !important; }
+  .algo-visited { animation: none; background-color: rgba(135, 165, 180, 0.3); }
+  .algo-path { animation: none; background-color: rgba(232, 163, 61, 0.92); }
 }
