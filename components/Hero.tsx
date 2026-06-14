@@ -61,7 +61,14 @@ export default function Hero() {
           className="pointer-events-none fixed inset-0 z-0 hidden md:block"
           aria-hidden
         >
-          <VBParticles reduced={!!reduced} scroll={scrollYProgress} active={active} />
+          <VBParticles
+            reduced={!!reduced}
+            scroll={scrollYProgress}
+            active={active}
+            groupX={4.6}
+            groupY={0.15}
+            camZ={12.8}
+          />
         </motion.div>
       )}
 

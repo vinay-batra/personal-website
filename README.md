@@ -21,7 +21,8 @@ Fraunces + IBM Plex, and lots of scroll-driven / generative / cursor-reactive mo
   to a scatter sphere and reform over ~2.2s, with a silent ~3s cooldown (no spam); the canvas stays
   live whenever the hero is on screen (IntersectionObserver) so the shatter still works after you
   scroll away and back. The "V"'s thin
-  right serif is density-weighted so it reads as bright as the thick stroke. Pure white.
+  right serif is density-weighted so it reads as bright as the thick stroke. Warm off-white
+  (`#F6EEDD`) with a wide soft **bloom** halo (radius ~0.65) that fills the space between the letters.
   **On mobile the VB isn't mounted at all** (gated by `lib/useIsDesktop.ts`, < 768px): the hero is
   content-height instead of `100svh` so there's no empty gap, the loader shows a quick serif "VB"
   mark instead of the canvas, and a one-time `MobileNotice.tsx` popup nudges users to view on a desktop.
@@ -29,9 +30,17 @@ Fraunces + IBM Plex, and lots of scroll-driven / generative / cursor-reactive mo
   whole viewport** (full-screen canvas, camera pulled back via `camZ`), holds, then the curtain lifts.
 - **Nav** (`TopBar.tsx`) — wordmark "VINAY BATRA" only (no glyph), left-aligned to the hero headline;
   active-section highlight. Collapses to wordmark + "06 CONTACT" below `lg`.
-- **About** (`visuals/AboutGraphic.tsx`) — interactive "map of me": facts + interests as a drifting,
-  cursor-linking constellation; fills its card, labels clamped so wide ones don't clip on mobile.
-  Below the bio: a **Test Scores** block (ACT 35/36, SSAT 2398/2400) and a **Languages** block.
+- **About** (`visuals/AboutConstellation.tsx`) — a true **3D R3F "map of me"**: ~37 nodes (facts,
+  products, skills, community, languages, hobbies) as uniform white glowing points wired into a
+  constellation. **Drag to orbit** (it holds wherever you drag it and keeps a slow clockwise spin);
+  **hover** lights a node + its label + edges amber; **tap a node** opens an anchored popup card with a
+  one-line blurb (the map keeps spinning behind it); **long-press** pauses/resumes. Labels are always
+  on, white, depth-weighted, and clamped so none clip. **No bloom** — the glow is additive soft-disc
+  points (a `Bloom`/EffectComposer pass renders an opaque rectangle over the aurora, i.e. a visible
+  "box", so it's avoided); the canvas **bleeds past its column** so glows/labels never hit an edge, with
+  a soft grey contrast blob and a far static starfield behind. Below the bio: a stacked **Test Scores**
+  block (ACT 35/36, SSAT 2398/2400) and a **Languages** list. (`AboutGraphic.tsx`, the old 2D version,
+  is kept in the repo but unused.)
 - **Work** (`Projects.tsx` + `visuals/`) — Corvo / Lark / FBLA One, each with a brand-colored visual
   that builds on scroll: **Corvo** equity chart + Monte Carlo fan (2D canvas), **Lark** plucked
   strings (2D), **FBLA One** a **draggable 3D force-graph network** (R3F — grab to spin). Brand-glow hover.
@@ -82,6 +91,9 @@ particle re-spell · cursor force-field that repelled the particles · the Corvo
 Also tried & reverted (Jun 12): a GPU-shader "living" VB (per-particle shimmer / cool→warm iridescence /
 curl-noise drift / depth shading / 10k particles), a parallax **dust-mote** atmosphere + bokeh, and a
 **scroll-into-nav** signature collapse — all rolled back to the clean static monogram.
+Tried & scrapped (Jun 14): a **3D GitHub "skyline"** in the Lately section (`GithubLandscape.tsx`,
+deleted) — the contribution year as extruded glowing towers. The data is too sparse/recent to read as a
+city; the user rejected it. The Lately section stays the **2D heatmap only** — don't add a 3D piece there.
 
 ## Notes / gotchas
 - **Preview/harness can't verify motion**: the Claude preview pauses rAF/`useFrame` (page treated as

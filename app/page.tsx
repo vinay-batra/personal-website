@@ -14,6 +14,8 @@ import Leadership from "@/components/Leadership";
 import Community from "@/components/Community";
 import Recommendations from "@/components/Recommendations";
 import Contact from "@/components/Contact";
+import Playground from "@/components/Playground";
+import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
@@ -41,6 +43,9 @@ export default function Home() {
         <Recommendations />
         <Divider index="06" label="CONTACT" accent="#E8A33D" />
         <Contact />
+        <Divider index="07" label="PLAYGROUND" accent="#E8A33D" />
+        <Playground />
+        <Footer />
       </div>
     </main>
   );

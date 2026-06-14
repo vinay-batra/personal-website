@@ -74,8 +74,9 @@ function sampleVB(maxCount: number): Cloud | null {
   const disperse = new Float32Array(n * 3);
   const colors = new Float32Array(n * 3);
   const phases = new Float32Array(n);
-  // pure white monogram — black & white, bright and crisp against the dark bg
-  const white = new THREE.Color("#ffffff");
+  // warm off-white monogram — a touch deeper than stark white so the glow reads
+  // with a little more colour/substance against the dark bg
+  const white = new THREE.Color("#F6EEDD");
   const scale = 8.5 / S;
 
   for (let i = 0; i < n; i++) {
@@ -315,14 +316,15 @@ export default function VBParticles({
             groupX={groupX}
             groupY={groupY}
           />
-          {/* glow: let the white particles bleed light against the dark bg */}
+          {/* glow: wide soft bloom — the light bleed forms a rounded halo that
+              fills the space between the letters and spills a bit around them */}
           <EffectComposer enableNormalPass={false} multisampling={0}>
             <Bloom
-              intensity={0.9}
-              luminanceThreshold={0.15}
+              intensity={1.0}
+              luminanceThreshold={0.1}
               luminanceSmoothing={0.5}
               mipmapBlur
-              radius={0.7}
+              radius={0.65}
             />
           </EffectComposer>
         </Canvas>

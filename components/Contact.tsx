@@ -1,13 +1,8 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import SectionHeading from "./SectionHeading";
 import { fadeUp } from "@/lib/motion";
-
-const Constellation = dynamic(() => import("./visuals/Constellation"), {
-  ssr: false,
-});
 
 type Channel = {
   label: string;
@@ -126,30 +121,6 @@ export default function Contact() {
           ))}
         </div>
 
-        {/* ---------- where I'm based ---------- */}
-        <motion.div
-          variants={fadeUp}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, margin: "-80px" }}
-          className="relative mt-20 h-[220px] overflow-hidden rounded-sm border border-bone/12 bg-bone/[0.015]"
-          data-cursor="chart"
-        >
-          <Constellation />
-          <span className="pointer-events-none absolute left-3.5 top-3 font-mono text-[9px] tracking-[0.18em] text-bone/35 uppercase">
-            Based In
-          </span>
-        </motion.div>
-
-        {/* ---------- footer ---------- */}
-        <footer className="mt-24 flex flex-col items-baseline justify-between gap-3 border-t border-bone/15 pt-8 sm:flex-row">
-          <p className="font-mono text-[11px] tracking-[0.18em] text-bone uppercase">
-            Vinay Batra
-          </p>
-          <p className="font-mono text-[10px] tracking-[0.12em] text-dim uppercase">
-            © 2026
-          </p>
-        </footer>
       </div>
     </section>
   );

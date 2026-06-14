@@ -5,7 +5,9 @@ import { motion } from "framer-motion";
 import SectionHeading from "./SectionHeading";
 import { fadeUp } from "@/lib/motion";
 
-const AboutGraphic = dynamic(() => import("./visuals/AboutGraphic"), { ssr: false });
+const AboutConstellation = dynamic(() => import("./visuals/AboutConstellation"), {
+  ssr: false,
+});
 
 const VIEWPORT = { once: true, margin: "-80px" } as const;
 
@@ -58,12 +60,12 @@ export default function About() {
               custom={1}
             >
               Outside of that I lead a few clubs, volunteer around my community,
-              and read a lot. Hover the map to see what I&rsquo;m into.
+              and read a lot. Drag the constellation to explore what I&rsquo;m into.
             </motion.p>
           </div>
 
-          {/* test scores + languages */}
-          <div className="mt-9 grid grid-cols-1 gap-8 sm:grid-cols-2">
+          {/* test scores + languages — stacked, clean */}
+          <div className="mt-10 max-w-md space-y-8">
             <motion.div
               variants={fadeUp}
               initial="hidden"
@@ -71,22 +73,25 @@ export default function About() {
               viewport={VIEWPORT}
               custom={2}
             >
-              <p className="font-mono text-[10px] tracking-[0.25em] text-dim uppercase">
+              <p className="flex items-center gap-2.5 font-mono text-[10px] tracking-[0.25em] text-dim uppercase">
+                <span className="h-px w-4 bg-amber/50" />
                 Test Scores
               </p>
-              <div className="mt-3.5 space-y-3">
+              <div className="mt-5 grid grid-cols-2 gap-x-6">
                 {SCORES.map((s) => (
-                  <div key={s.test} className="flex items-baseline gap-2.5">
-                    <span className="w-11 font-mono text-[11px] tracking-[0.14em] text-bone/65 uppercase">
-                      {s.test}
-                    </span>
-                    <span className="font-serif text-2xl leading-none text-amber tabular-nums">
+                  <div key={s.test} className="flex items-baseline gap-3">
+                    <span className="font-serif text-[2.4rem] leading-none text-amber tabular-nums">
                       {s.score}
                     </span>
-                    <span className="font-mono text-[10px] text-dim">/{s.max}</span>
-                    <span className="font-mono text-[9px] tracking-[0.1em] text-dim uppercase">
-                      {s.note}
-                    </span>
+                    <div className="flex flex-col gap-1 pb-1">
+                      <span className="font-mono text-[11px] tracking-[0.16em] text-bone/75 uppercase">
+                        {s.test}
+                        <span className="text-dim"> /{s.max}</span>
+                      </span>
+                      <span className="font-mono text-[9px] tracking-[0.12em] text-dim uppercase">
+                        {s.note}
+                      </span>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -99,19 +104,20 @@ export default function About() {
               viewport={VIEWPORT}
               custom={3}
             >
-              <p className="font-mono text-[10px] tracking-[0.25em] text-dim uppercase">
+              <p className="flex items-center gap-2.5 font-mono text-[10px] tracking-[0.25em] text-dim uppercase">
+                <span className="h-px w-4 bg-amber/50" />
                 Languages
               </p>
-              <ul className="mt-3.5 space-y-2.5">
+              <ul className="mt-3 divide-y divide-bone/10">
                 {LANGS.map((l) => (
                   <li
                     key={l.name}
-                    className="flex items-baseline justify-between gap-3"
+                    className="flex items-baseline justify-between gap-4 py-2.5 first:pt-0"
                   >
-                    <span className="font-sans text-[14px] text-bone/85">
+                    <span className="font-sans text-[15px] text-bone/90">
                       {l.name}
                     </span>
-                    <span className="text-right font-mono text-[9px] tracking-[0.1em] text-dim uppercase">
+                    <span className="font-mono text-[9px] tracking-[0.14em] text-dim uppercase">
                       {l.level}
                     </span>
                   </li>
@@ -130,12 +136,9 @@ export default function About() {
           initial="hidden"
           whileInView="show"
           viewport={VIEWPORT}
-          className="relative min-h-[420px] overflow-hidden border border-amber/20 md:min-h-[480px]"
-          style={{
-            background: "linear-gradient(180deg, rgba(232,163,61,0.06), transparent 72%)",
-          }}
+          className="relative min-h-[520px] md:min-h-[640px]"
         >
-          <AboutGraphic />
+          <AboutConstellation />
         </motion.div>
       </div>
     </section>
