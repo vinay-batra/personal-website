@@ -10,6 +10,7 @@ import {
 } from "framer-motion";
 import { useLenis } from "lenis/react";
 import { EASE } from "@/lib/motion";
+import { useIsDesktop } from "@/lib/useIsDesktop";
 import { TypeOn } from "./SectionHeading";
 
 const VBParticles = dynamic(() => import("./VBParticles"), { ssr: false });
@@ -18,6 +19,7 @@ export default function Hero() {
   const ref = useRef<HTMLElement>(null);
   const lenis = useLenis();
   const reduced = useReducedMotion();
+  const isDesktop = useIsDesktop();
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start start", "end start"],
@@ -48,17 +50,20 @@ export default function Hero() {
     <section
       ref={ref}
       data-section="MASTHEAD"
-      className="relative flex min-h-[100svh] flex-col justify-center pt-20 pb-16"
+      className="relative flex flex-col justify-center pt-28 pb-16 md:min-h-[100svh] md:pt-20"
     >
-      {/* VB monogram — a fixed full-viewport layer so the dissolve streams down
-          behind the next section instead of clipping at the hero's edge */}
-      <motion.div
-        style={{ opacity: sceneOpacity }}
-        className="pointer-events-none fixed inset-0 z-0 hidden md:block"
-        aria-hidden
-      >
-        <VBParticles reduced={!!reduced} scroll={scrollYProgress} active={active} />
-      </motion.div>
+      {/* VB monogram — desktop only; a fixed full-viewport layer so the dissolve
+          streams down behind the next section instead of clipping at the hero's
+          edge. Not mounted on mobile (no canvas, no blank space). */}
+      {isDesktop && (
+        <motion.div
+          style={{ opacity: sceneOpacity }}
+          className="pointer-events-none fixed inset-0 z-0 hidden md:block"
+          aria-hidden
+        >
+          <VBParticles reduced={!!reduced} scroll={scrollYProgress} active={active} />
+        </motion.div>
+      )}
 
       <motion.div
         style={{ y: exitY, opacity: exitOpacity }}

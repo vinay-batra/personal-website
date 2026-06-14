@@ -1,6 +1,7 @@
 import Aurora from "@/components/Aurora";
 import AccentTracker from "@/components/AccentTracker";
 import Loader from "@/components/Loader";
+import MobileNotice from "@/components/MobileNotice";
 import Cursor from "@/components/Cursor";
 import ScrollSpine from "@/components/ScrollSpine";
 import TopBar from "@/components/TopBar";
@@ -18,6 +19,7 @@ export default function Home() {
   return (
     <main className="relative overflow-x-clip">
       <Loader />
+      <MobileNotice />
       <Aurora />
       <AccentTracker />
       <div className="noise" />
