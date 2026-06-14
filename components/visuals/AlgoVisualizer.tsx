@@ -22,11 +22,31 @@ const SPEED = 8; // ms per visited cell
 const PATH_SPEED = 36; // ms per path cell
 
 type Algo = "bfs" | "dfs" | "dijkstra" | "astar";
-const ALGOS: { id: Algo; name: string }[] = [
-  { id: "bfs", name: "BFS" },
-  { id: "dfs", name: "DFS" },
-  { id: "dijkstra", name: "Dijkstra" },
-  { id: "astar", name: "A*" },
+const ALGOS: { id: Algo; name: string; full: string; desc: string }[] = [
+  {
+    id: "bfs",
+    name: "BFS",
+    full: "Breadth-First Search",
+    desc: "Explores evenly in every direction, one ring of cells at a time — always finds the shortest path.",
+  },
+  {
+    id: "dfs",
+    name: "DFS",
+    full: "Depth-First Search",
+    desc: "Dives down one route as far as it can before backtracking — finds a path, but usually not the shortest.",
+  },
+  {
+    id: "dijkstra",
+    name: "Dijkstra",
+    full: "Dijkstra's Algorithm",
+    desc: "Expands outward by lowest cost — guarantees the shortest path (and works on weighted maps).",
+  },
+  {
+    id: "astar",
+    name: "A*",
+    full: "A* Search",
+    desc: "Dijkstra plus a heuristic that aims toward the goal — shortest path, but explores far fewer cells.",
+  },
 ];
 
 function neighbors(i: number, walls: Set<number>) {
@@ -215,6 +235,7 @@ export default function AlgoVisualizer() {
         ? "border-amber text-amber"
         : "border-bone/15 text-dim hover:border-bone/35 hover:text-bone"
     }`;
+  const cur = ALGOS.find((a) => a.id === algo)!;
 
   return (
     <div className="select-none">
@@ -223,6 +244,7 @@ export default function AlgoVisualizer() {
           <button
             key={a.id}
             type="button"
+            title={`${a.full} — ${a.desc}`}
             onClick={() => {
               setAlgo(a.id);
               setResult(null);
@@ -249,6 +271,13 @@ export default function AlgoVisualizer() {
           Drag to draw walls · move the dots
         </span>
       </div>
+
+      <p className="mb-3 max-w-2xl font-sans text-[12.5px] leading-[1.55] text-bone/55">
+        <span className="font-mono text-[10px] tracking-[0.14em] text-amber uppercase">
+          {cur.full}
+        </span>{" "}
+        — {cur.desc}
+      </p>
 
       {result && (
         <div className="mb-3 flex flex-wrap items-center gap-x-5 gap-y-1 font-mono text-[10px] tracking-[0.14em] uppercase">
