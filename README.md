@@ -22,6 +22,9 @@ Fraunces + IBM Plex, and lots of scroll-driven / generative / cursor-reactive mo
   live whenever the hero is on screen (IntersectionObserver) so the shatter still works after you
   scroll away and back. The "V"'s thin
   right serif is density-weighted so it reads as bright as the thick stroke. Pure white.
+  **On mobile the VB isn't mounted at all** (gated by `lib/useIsDesktop.ts`, < 768px): the hero is
+  content-height instead of `100svh` so there's no empty gap, the loader shows a quick serif "VB"
+  mark instead of the canvas, and a one-time `MobileNotice.tsx` popup nudges users to view on a desktop.
 - **Loader** (`Loader.tsx`) — black intro; the VB assembles from particles scattered **across the
   whole viewport** (full-screen canvas, camera pulled back via `camZ`), holds, then the curtain lifts.
 - **Nav** (`TopBar.tsx`) — wordmark "VINAY BATRA" only (no glyph), left-aligned to the hero headline;
@@ -41,7 +44,7 @@ Fraunces + IBM Plex, and lots of scroll-driven / generative / cursor-reactive mo
   a **volunteering ledger** (Northampton Area Public Library, CRHSS/EAC, Trenton Area Soup Kitchen — 185
   hrs); pull-quotes.
 - **Contact** (`Contact.tsx`) — links + email, a **"Greater Philadelphia" constellation**, footer reads
-  just "© 2026". LinkedIn and GitHub rows carry stat lines (2.3K followers · 2.3K connections; 2.2K commits).
+  just "© 2026". LinkedIn and GitHub rows carry stat lines (2.3K followers · 2.3K connections; 3.2K commits).
 - Site-wide: `Aurora.tsx` (WebGL flowing-gradient backdrop; subtler on mobile), `ScrollSpine.tsx`
   (left-edge progress spine), `Cursor.tsx` (crosshair that blooms a ring over links),
   `AccentTracker.tsx` — **section-accent theming**: cursor ring, scroll spine, and aurora tint all
@@ -88,4 +91,8 @@ curl-noise drift / depth shading / 10k particles), a parallax **dust-mote** atmo
   restarts also exhaust WebGL contexts → blank-white / tiny-corner render glitches (restart fixes it).
 - Vercel didn't auto-detect Next.js → `vercel.json` pins `"framework": "nextjs"` (else 404).
 - Vercel team Deployment Protection (SAML) is on by default — disable per-project for a public prod.
+- **Domain**: live on `vinaybatra.org` (apex is canonical; `metadataBase` points there). Keep the
+  `www → apex` redirect in **one place only** — the Vercel domain settings, NOT `next.config`. A code
+  redirect once fought Vercel's domain redirect and caused an infinite loop (`ERR_TOO_MANY_REDIRECTS`).
+  308 redirects cache hard in browsers, so test any redirect change in an incognito window.
 - `DESIGN.md` documents the earlier "Corvid Ledger" direction; kept for reference.
