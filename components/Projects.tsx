@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import { motion, useScroll, type Variants } from "framer-motion";
 import SectionHeading from "./SectionHeading";
+import LazyVisual from "./LazyVisual";
 import { EASE } from "@/lib/motion";
 
 // Every product shares the same core stack — shown identically on each block.
@@ -209,7 +210,14 @@ function ProjectBlock({ project, flip }: { project: Project; flip: boolean }) {
         className="relative min-h-[260px] overflow-hidden border border-[var(--brand)]/25 transition-[box-shadow,border-color,transform] duration-500 group-hover:-translate-y-1 group-hover:border-[var(--brand)]/60 group-hover:[box-shadow:0_0_60px_-18px_var(--brand)] md:min-h-[340px]"
         style={{ background: `linear-gradient(180deg, ${project.brand}14, transparent 72%)` }}
       >
-        <Visual progress={scrollYProgress} />
+        {project.kind === "fbla" ? (
+          // the only WebGL visual — mount its context only when near the viewport
+          <LazyVisual className="absolute inset-0">
+            <Visual progress={scrollYProgress} />
+          </LazyVisual>
+        ) : (
+          <Visual progress={scrollYProgress} />
+        )}
       </motion.div>
 
       {/* live website preview — same size as the graphic, opens the site */}

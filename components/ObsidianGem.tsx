@@ -6,6 +6,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import { ConvexGeometry } from "three/examples/jsm/geometries/ConvexGeometry.js";
 import { useReducedMotionSafe } from "@/lib/useReducedMotionSafe";
+import { useIsDesktop } from "@/lib/useIsDesktop";
 
 const clamp = (v: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, v));
 
@@ -51,33 +52,20 @@ function radialTexture(inner: string, outer: string): THREE.Texture {
 }
 
 function Backdrop() {
+  // just a soft amber glow behind the crystal — the bars were removed; the
+  // environment Lightformers still give the gem its reflections/fire.
   const glow = useMemo(() => radialTexture("rgba(232,163,61,0.85)", "rgba(232,163,61,0)"), []);
-  const bars = useMemo(
-    () => [
-      { x: -2.4, c: "#E8A33D", o: 0.7, h: 7 },
-      { x: -0.9, c: "#EDE4D3", o: 0.34, h: 6 },
-      { x: 1.1, c: "#E8A33D", o: 0.5, h: 7 },
-      { x: 2.6, c: "#87a5b4", o: 0.28, h: 6 },
-    ],
-    []
-  );
   return (
     <group position={[0, 0, -2.4]}>
       <mesh position={[0, 0, -0.6]}>
         <planeGeometry args={[9, 9]} />
         <meshBasicMaterial map={glow} transparent opacity={0.9} blending={THREE.AdditiveBlending} depthWrite={false} />
       </mesh>
-      {bars.map((b, i) => (
-        <mesh key={i} position={[b.x, 0, 0]}>
-          <planeGeometry args={[0.13, b.h]} />
-          <meshBasicMaterial color={b.c} transparent opacity={b.o} blending={THREE.AdditiveBlending} depthWrite={false} />
-        </mesh>
-      ))}
     </group>
   );
 }
 
-function Crystal({ reduced }: { reduced: boolean }) {
+function Crystal({ reduced, hi }: { reduced: boolean; hi: boolean }) {
   const geom = useCrystalGeometry();
   const mesh = useRef<THREE.Mesh>(null!);
   const { gl } = useThree();
@@ -153,8 +141,8 @@ function Crystal({ reduced }: { reduced: boolean }) {
         attenuationColor="#E8A33D"
         attenuationDistance={0.7}
         background={new THREE.Color("#080706")}
-        resolution={1024}
-        samples={6}
+        resolution={hi ? 1024 : 512}
+        samples={hi ? 6 : 4}
         clearcoat={1}
         clearcoatRoughness={0.12}
       />
@@ -162,12 +150,12 @@ function Crystal({ reduced }: { reduced: boolean }) {
   );
 }
 
-function Scene({ reduced }: { reduced: boolean }) {
+function Scene({ reduced, hi }: { reduced: boolean; hi: boolean }) {
   return (
     <>
       <ambientLight intensity={0.3} />
       <Backdrop />
-      <Crystal reduced={reduced} />
+      <Crystal reduced={reduced} hi={hi} />
       <Environment resolution={256}>
         <color attach="background" args={["#070605"]} />
         <Lightformer intensity={2.2} color="#E8A33D" position={[-3, 1.5, -1]} scale={[3, 4, 1]} />
@@ -182,6 +170,7 @@ function Scene({ reduced }: { reduced: boolean }) {
 /** The obsidian gem as a canvas-only engine — the parent supplies the framed box. */
 export default function ObsidianGem() {
   const reduced = useReducedMotionSafe();
+  const isDesktop = useIsDesktop();
   const wrap = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(true);
 
@@ -201,7 +190,7 @@ export default function ObsidianGem() {
         frameloop={active ? "always" : "never"}
         gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
       >
-        <Scene reduced={reduced} />
+        <Scene reduced={reduced} hi={isDesktop} />
       </Canvas>
     </div>
   );

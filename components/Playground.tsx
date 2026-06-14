@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import InkCanvas, { DEFAULT_INK, type InkParams } from "./InkFluid";
 import ObsidianGem from "./ObsidianGem";
+import LazyVisual from "./LazyVisual";
 import { fadeUp } from "@/lib/motion";
 
 type RGB = [number, number, number];
@@ -68,7 +69,9 @@ export default function Playground() {
           viewport={{ once: true, margin: "-60px" }}
         >
           <div className="relative h-[340px] overflow-hidden rounded-2xl border border-bone/10 bg-[#080706] shadow-[inset_0_1px_0_rgba(237,228,211,0.05),0_30px_70px_-40px_rgba(0,0,0,0.85)] md:h-[380px]">
-            <InkCanvas paramsRef={paramsRef} clearRef={clearRef} />
+            <LazyVisual className="absolute inset-0">
+              <InkCanvas paramsRef={paramsRef} clearRef={clearRef} />
+            </LazyVisual>
             <span className="pointer-events-none absolute left-4 top-3.5 font-mono text-[10px] tracking-[0.2em] text-bone/45 uppercase">
               Stir the ink
             </span>
@@ -142,7 +145,9 @@ export default function Playground() {
           custom={1}
         >
           <div className="relative h-[340px] overflow-hidden rounded-2xl border border-bone/10 bg-[#0a0908]/70 shadow-[inset_0_1px_0_rgba(237,228,211,0.05),0_30px_70px_-40px_rgba(0,0,0,0.85)] backdrop-blur-sm md:h-[380px]">
-            <ObsidianGem />
+            <LazyVisual className="absolute inset-0">
+              <ObsidianGem />
+            </LazyVisual>
             <span className="pointer-events-none absolute left-4 top-3.5 font-mono text-[10px] tracking-[0.2em] text-bone/45 uppercase">
               Obsidian
             </span>

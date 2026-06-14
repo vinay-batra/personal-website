@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import SectionHeading from "./SectionHeading";
+import LazyVisual from "./LazyVisual";
 import { fadeUp } from "@/lib/motion";
 
 const AboutConstellation = dynamic(() => import("./visuals/AboutConstellation"), {
@@ -138,7 +139,9 @@ export default function About() {
           viewport={VIEWPORT}
           className="relative min-h-[520px] md:min-h-[640px]"
         >
-          <AboutConstellation />
+          <LazyVisual className="absolute inset-0">
+            <AboutConstellation />
+          </LazyVisual>
         </motion.div>
       </div>
     </section>
