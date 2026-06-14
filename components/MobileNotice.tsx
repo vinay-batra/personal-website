@@ -52,12 +52,11 @@ export default function MobileNotice() {
               A quick note
             </p>
             <h2 className="serif-head mt-3 font-serif text-[1.9rem] leading-tight font-semibold text-bone">
-              Best on a bigger screen.
+              Best on a computer.
             </h2>
             <p className="mt-3 font-sans text-[15px] leading-[1.65] text-bone/70">
-              This site leans on 3D and motion that really come alive on a desktop.
-              You&rsquo;re welcome to keep scrolling here, but for the full experience,
-              open it on a computer.
+              Use a computer for the best viewing experience. The 3D and motion on
+              this site really come alive on a bigger screen.
             </p>
             <button
               onClick={dismiss}

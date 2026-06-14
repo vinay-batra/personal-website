@@ -1,6 +1,6 @@
 # Personal website — Vinay Batra
 
-Live: **https://personal-website-mu-nine-34.vercel.app**
+Live: **https://vinaybatra.org**
 Repo: github.com/vinay-batra/personal-website (auto-deploys to Vercel on push to `main`)
 
 A high-end personal site: warm-noir aesthetic (ink `#0F0D0A`, bone `#EDE4D3`, amber `#E8A33D`),

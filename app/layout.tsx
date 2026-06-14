@@ -24,7 +24,7 @@ const plexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://personal-website-mu-nine-34.vercel.app"),
+  metadataBase: new URL("https://vinaybatra.org"),
   title: "Vinay Batra",
   description:
     "High school student in the Philadelphia area. I build software (Corvo, Lark, and FBLA One) and I've managed my own investment portfolio since 2021.",
