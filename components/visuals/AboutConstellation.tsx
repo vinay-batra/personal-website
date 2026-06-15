@@ -86,7 +86,6 @@ const ITEMS: Item[] = [
   { label: "Urdu", kind: "skill", blurb: "Professional working proficiency." },
 
   // off the screen
-  { label: "Guitar", kind: "skill", blurb: "I play guitar — and built Lark, an AI guitar tutor, partly to get better at it." },
   { label: "Reading", kind: "skill", blurb: "I read widely: mystery, speculative fiction, and increasingly poetry." },
   { label: "Soccer", kind: "skill", blurb: "I play soccer." },
   { label: "Lacrosse", kind: "skill", blurb: "I play lacrosse." },
