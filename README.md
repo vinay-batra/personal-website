@@ -3,10 +3,10 @@
 Live: **https://vinaybatra.org**
 Repo: github.com/vinay-batra/personal-website (auto-deploys to Vercel on push to `main`)
 
-A high-end personal site: warm-noir aesthetic (ink `#0F0D0A`, bone `#EDE4D3`; amber `#E8A33D` for the
-brand mark + buttons), Fraunces + IBM Plex, and lots of scroll-driven / generative / cursor-reactive
-motion. The per-section **accent** that tints the cursor/spine/aurora cycles only through cool hues
-(blues, greens, purples, pinks).
+A high-end personal site: warm-noir aesthetic (ink `#0F0D0A`, bone `#EDE4D3`; amber `#E8A33D` kept for
+data/stats + action buttons), Fraunces + IBM Plex, and lots of scroll-driven / generative /
+cursor-reactive motion. The **hero is black & white** (white "VB" particles); the per-section
+**accent** that tints the cursor/spine/aurora then runs a **cyan → pink spectrum** down the 8 chapters.
 
 ## Stack
 - **Next.js 16** (App Router, TypeScript, Tailwind v4), static route, push-to-deploy on Vercel
@@ -77,7 +77,8 @@ motion. The per-section **accent** that tints the cursor/spine/aurora cycles onl
 - Site-wide: `Aurora.tsx` (WebGL flowing-gradient backdrop; subtler on mobile), `ScrollSpine.tsx`
   (left-edge progress spine), `Cursor.tsx` (crosshair that blooms a ring over links),
   `AccentTracker.tsx` — **section-accent theming**: cursor ring, scroll spine, and aurora tint all
-  shift hue per section through **cool tones only** (blues → greens → purples → pinks). Section labels
+  shift hue per section through a **cyan → pink spectrum** across the 8 numbered chapters (hero is
+  near-white). Section labels
   **decode/scramble** in on enter (`SectionHeading.tsx`).
 
 ## Brand mark / meta
