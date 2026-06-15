@@ -3,16 +3,21 @@
 Live: **https://vinaybatra.org**
 Repo: github.com/vinay-batra/personal-website (auto-deploys to Vercel on push to `main`)
 
-A high-end personal site: warm-noir aesthetic (ink `#0F0D0A`, bone `#EDE4D3`, amber `#E8A33D`),
-Fraunces + IBM Plex, and lots of scroll-driven / generative / cursor-reactive motion.
+A high-end personal site: warm-noir aesthetic (ink `#0F0D0A`, bone `#EDE4D3`; amber `#E8A33D` for the
+brand mark + buttons), Fraunces + IBM Plex, and lots of scroll-driven / generative / cursor-reactive
+motion. The per-section **accent** that tints the cursor/spine/aurora cycles only through cool hues
+(blues, greens, purples, pinks).
 
 ## Stack
 - **Next.js 16** (App Router, TypeScript, Tailwind v4), static route, push-to-deploy on Vercel
 - **React Three Fiber + three.js** — the "VB" particle monogram (hero + intro) with **bloom**
-  post-processing (`@react-three/postprocessing`), and the FBLA 3D force-graph
+  post-processing, the About constellation, and (`@react-three/drei` `MeshTransmissionMaterial`) the
+  Playground obsidian gem
+- **Raw WebGL2** — the Aurora backdrop, the Playground ink fluid sim (Navier–Stokes), the lava +
+  kaleidoscope shader toys
 - **Framer Motion** — scroll-scrubbed visuals, reveals, scroll-velocity skew, scroll spine, count-ups
 - **Lenis** — smooth scroll (lerp 0.14)
-- 2D `<canvas>` for most section visuals (cheap; pause when off-screen)
+- 2D `<canvas>` for the project visuals, the From-scratch demos, and the GitHub heatmap (pause off-screen)
 
 ## The pieces
 - **Hero** (`Hero.tsx` + `VBParticles.tsx`) — a **static "VB"** particle monogram on the right that
@@ -41,24 +46,39 @@ Fraunces + IBM Plex, and lots of scroll-driven / generative / cursor-reactive mo
   a soft grey contrast blob and a far static starfield behind. Below the bio: a stacked **Test Scores**
   block (ACT 35/36, SSAT 2398/2400) and a **Languages** list. (`AboutGraphic.tsx`, the old 2D version,
   is kept in the repo but unused.)
-- **Work** (`Projects.tsx` + `visuals/`) — Corvo / Lark / FBLA One, each with a brand-colored visual
-  that builds on scroll: **Corvo** equity chart + Monte Carlo fan (2D canvas), **Lark** plucked
-  strings (2D), **FBLA One** a **draggable 3D force-graph network** (R3F — grab to spin). Brand-glow hover.
-  Each block lists an identical **Built with** stack (Next.js · TypeScript · FastAPI · Python · Supabase
-  · Claude API). **Corvo** and **FBLA One** also show a clickable **live-website preview image**
-  (`next/image`, sources in `public/`) under the graphic that opens the site in a new tab.
+- **Work** (`Projects.tsx` + `visuals/`) — Corvo / Lark / FBLA One, each with a brand-colored 2D-canvas
+  visual that builds on scroll: **Corvo** equity chart + Monte Carlo fan, **Lark** plucked strings,
+  **FBLA One** a **chapter dashboard** (`FblaDashboard.tsx` — bars that grow in + a gold trend line +
+  hover values). Brand-glow hover. Each block lists an identical **Built with** stack (Next.js ·
+  TypeScript · FastAPI · Python · Supabase · Claude API). **Corvo** and **FBLA One** also show a
+  clickable **live-website preview image** (`next/image`, sources in `public/`) that opens the site.
+- **From scratch** (`Experiments.tsx`) — a **subsection of Work** (not its own chapter on the spine):
+  classic CS rebuilt from nothing, running live in the browser. (1) **Pathfinding visualizer**
+  (`visuals/AlgoVisualizer.tsx`) — BFS / DFS / Dijkstra / A* from scratch on a grid; draw walls, drag
+  the endpoints, animated search + path (sequenced with CSS `animation-delay`), with per-algorithm
+  explanations + a path/explored readout. (2) **Ray tracer** (`visuals/RayTracer.tsx`) — ray–sphere +
+  checkered floor, diffuse/specular, hard shadows, recursive reflections; renders on demand (low-res
+  while dragging, sharp when settled), drag to orbit. (3) **Neural network** (`visuals/NeuralNet.tsx`)
+  — a small MLP with hand-written backprop that trains live; the smooth background is its decision
+  surface, the glowing line its learned boundary, with live accuracy.
 - **GitHub** (`GithubActivity.tsx`) — real contribution heatmap fetched live (seeded fallback), reveal + count-up.
 - **Leadership / Community / Recommendations** — a scroll-scrubbed glowing **experience timeline** (full
   history: investor, BetterMind, JITO/FJLP, Environmental Action Club, FBLA, CSO/SSAC, Corvo, Wharton);
   a **volunteering ledger** (Northampton Area Public Library, CRHSS/EAC, Trenton Area Soup Kitchen — 185
   hrs); pull-quotes.
-- **Contact** (`Contact.tsx`) — links + email, a **"Greater Philadelphia" constellation**, footer reads
-  just "© 2026". LinkedIn and GitHub rows carry stat lines (2.3K followers · 2.3K connections; 3.2K commits).
+- **Contact** (`Contact.tsx`) — links + email. LinkedIn and GitHub rows carry stat lines (2.3K
+  followers · 2.3K connections; 3.2K commits). (The old "Greater Philadelphia" constellation was
+  removed; the site footer lives in `Footer.tsx` after the Playground.)
+- **Playground** (`Playground.tsx`) — a bottom "for fun" section: four interactive WebGL toys in a 2×2
+  grid. **Ink** (`InkFluid.tsx` — a real raw-WebGL2 Navier–Stokes fluid sim; stir it, with
+  colour/swirl/linger/size/glow controls), **Lava** + **Kaleidoscope** (`ShaderToy.tsx` fragment
+  shaders), and **Obsidian** (`ObsidianGem.tsx` — a faceted crystal with drei `MeshTransmissionMaterial`
+  refraction, drag to spin). Heavy WebGL canvases are mounted only near the viewport via `LazyVisual.tsx`.
 - Site-wide: `Aurora.tsx` (WebGL flowing-gradient backdrop; subtler on mobile), `ScrollSpine.tsx`
   (left-edge progress spine), `Cursor.tsx` (crosshair that blooms a ring over links),
   `AccentTracker.tsx` — **section-accent theming**: cursor ring, scroll spine, and aurora tint all
-  shift hue per section (amber→green→blue→teal→violet→amber). Section labels **decode/scramble** in
-  on enter (`SectionHeading.tsx`).
+  shift hue per section through **cool tones only** (blues → greens → purples → pinks). Section labels
+  **decode/scramble** in on enter (`SectionHeading.tsx`).
 
 ## Brand mark / meta
 - **Favicon**: `app/icon.png` (+ `apple-icon.png`) — a white, **glowing "VB" in Fraunces** on the dark
