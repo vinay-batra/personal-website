@@ -265,7 +265,7 @@ export default function Projects() {
     <section
       id="work"
       data-section="WORK"
-      className="relative mx-auto max-w-6xl px-6 py-28 md:py-40"
+      className="relative mx-auto max-w-6xl px-6 pt-28 pb-10 md:pt-40 md:pb-12"
     >
       <SectionHeading
         index="02"

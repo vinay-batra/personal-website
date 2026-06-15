@@ -37,7 +37,7 @@ export default function About() {
           <SectionHeading
             index="01"
             eyebrow="ABOUT"
-            accent="#E8A33D"
+            accent="#5cc8a6"
             lines={["A bit", "about me."]}
           />
           <div className="mt-8 font-sans text-[16px] leading-[1.7] text-bone/80 md:text-[17px]">

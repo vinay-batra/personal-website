@@ -3,6 +3,8 @@
 import type { ReactNode } from "react";
 import { motion } from "framer-motion";
 import AlgoVisualizer from "./visuals/AlgoVisualizer";
+import RayTracer from "./visuals/RayTracer";
+import NeuralNet from "./visuals/NeuralNet";
 import { fadeUp } from "@/lib/motion";
 
 interface Item {
@@ -20,31 +22,42 @@ const ITEMS: Item[] = [
       "Four search algorithms written from scratch. Draw walls, drag the endpoints, and watch each one explore the grid then trace its path.",
     node: <AlgoVisualizer />,
   },
+  {
+    name: "Ray tracer",
+    tag: "Graphics · reflections + shadows",
+    blurb:
+      "A renderer built from nothing: every pixel casts a ray that bounces off spheres and a floor with real reflections, shadows, and specular highlights. Drag to orbit the scene.",
+    node: <RayTracer />,
+  },
+  {
+    name: "Neural network",
+    tag: "Machine learning · hand-written backprop",
+    blurb:
+      "A small neural net with no libraries, its forward pass and backpropagation written by hand. It trains live to separate a non-linear dataset, and the background is its decision boundary learning in real time.",
+    node: <NeuralNet />,
+  },
 ];
 
+/**
+ * A subsection of Work (no data-section, so it is not its own chapter on the
+ * spine): from-scratch CS demos that run live in the browser.
+ */
 export default function Experiments() {
   return (
-    <section
-      id="experiments"
-      data-section="EXPERIMENTS"
-      className="relative mx-auto max-w-6xl px-6 py-24 md:py-32"
-    >
+    <section id="experiments" className="relative mx-auto -mt-6 max-w-6xl px-6 pb-24 md:-mt-10 md:pb-32">
       <motion.header
         variants={fadeUp}
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, margin: "-80px" }}
-        className="mb-10"
+        className="mb-8 border-t border-bone/12 pt-10"
       >
-        <p className="mb-3 font-mono text-[11px] font-medium tracking-[0.24em] text-amber uppercase">
+        <p className="mb-3 font-mono text-[11px] font-medium tracking-[0.24em] text-bone/70 uppercase">
           From scratch
         </p>
-        <h2 className="serif-head font-serif text-3xl font-semibold tracking-tight md:text-4xl">
-          Built from nothing.
-        </h2>
-        <p className="mt-4 max-w-lg font-sans text-[15px] leading-[1.7] text-bone/60">
+        <p className="max-w-lg font-sans text-[15px] leading-[1.7] text-bone/60">
           Classic computer science, rebuilt from the ground up and running live in your
-          browser — no libraries doing the hard part.
+          browser, no libraries doing the hard part.
         </p>
       </motion.header>
 
@@ -60,7 +73,7 @@ export default function Experiments() {
           >
             <div className="mb-5 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
               <h3 className="font-serif text-xl font-semibold">{it.name}</h3>
-              <p className="font-mono text-[10px] tracking-[0.14em] text-amber/80 uppercase">
+              <p className="font-mono text-[10px] tracking-[0.14em] text-bone/55 uppercase">
                 {it.tag}
               </p>
             </div>

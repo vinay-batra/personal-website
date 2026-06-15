@@ -7,7 +7,7 @@ import { useSyncExternalStore } from "react";
  * sets it from whichever section is centered in the viewport; the cursor,
  * scroll spine, and aurora all read it so the whole page shifts hue together.
  */
-const DEFAULT = "#E8A33D";
+const DEFAULT = "#6aa8e6";
 let current = DEFAULT;
 const listeners = new Set<() => void>();
 

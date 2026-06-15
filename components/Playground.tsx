@@ -67,7 +67,8 @@ export default function Playground() {
           For fun.
         </h2>
         <p className="mx-auto mt-4 max-w-md font-sans text-[15px] leading-[1.7] text-bone/60">
-          A few WebGL toys I built. Stir the ink, push the lava, spin the stone.
+          Four WebGL toys I built. Stir the ink, swirl the lava, spin the stone, turn the
+          kaleidoscope. Each one has its own controls.
         </p>
       </motion.header>
 
@@ -199,7 +200,7 @@ export default function Playground() {
             </span>
           </div>
           <p className="mt-4 font-sans text-[13px] leading-[1.6] text-bone/55">
-            A faceted crystal that refracts the light behind it — real-time
+            A faceted crystal that refracts the light behind it: real-time
             transmission, chromatic split, violet fire inside.
           </p>
         </motion.div>

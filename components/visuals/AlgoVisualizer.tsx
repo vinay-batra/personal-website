@@ -27,25 +27,25 @@ const ALGOS: { id: Algo; name: string; full: string; desc: string }[] = [
     id: "bfs",
     name: "BFS",
     full: "Breadth-First Search",
-    desc: "Explores evenly in every direction, one ring of cells at a time — always finds the shortest path.",
+    desc: "Explores evenly in every direction, one ring of cells at a time. Always finds the shortest path.",
   },
   {
     id: "dfs",
     name: "DFS",
     full: "Depth-First Search",
-    desc: "Dives down one route as far as it can before backtracking — finds a path, but usually not the shortest.",
+    desc: "Dives down one route as far as it can before backtracking. Finds a path, but usually not the shortest.",
   },
   {
     id: "dijkstra",
     name: "Dijkstra",
     full: "Dijkstra's Algorithm",
-    desc: "Expands outward by lowest cost — guarantees the shortest path (and works on weighted maps).",
+    desc: "Expands outward by lowest cost, and guarantees the shortest path (it works on weighted maps too).",
   },
   {
     id: "astar",
     name: "A*",
     full: "A* Search",
-    desc: "Dijkstra plus a heuristic that aims toward the goal — shortest path, but explores far fewer cells.",
+    desc: "Dijkstra plus a heuristic that aims toward the goal. Shortest path, but explores far fewer cells.",
   },
 ];
 
@@ -244,7 +244,7 @@ export default function AlgoVisualizer() {
           <button
             key={a.id}
             type="button"
-            title={`${a.full} — ${a.desc}`}
+            title={`${a.full}: ${a.desc}`}
             onClick={() => {
               setAlgo(a.id);
               setResult(null);
@@ -275,21 +275,22 @@ export default function AlgoVisualizer() {
       <p className="mb-3 max-w-2xl font-sans text-[12.5px] leading-[1.55] text-bone/55">
         <span className="font-mono text-[10px] tracking-[0.14em] text-amber uppercase">
           {cur.full}
-        </span>{" "}
-        — {cur.desc}
+        </span>
+        {": "}
+        {cur.desc}
       </p>
 
       {result && (
         <div className="mb-3 flex flex-wrap items-center gap-x-5 gap-y-1 font-mono text-[10px] tracking-[0.14em] uppercase">
           <span className="text-bone/50">
-            Path <span className="tabular-nums text-amber">{result.path.length || "—"}</span>
+            Path <span className="tabular-nums text-amber">{result.path.length || "none"}</span>
           </span>
           <span className="text-bone/50">
             Explored <span className="tabular-nums text-bone/80">{result.visited.length}</span>
           </span>
           <span className="text-dim">
             {result.algo === "dfs"
-              ? "DFS finds a path — not the shortest"
+              ? "DFS finds a path, not the shortest"
               : result.algo === "astar"
                 ? "A* · shortest, heuristic-guided"
                 : "Shortest path"}

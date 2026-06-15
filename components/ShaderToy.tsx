@@ -19,36 +19,36 @@ export const METABALLS_FRAG = `
   uniform float uTime;
   uniform vec2 uMouse;
   uniform float uDown;
+  vec3 ramp(float t) {
+    vec3 c = mix(vec3(0.03, 0.015, 0.06), vec3(0.30, 0.08, 0.50), smoothstep(0.0, 0.42, t));
+    c = mix(c, vec3(0.88, 0.20, 0.55), smoothstep(0.40, 0.72, t));
+    c = mix(c, vec3(1.00, 0.72, 0.32), smoothstep(0.72, 1.0, t));
+    return c;
+  }
   void main () {
     vec2 uv = gl_FragCoord.xy / uRes.xy;
     float aspect = uRes.x / uRes.y;
     vec2 p = vec2(uv.x * aspect, uv.y);
     float field = 0.0;
-    for (int i = 0; i < 7; i++) {
+    for (int i = 0; i < 9; i++) {
       float fi = float(i);
       vec2 c = vec2(
-        (0.5 + 0.33 * cos(uTime * 0.4 + fi * 1.7)) * aspect,
-         0.5 + 0.33 * sin(uTime * 0.33 + fi * 2.1)
+        (0.5 + 0.34 * sin(uTime * 0.32 + fi * 1.43)) * aspect,
+         0.5 + 0.34 * cos(uTime * 0.27 + fi * 2.11)
       );
-      float rad = 0.085 + 0.03 * sin(uTime * 0.8 + fi * 1.3);
+      float rad = 0.09 + 0.035 * sin(uTime * 0.6 + fi);
       vec2 d = p - c;
       field += (rad * rad) / dot(d, d);
     }
     vec2 m = vec2(uMouse.x * aspect, uMouse.y);
     vec2 dm = p - m;
-    float mr = 0.12 + uDown * 0.10;
+    float mr = 0.13 + uDown * 0.10;
     field += (mr * mr) / dot(dm, dm);
 
-    float edge = smoothstep(0.92, 1.08, field);
-    float core = smoothstep(1.0, 2.6, field);
-    vec3 purple = vec3(0.50, 0.18, 0.85);
-    vec3 amber = vec3(0.97, 0.58, 0.20);
-    vec3 col = mix(purple, amber, core);
-    float rim = exp(-pow((field - 1.0) * 3.2, 2.0));
-    col += rim * vec3(0.8, 0.5, 1.0) * 0.6;
-    col *= 0.35 + edge * 1.0;
-    float a = smoothstep(0.9, 1.02, field);
-    gl_FragColor = vec4(col, a);
+    float t = smoothstep(0.35, 3.0, field);
+    vec3 col = ramp(t);
+    col += smoothstep(2.6, 4.6, field) * 0.4; // white-hot cores
+    gl_FragColor = vec4(col, 1.0);
   }
 `;
 

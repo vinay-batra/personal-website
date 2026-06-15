@@ -8,15 +8,16 @@ import { setAccent } from "@/lib/accent";
  * one is nearest the viewport center. Decoupled: each section declares its own
  * hue here, and any component can subscribe via useAccent().
  */
+// blues → greens → purples → pinks, nothing else
 const SECTION_ACCENT: Record<string, string> = {
-  MASTHEAD: "#E8A33D", // amber
-  ABOUT: "#E8A33D",
-  WORK: "#5cb88a", // corvo green
-  GITHUB: "#5cb88a",
-  LEADERSHIP: "#5d9ce4", // blue
-  COMMUNITY: "#87A5B4", // teal
-  WORDS: "#8b5cf6", // violet
-  CONTACT: "#E8A33D",
+  MASTHEAD: "#6aa8e6", // blue
+  ABOUT: "#5cc8a6", // green
+  WORK: "#3fbfb0", // teal
+  GITHUB: "#6aa8e6", // blue
+  LEADERSHIP: "#8b5cf6", // violet
+  COMMUNITY: "#48c6a0", // green
+  WORDS: "#a855f7", // purple
+  CONTACT: "#ec6cb0", // pink
 };
 
 export default function AccentTracker() {

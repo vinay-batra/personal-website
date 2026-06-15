@@ -33,19 +33,19 @@ export default function Home() {
       <div className="relative z-10">
         <Hero />
         <About />
-        <Divider index="02" label="WORK" accent="#5cb88a" />
+        <Divider index="02" label="WORK" accent="#3fbfb0" />
         <Projects />
         <Experiments />
         <GithubActivity />
-        <Divider index="03" label="LEADERSHIP" accent="#5d9ce4" />
+        <Divider index="03" label="LEADERSHIP" accent="#8b5cf6" />
         <Leadership />
-        <Divider index="04" label="COMMUNITY" accent="#87A5B4" />
+        <Divider index="04" label="COMMUNITY" accent="#48c6a0" />
         <Community />
-        <Divider index="05" label="RECOMMENDATIONS" accent="#8b5cf6" />
+        <Divider index="05" label="RECOMMENDATIONS" accent="#a855f7" />
         <Recommendations />
-        <Divider index="06" label="CONTACT" accent="#E8A33D" />
+        <Divider index="06" label="CONTACT" accent="#ec6cb0" />
         <Contact />
-        <Divider index="07" label="PLAYGROUND" accent="#E8A33D" />
+        <Divider index="07" label="PLAYGROUND" accent="#6aa8e6" />
         <Playground />
         <Footer />
       </div>
