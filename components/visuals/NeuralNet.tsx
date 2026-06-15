@@ -497,11 +497,13 @@ export default function NeuralNet() {
         </button>
       </div>
       <p className="mb-3 max-w-2xl font-sans text-[12.5px] leading-[1.55] text-bone/55">
-        <span className="font-mono text-[10px] tracking-[0.14em] text-amber uppercase">How it works</span>
+        <span className="font-mono text-[10px] tracking-[0.14em] text-amber uppercase">How to use</span>
         {": "}
-        Pick a built-in dataset, or grab a brush and draw your own points right on the canvas, the
-        network retrains on them live. Class A is teal, Class B is pink, Erase removes nearby points.
-        The white line is the boundary it has learned, the background is its guess everywhere else.
+        The net is learning to separate the teal dots from the pink ones. Pick a built-in pattern
+        below, or make your own: choose a brush (Class A is teal, Class B is pink, or Erase) and drag
+        on the canvas to place dots. It keeps learning as you go, the glowing white line is the
+        boundary it has found, and the background is its best guess everywhere. Restart shuffles the
+        net and starts over.
       </p>
       <div
         ref={wrapRef}

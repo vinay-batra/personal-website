@@ -19,21 +19,21 @@ const ITEMS: Item[] = [
     name: "Pathfinding visualizer",
     tag: "Graphs · BFS / DFS / Dijkstra / A*",
     blurb:
-      "Four search algorithms written from scratch. Draw walls, drag the endpoints, and watch each one explore the grid then trace its path.",
+      "Four pathfinding algorithms, all written from scratch. Pick one and press Run to watch it search for the shortest route between the two dots. Drag across the grid to draw walls, drag the dots to move the start and goal, or press Maze for a random layout.",
     node: <AlgoVisualizer />,
   },
   {
     name: "Ray tracer",
     tag: "Graphics · reflections + shadows",
     blurb:
-      "A renderer built from nothing: every pixel casts a ray that bounces off spheres and a floor with real reflections, shadows, and specular highlights. Drag to orbit the scene.",
+      "A 3D renderer built from nothing: every pixel shoots a ray that bounces off the spheres and the floor, with real reflections, shadows, and highlights. Drag the scene to orbit around it.",
     node: <RayTracer />,
   },
   {
     name: "Neural network",
     tag: "Machine learning · hand-written backprop",
     blurb:
-      "A small neural net with no libraries, its forward pass and backpropagation written by hand. It trains live to separate a non-linear dataset, and the background is its decision boundary learning in real time.",
+      "A neural network with no libraries, the learning math written by hand. It teaches itself to tell the teal dots from the pink ones, and the glowing line is the boundary it has found. Pick a built-in pattern, or draw your own dots, and watch it relearn live.",
     node: <NeuralNet />,
   },
 ];
@@ -57,7 +57,7 @@ export default function Experiments() {
         </p>
         <p className="max-w-lg font-sans text-[15px] leading-[1.7] text-bone/60">
           Classic computer science, rebuilt from the ground up and running live in your
-          browser, no libraries doing the hard part.
+          browser, no libraries doing the hard part. Each one is interactive, so dig in and play.
         </p>
       </motion.header>
 

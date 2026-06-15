@@ -160,8 +160,8 @@ export default function Playground() {
         <p className="mb-3 font-mono text-[11px] font-medium tracking-[0.24em] text-[#ec4899] uppercase">08 · Playground</p>
         <h2 className="serif-head font-serif text-3xl font-semibold tracking-tight md:text-4xl">For fun.</h2>
         <p className="mx-auto mt-4 max-w-md font-sans text-[15px] leading-[1.7] text-bone/60">
-          Four WebGL toys I built. Stir the ink, shove the lava, spin the stone, turn the
-          kaleidoscope. Each one has its own controls.
+          Four WebGL toys I built from scratch. Move your cursor over each one to play with it, and
+          use the sliders under each to change how it looks.
         </p>
       </motion.header>
 
@@ -172,7 +172,8 @@ export default function Playground() {
             <LazyVisual className="absolute inset-0">
               <InkCanvas paramsRef={inkRef} clearRef={inkClear} />
             </LazyVisual>
-            <span className={tagTL}>Stir the ink</span>
+            <span className={tagTL}>Ink</span>
+            <span className={tagBC}>Move your cursor to stir it</span>
           </div>
           <div className="mt-4 flex flex-col gap-3.5">
             <Swatches
@@ -229,7 +230,7 @@ export default function Playground() {
               <ObsidianGem colorIdx={gemColor} facets={gemFacets} fire={gemFire} reflect={gemReflect} size={gemSize} />
             </LazyVisual>
             <span className={tagTL}>Obsidian</span>
-            <span className={tagBC}>Drag to turn</span>
+            <span className={tagBC}>Drag to turn it</span>
           </div>
           <div className="mt-4 flex flex-col gap-3.5">
             <Swatches label="Color" items={GEM_SWATCHES} active={gemColor} onPick={setGemColor} />
@@ -251,7 +252,7 @@ export default function Playground() {
               <Lava paramsRef={lavaRef} />
             </LazyVisual>
             <span className={tagTL}>Lava</span>
-            <span className={tagBC}>Grab a blob, or sweep to push</span>
+            <span className={tagBC}>Sweep to push · grab a blob to throw</span>
           </div>
           <div className="mt-4 flex flex-col gap-3.5">
             <Swatches
@@ -283,7 +284,7 @@ export default function Playground() {
               <Kaleido paramsRef={kaleidoRef} />
             </LazyVisual>
             <span className={tagTL}>Kaleidoscope</span>
-            <span className={tagBC}>Grab and turn it</span>
+            <span className={tagBC}>Drag to spin it</span>
           </div>
           <div className="mt-4 flex flex-col gap-3.5">
             <Swatches

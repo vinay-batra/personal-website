@@ -315,11 +315,13 @@ export default function AlgoVisualizer() {
         <button type="button" onClick={reset} className={btn(false)}>
           Reset
         </button>
-        <span className="ml-auto hidden font-mono text-[9px] tracking-[0.14em] text-dim uppercase sm:inline">
-          Drag to draw walls · move the dots
-        </span>
       </div>
 
+      <p className="mb-3 max-w-2xl font-sans text-[12.5px] leading-[1.55] text-bone/70">
+        Pick an algorithm, then press <span className="text-amber">Run</span> to watch it find the
+        shortest path between the two dots. Drag on the grid to draw walls, drag either dot to move the
+        start or goal, and press Maze for a random maze.
+      </p>
       <p className="mb-3 max-w-2xl font-sans text-[12.5px] leading-[1.55] text-bone/55">
         <span className="font-mono text-[10px] tracking-[0.14em] text-amber uppercase">
           {cur.full}
