@@ -640,7 +640,7 @@ export default function AboutConstellation() {
 
       {/* instructions — centered below the map (sphere is at canvas center) */}
       <div
-        className="pointer-events-none absolute bottom-3 left-1/2 flex -translate-x-1/2 flex-col items-center gap-1.5 text-center"
+        className="pointer-events-none absolute bottom-3 left-1/2 flex -translate-x-1/2 translate-y-7 flex-col items-center gap-1.5 text-center"
         style={{ textShadow: "0 1px 10px rgba(0,0,0,0.9)" }}
       >
         <p className="font-mono text-[11px] tracking-[0.32em] text-amber/80 uppercase">

@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import InkCanvas, { DEFAULT_INK, type InkParams } from "./InkFluid";
 import ObsidianGem, { DEFAULT_GEM, GEM_PALETTES } from "./ObsidianGem";
 import Lava, { DEFAULT_LAVA, type LavaParams } from "./Lava";
-import ShaderToy, { KALEIDO_FRAG, type ToyParams } from "./ShaderToy";
+import Kaleido, { DEFAULT_KALEIDO, type KaleidoParams } from "./Kaleido";
 import LazyVisual from "./LazyVisual";
 import { fadeUp } from "@/lib/motion";
 
@@ -139,23 +139,12 @@ export default function Playground() {
   const [lavaFlow, setLavaFlow] = useState(DEFAULT_LAVA.flow);
   const [lavaHeat, setLavaHeat] = useState(DEFAULT_LAVA.heat);
 
-  // ---- kaleidoscope (live ref → shader uniforms) ----
-  const kaleidoRef = useRef<ToyParams>({
-    uSeg: 8,
-    uSpin: 0.08,
-    uZoom: 1,
-    uColA: KALEIDO_PALETTES[0].a,
-    uColB: KALEIDO_PALETTES[0].b,
-    uColC: KALEIDO_PALETTES[0].c,
-  });
+  // ---- kaleidoscope (live ref → grab-to-turn engine) ----
+  const kaleidoRef = useRef<KaleidoParams>({ ...DEFAULT_KALEIDO });
   const [kPal, setKPal] = useState(0);
-  const [kSeg, setKSeg] = useState(8);
-  const [kSpin, setKSpin] = useState(0.08);
-  const [kZoom, setKZoom] = useState(1);
-
-  const set = (ref: { current: Record<string, unknown> }, k: string, v: unknown) => {
-    ref.current[k] = v;
-  };
+  const [kSeg, setKSeg] = useState(DEFAULT_KALEIDO.seg);
+  const [kSpin, setKSpin] = useState(DEFAULT_KALEIDO.autoSpin);
+  const [kZoom, setKZoom] = useState(DEFAULT_KALEIDO.zoom);
 
   return (
     <section id="playground" data-section="PLAYGROUND" className="relative mx-auto max-w-6xl px-6 py-24 md:py-32">
@@ -227,7 +216,7 @@ export default function Playground() {
             <Swatches label="Color" items={GEM_SWATCHES} active={gemColor} onPick={setGemColor} />
             <div className="flex gap-6">
               <Slider label="Facets" display={gemFacets} value={gemFacets} min={8} max={28} onChange={setGemFacets} />
-              <Slider label="Fire" display={Math.round(gemFire * 100)} value={gemFire} min={0} max={1} step={0.02} onChange={setGemFire} />
+              <Slider label="Tint" display={Math.round(gemFire * 100)} value={gemFire} min={0} max={1} step={0.02} onChange={setGemFire} />
             </div>
             <div className="flex gap-6">
               <Slider label="Reflect" display={Math.round(gemReflect * 100)} value={gemReflect} min={0} max={1} step={0.02} onChange={setGemReflect} />
@@ -243,7 +232,7 @@ export default function Playground() {
               <Lava paramsRef={lavaRef} />
             </LazyVisual>
             <span className={tagTL}>Lava</span>
-            <span className={tagBC}>Move through it to push</span>
+            <span className={tagBC}>Grab a blob, or sweep to push</span>
           </div>
           <div className="mt-4 flex flex-col gap-3.5">
             <Swatches
@@ -272,10 +261,10 @@ export default function Playground() {
         <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-60px" }} custom={3}>
           <div className={`${card} bg-[#060509]`}>
             <LazyVisual className="absolute inset-0">
-              <ShaderToy frag={KALEIDO_FRAG} name="kaleido" paramsRef={kaleidoRef} />
+              <Kaleido paramsRef={kaleidoRef} />
             </LazyVisual>
             <span className={tagTL}>Kaleidoscope</span>
-            <span className={tagBC}>Drag to spin</span>
+            <span className={tagBC}>Grab and turn it</span>
           </div>
           <div className="mt-4 flex flex-col gap-3.5">
             <Swatches
@@ -284,17 +273,17 @@ export default function Playground() {
               active={kPal}
               onPick={(i) => {
                 setKPal(i);
-                set(kaleidoRef, "uColA", KALEIDO_PALETTES[i].a);
-                set(kaleidoRef, "uColB", KALEIDO_PALETTES[i].b);
-                set(kaleidoRef, "uColC", KALEIDO_PALETTES[i].c);
+                kaleidoRef.current.colA = KALEIDO_PALETTES[i].a;
+                kaleidoRef.current.colB = KALEIDO_PALETTES[i].b;
+                kaleidoRef.current.colC = KALEIDO_PALETTES[i].c;
               }}
             />
             <div className="flex gap-6">
-              <Slider label="Segments" display={kSeg} value={kSeg} min={3} max={16} onChange={(v) => { setKSeg(v); set(kaleidoRef, "uSeg", v); }} />
-              <Slider label="Speed" display={Math.round(kSpin * 100)} value={kSpin} min={0} max={0.3} step={0.01} onChange={(v) => { setKSpin(v); set(kaleidoRef, "uSpin", v); }} />
+              <Slider label="Segments" display={kSeg} value={kSeg} min={3} max={16} onChange={(v) => { setKSeg(v); kaleidoRef.current.seg = v; }} />
+              <Slider label="Spin" display={Math.round(kSpin * 100)} value={kSpin} min={0} max={1} step={0.05} onChange={(v) => { setKSpin(v); kaleidoRef.current.autoSpin = v; }} />
             </div>
             <div className="flex gap-6">
-              <Slider label="Zoom" display={Math.round(kZoom * 100)} value={kZoom} min={0.5} max={2} step={0.05} onChange={(v) => { setKZoom(v); set(kaleidoRef, "uZoom", v); }} />
+              <Slider label="Zoom" display={Math.round(kZoom * 100)} value={kZoom} min={0.5} max={2} step={0.05} onChange={(v) => { setKZoom(v); kaleidoRef.current.zoom = v; }} />
               <span className="flex-1" />
             </div>
           </div>

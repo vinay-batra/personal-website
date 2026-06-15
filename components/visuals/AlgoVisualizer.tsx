@@ -133,6 +133,50 @@ function search(algo: Algo, walls: Set<number>, start: number, end: number) {
   return { visited, path: rebuild(came, start, end) };
 }
 
+const MAZE_SEEDS = [7, 23, 61, 139, 263]; // five distinct mazes, cycled on each click
+
+/** A seeded recursive-backtracker maze: carve passages between the even-indexed
+ *  cells, knocking out the wall cell between each step. Always a perfect, fully
+ *  connected maze; every seed gives a distinct one. The start/end cells (and
+ *  their neighbours) are then opened so they always join the passage network. */
+function genMaze(seed: number, start: number, end: number): Set<number> {
+  let s = (seed * 2654435761) % 2147483647;
+  if (s <= 0) s += 2147483646;
+  const rnd = () => ((s = (s * 16807) % 2147483647) - 1) / 2147483646;
+  const open = new Set<number>([idx(0, 0)]);
+  const visited = new Set<number>([idx(0, 0)]);
+  const stack = [idx(0, 0)];
+  const DIRS = [[-2, 0], [2, 0], [0, -2], [0, 2]] as const;
+  while (stack.length) {
+    const [r, c] = rc(stack[stack.length - 1]);
+    const opts: [number, number, number, number][] = [];
+    for (const [dr, dc] of DIRS) {
+      const nr = r + dr;
+      const nc = c + dc;
+      if (inBounds(nr, nc) && !visited.has(idx(nr, nc))) opts.push([nr, nc, r + dr / 2, c + dc / 2]);
+    }
+    if (!opts.length) {
+      stack.pop();
+      continue;
+    }
+    const [nr, nc, wr, wc] = opts[Math.floor(rnd() * opts.length)];
+    visited.add(idx(nr, nc));
+    open.add(idx(nr, nc));
+    open.add(idx(wr, wc)); // knock out the wall between the two cells
+    stack.push(idx(nr, nc));
+  }
+  const walls = new Set<number>();
+  for (let i = 0; i < N; i++) if (!open.has(i)) walls.add(i);
+  for (const cell of [start, end]) {
+    walls.delete(cell);
+    const [r, c] = rc(cell);
+    for (const [dr, dc] of [[-1, 0], [1, 0], [0, -1], [0, 1]] as const) {
+      if (inBounds(r + dr, c + dc)) walls.delete(idx(r + dr, c + dc));
+    }
+  }
+  return walls;
+}
+
 export default function AlgoVisualizer() {
   const [algo, setAlgo] = useState<Algo>("astar");
   const [walls, setWalls] = useState<Set<number>>(() => new Set());
@@ -159,12 +203,11 @@ export default function AlgoVisualizer() {
     setEnd(END0);
     setResult(null);
   };
+  const mazeCount = useRef(0);
   const maze = () => {
-    let s = 20260614;
-    const rnd = () => ((s = (s * 16807) % 2147483647) - 1) / 2147483646;
-    const w = new Set<number>();
-    for (let i = 0; i < N; i++) if (i !== start && i !== end && rnd() < 0.27) w.add(i);
-    setWalls(w);
+    const seed = MAZE_SEEDS[mazeCount.current % MAZE_SEEDS.length];
+    mazeCount.current += 1;
+    setWalls(genMaze(seed, start, end));
     setResult(null);
   };
 
@@ -261,7 +304,12 @@ export default function AlgoVisualizer() {
         >
           ▶ Run
         </button>
-        <button type="button" onClick={maze} className={btn(false)}>
+        <button
+          type="button"
+          onClick={maze}
+          title="Generates a new maze each click (5 layouts)"
+          className={btn(false)}
+        >
           Maze
         </button>
         <button type="button" onClick={reset} className={btn(false)}>

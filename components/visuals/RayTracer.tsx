@@ -195,15 +195,16 @@ export default function RayTracer() {
       ctx.drawImage(buf, 0, 0, w, h);
     };
 
-    // a quick medium pass while dragging; on settle, a coarse frame for instant
-    // feedback then a sharp anti-aliased frame.
+    // Keep the resolution high even while dragging (only the shading is cheaper:
+    // one reflection bounce, one sample) so it never drops to a blocky low-res
+    // pass. On settle, refine to full depth + 3x anti-aliasing for a crisp image.
     const queueDrag = () => {
-      queue = [{ rw: 360, depth: 2, spp: 1 }];
+      queue = [{ rw: Math.min(560, canvas.width), depth: 1, spp: 1 }];
     };
     const queueSharp = () => {
       queue = [
-        { rw: 360, depth: 2, spp: 1 },
-        { rw: 600, depth: 3, spp: 4 },
+        { rw: Math.min(520, canvas.width), depth: 2, spp: 1 },
+        { rw: Math.min(1040, canvas.width), depth: 3, spp: 3 },
       ];
     };
 
@@ -211,9 +212,19 @@ export default function RayTracer() {
       const w = wrap.clientWidth;
       const h = wrap.clientHeight;
       if (!w || !h) return;
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      canvas.width = Math.round(w * dpr);
-      canvas.height = Math.round(h * dpr);
+      // A ray tracer gains nothing from a 2x backing store (it's upscaled from
+      // the render target either way) — keeping the buffer near 1x makes the
+      // upscale ratio small, so even the drag pass reads smooth, not blocky.
+      const scale = Math.min(window.devicePixelRatio || 1, 1.1);
+      let bw = Math.round(w * scale);
+      let bh = Math.round(h * scale);
+      const CAP = 1400;
+      if (bw > CAP) {
+        bh = Math.round((bh * CAP) / bw);
+        bw = CAP;
+      }
+      canvas.width = bw;
+      canvas.height = bh;
       ctx.imageSmoothingEnabled = true;
       queueSharp();
     };

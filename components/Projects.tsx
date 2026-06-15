@@ -75,6 +75,7 @@ const PROJECTS: Project[] = [
     ],
     tags: STACK,
     links: [{ label: "Visit lark.coach", href: "https://lark.coach", primary: true }],
+    preview: { src: "/lark-preview.png", href: "https://lark.coach" },
     kind: "lark",
   },
   {

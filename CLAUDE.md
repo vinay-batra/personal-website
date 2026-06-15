@@ -40,6 +40,19 @@ dragging, no more pixelation) + a visible sun. The **neural net** got a finer de
 watchable training, paint-your-own-data (Class A / B / Erase brushes), and 5 presets (spiral, circles,
 moons, xor, blobs).
 
+Done June 14 (3rd pass): **Maze** button now cycles **5 distinct solvable mazes** (seeded
+recursive-backtracker, not random fill). **Neural net** bumped to 16-wide hidden layers (100% on all
+presets) with the boundary drawn as a **crisp marching-squares vector contour** (no more pixelated
+band) + on-canvas "how it works" copy. **Ray tracer** drag pixelation fixed by capping the backing
+store near 1x (small upscale ratio) and keeping resolution high while dragging (only the shading is
+cheaper); settle is a 3x-AA pass. **Lava** now lets you **grab a blob and toss it** (press to pick up,
+release to fling with momentum) with a wider, less twitchy cursor. **Obsidian** "Fire" control renamed
+**"Tint"**. **Kaleidoscope** spin redone as **grab-and-turn** (pointer-angle drag + inertia, with a
+Spin auto-rotate control). **Lark** now has a live-site preview image like Corvo/FBLA
+(`public/lark-preview.png`). The **scroll spine** labels every section dot (clickable, Lenis scroll),
+shown only >=1400px so they don't overlap content. About "map of me" caption nudged down for
+separation.
+
 ---
 
 ## Conventions (the user cares about these)

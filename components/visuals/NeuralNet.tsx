@@ -13,11 +13,11 @@ import { useEffect, useRef, useState } from "react";
 
 type Dataset = "spiral" | "circles" | "moons" | "xor" | "blobs";
 const PRESETS: Dataset[] = ["spiral", "circles", "moons", "xor", "blobs"];
-const H1 = 12;
-const H2 = 12;
-const LR = 0.07;
-const STEPS_PER_FRAME = 1; // one gradient step per frame, so you can watch it learn
-const GW = 112; // decision-field grid (upscaled smoothly) — finer than before
+const H1 = 16;
+const H2 = 16;
+const LR = 0.09;
+const STEPS_PER_FRAME = 2; // a couple of steps/frame: still watchable, but climbs to high accuracy
+const GW = 96; // grid for the soft colour fill (the boundary itself is a crisp vector overlay)
 const DOM = 1.35;
 const MAX_PTS = 1400;
 
@@ -184,6 +184,70 @@ function trainStep(net: Net, data: Pt[]): number {
   return loss / n;
 }
 
+/** Crisp learned boundary: marching squares extracts the p=0.5 contour from the
+ *  field grid (with linear interpolation, so it's smooth), then we stroke it as a
+ *  glowing vector line at full canvas resolution, no more pixelated band. */
+function drawContour(
+  ctx: CanvasRenderingContext2D,
+  field: Float32Array,
+  GW: number,
+  GH: number,
+  w: number,
+  h: number
+) {
+  const L = 0.5;
+  const at = (gx: number, gy: number) => field[gy * GW + gx];
+  const px = (gx: number) => ((gx + 0.5) / GW) * w;
+  const py = (gy: number) => ((gy + 0.5) / GH) * h;
+  const t = (a: number, b: number) => (L - a) / (b - a || 1e-6); // edge crossing fraction
+  const seg: number[] = []; // flat list of x1,y1,x2,y2
+  const push = (a: number[], b: number[]) => seg.push(a[0], a[1], b[0], b[1]);
+  for (let gy = 0; gy < GH - 1; gy++) {
+    for (let gx = 0; gx < GW - 1; gx++) {
+      const tl = at(gx, gy), tr = at(gx + 1, gy), br = at(gx + 1, gy + 1), bl = at(gx, gy + 1);
+      let c = 0;
+      if (tl > L) c |= 8;
+      if (tr > L) c |= 4;
+      if (br > L) c |= 2;
+      if (bl > L) c |= 1;
+      if (c === 0 || c === 15) continue;
+      const top = (): number[] => [px(gx + t(tl, tr)), py(gy)];
+      const bot = (): number[] => [px(gx + t(bl, br)), py(gy + 1)];
+      const lft = (): number[] => [px(gx), py(gy + t(tl, bl))];
+      const rgt = (): number[] => [px(gx + 1), py(gy + t(tr, br))];
+      switch (c) {
+        case 1: case 14: push(lft(), bot()); break;
+        case 2: case 13: push(bot(), rgt()); break;
+        case 3: case 12: push(lft(), rgt()); break;
+        case 4: case 11: push(top(), rgt()); break;
+        case 6: case 9: push(top(), bot()); break;
+        case 7: case 8: push(lft(), top()); break;
+        case 5: push(lft(), top()); push(bot(), rgt()); break;
+        case 10: push(lft(), bot()); push(top(), rgt()); break;
+      }
+    }
+  }
+  if (!seg.length) return;
+  ctx.save();
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+  ctx.beginPath();
+  for (let i = 0; i < seg.length; i += 4) {
+    ctx.moveTo(seg[i], seg[i + 1]);
+    ctx.lineTo(seg[i + 2], seg[i + 3]);
+  }
+  ctx.strokeStyle = "rgba(208,230,255,0.85)"; // soft outer glow
+  ctx.shadowColor = "rgba(150,200,255,0.9)";
+  ctx.shadowBlur = 12;
+  ctx.lineWidth = 2.4;
+  ctx.stroke();
+  ctx.shadowBlur = 0; // crisp white core
+  ctx.strokeStyle = "rgba(255,255,255,0.95)";
+  ctx.lineWidth = 1;
+  ctx.stroke();
+  ctx.restore();
+}
+
 type Brush = "a" | "b" | "erase";
 
 export default function NeuralNet() {
@@ -285,28 +349,25 @@ export default function NeuralNet() {
       fbuf.height = GH;
       const fimg = fctx.createImageData(GW, GH);
       const fd = fimg.data;
+      const field = new Float32Array(GW * GH);
       for (let gy = 0; gy < GH; gy++) {
         const dy = (1 - (gy + 0.5) / GH) * 2 * DOM - DOM;
         for (let gx = 0; gx < GW; gx++) {
           const dx = ((gx + 0.5) / GW) * 2 * DOM - DOM;
           const o = forward(net, dx, dy).out;
-          let r = C0[0] * (1 - o) + C1[0] * o;
-          let g = C0[1] * (1 - o) + C1[1] * o;
-          let b = C0[2] * (1 - o) + C1[2] * o;
-          const edge = Math.exp(-(((o - 0.5) / 0.045) ** 2)); // glowing learned boundary
-          r += edge * 0.5;
-          g += edge * 0.54;
-          b += edge * 0.56;
+          field[gy * GW + gx] = o;
           const i = (gy * GW + gx) * 4;
-          fd[i] = Math.min(255, r * 255);
-          fd[i + 1] = Math.min(255, g * 255);
-          fd[i + 2] = Math.min(255, b * 255);
+          fd[i] = Math.min(255, (C0[0] * (1 - o) + C1[0] * o) * 255);
+          fd[i + 1] = Math.min(255, (C0[1] * (1 - o) + C1[1] * o) * 255);
+          fd[i + 2] = Math.min(255, (C0[2] * (1 - o) + C1[2] * o) * 255);
           fd[i + 3] = 255;
         }
       }
       fctx.putImageData(fimg, 0, 0);
       ctx.imageSmoothingEnabled = true;
       ctx.drawImage(fbuf, 0, 0, w, h);
+      // the sharp glowing boundary, drawn as a vector contour at full resolution
+      drawContour(ctx, field, GW, GH, w, h);
 
       const toPx = (dx: number, dy: number): [number, number] => [
         ((dx + DOM) / (2 * DOM)) * w,
@@ -435,6 +496,13 @@ export default function NeuralNet() {
           Clear ✕
         </button>
       </div>
+      <p className="mb-3 max-w-2xl font-sans text-[12.5px] leading-[1.55] text-bone/55">
+        <span className="font-mono text-[10px] tracking-[0.14em] text-amber uppercase">How it works</span>
+        {": "}
+        Pick a built-in dataset, or grab a brush and draw your own points right on the canvas, the
+        network retrains on them live. Class A is teal, Class B is pink, Erase removes nearby points.
+        The white line is the boundary it has learned, the background is its guess everywhere else.
+      </p>
       <div
         ref={wrapRef}
         className="relative aspect-[16/10] w-full cursor-crosshair touch-none overflow-hidden rounded-lg bg-[#0a0908]"

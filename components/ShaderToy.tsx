@@ -83,9 +83,8 @@ export const KALEIDO_FRAG = `
   uniform vec2 uRes;
   uniform float uTime;
   uniform vec2 uMouse;
-  uniform vec2 uDrag;
   uniform float uSeg;
-  uniform float uSpin;
+  uniform float uRot;
   uniform float uZoom;
   uniform vec3 uColA;
   uniform vec3 uColB;
@@ -96,7 +95,7 @@ export const KALEIDO_FRAG = `
     float ang = atan(uv.y, uv.x);
     float rad = length(uv);
     float seg = max(2.0, uSeg);
-    ang = mod(ang + uDrag.x * 3.0 + uTime * uSpin, 2.0 * PI / seg);
+    ang = mod(ang + uRot, 2.0 * PI / seg);
     ang = abs(ang - PI / seg);
     vec2 p = vec2(cos(ang), sin(ang)) * rad * uZoom;
     p += 0.15 * (uMouse - 0.5);
