@@ -8,16 +8,18 @@ import { setAccent } from "@/lib/accent";
  * one is nearest the viewport center. Decoupled: each section declares its own
  * hue here, and any component can subscribe via useAccent().
  */
-// blues → greens → purples → pinks, nothing else
+// hero is near-white (black & white), then a smooth cyan → pink spectrum down
+// the 8 chapters
 const SECTION_ACCENT: Record<string, string> = {
-  MASTHEAD: "#6aa8e6", // blue
-  ABOUT: "#5cc8a6", // green
-  WORK: "#3fbfb0", // teal
-  GITHUB: "#6aa8e6", // blue
-  LEADERSHIP: "#8b5cf6", // violet
-  COMMUNITY: "#48c6a0", // green
+  MASTHEAD: "#dfe7ee", // hero: cool near-white
+  ABOUT: "#22d3ee", // cyan
+  WORK: "#38bdf8", // light blue
+  GITHUB: "#3b82f6", // blue
+  LEADERSHIP: "#6366f1", // indigo / light purple
+  COMMUNITY: "#8b5cf6", // violet
   WORDS: "#a855f7", // purple
-  CONTACT: "#ec6cb0", // pink
+  CONTACT: "#d946ef", // fuchsia
+  PLAYGROUND: "#ec4899", // pink
 };
 
 export default function AccentTracker() {

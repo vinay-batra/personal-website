@@ -74,9 +74,8 @@ function sampleVB(maxCount: number): Cloud | null {
   const disperse = new Float32Array(n * 3);
   const colors = new Float32Array(n * 3);
   const phases = new Float32Array(n);
-  // warm off-white monogram — a touch deeper than stark white so the glow reads
-  // with a little more colour/substance against the dark bg
-  const white = new THREE.Color("#F6EEDD");
+  // pure white monogram — a stark black-and-white hero
+  const white = new THREE.Color("#ffffff");
   const scale = 8.5 / S;
 
   for (let i = 0; i < n; i++) {

@@ -64,9 +64,9 @@ export default function Community() {
       className="relative mx-auto max-w-6xl px-6 py-28 md:py-40"
     >
       <SectionHeading
-        index="04"
+        index="05"
         eyebrow="COMMUNITY"
-        accent="#87A5B4"
+        accent="#8b5cf6"
         lines={["In my", "community."]}
       />
 

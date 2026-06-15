@@ -150,9 +150,9 @@ export default function Leadership() {
         {/* LEFT — sticky heading + session-year readout */}
         <div className="self-start md:sticky md:top-28">
           <SectionHeading
-            index="03"
+            index="04"
             eyebrow="LEADERSHIP"
-            accent="#5d9ce4"
+            accent="#6366f1"
             lines={["Where I", "lead."]}
           />
           <div className="mt-10">

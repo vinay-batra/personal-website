@@ -136,9 +136,9 @@ export default function Recommendations() {
       className="relative mx-auto max-w-6xl px-6 py-28 md:py-40"
     >
       <SectionHeading
-        index="05"
+        index="06"
         eyebrow="RECOMMENDATIONS"
-        accent="#8b5cf6"
+        accent="#a855f7"
         lines={["What people", "say."]}
       />
 

@@ -66,7 +66,7 @@ export default function Contact() {
   return (
     <section id="contact" data-section="CONTACT" className="relative">
       <div className="mx-auto max-w-6xl px-6 pt-28 md:pt-44 pb-20">
-        <SectionHeading index="06" eyebrow="CONTACT" lines={["Get in", "touch."]} />
+        <SectionHeading index="07" eyebrow="CONTACT" accent="#d946ef" lines={["Get in", "touch."]} />
 
         <motion.p
           className="mt-8 max-w-md font-sans text-[16px] leading-[1.7] text-bone/70"

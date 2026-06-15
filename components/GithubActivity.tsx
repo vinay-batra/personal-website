@@ -82,15 +82,15 @@ export default function GithubActivity() {
         viewport={{ once: true, margin: "-80px" }}
       >
         <p
-          className="mb-4 flex items-center gap-2.5 font-mono text-[11px] font-medium tracking-[0.18em] text-amber uppercase"
+          className="mb-4 flex items-center gap-2.5 font-mono text-[11px] font-medium tracking-[0.18em] text-[#3b82f6] uppercase"
         >
           <span className="relative flex h-1.5 w-1.5">
             {live && (
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber/60" />
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#3b82f6]/60" />
             )}
-            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-amber" />
+            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[#3b82f6]" />
           </span>
-          <TypeOn text="GITHUB · LIVE" />
+          <TypeOn text="03 · GITHUB · LIVE" />
         </p>
         <h2 className="serif-head font-serif text-4xl font-semibold tracking-tight md:text-5xl">
           Lately.

@@ -6,10 +6,12 @@ import { useLenis } from "lenis/react";
 const LINKS: [string, string, string][] = [
   ["01", "ABOUT", "#about"],
   ["02", "WORK", "#work"],
-  ["03", "LEAD", "#leadership"],
-  ["04", "SERVE", "#community"],
-  ["05", "WORDS", "#words"],
-  ["06", "CONTACT", "#contact"],
+  ["03", "LATELY", "#github"],
+  ["04", "LEAD", "#leadership"],
+  ["05", "SERVE", "#community"],
+  ["06", "WORDS", "#words"],
+  ["07", "CONTACT", "#contact"],
+  ["08", "PLAY", "#playground"],
 ];
 
 export default function TopBar() {
@@ -98,7 +100,7 @@ export default function TopBar() {
           onClick={(e) => go(e, "#contact")}
           className="font-mono text-[10px] tracking-[0.18em] text-dim uppercase hover:text-bone lg:hidden"
         >
-          06 CONTACT
+          07 CONTACT
         </a>
       </nav>
     </header>

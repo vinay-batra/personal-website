@@ -23,8 +23,9 @@ Full prose lives in `README.md`; this file is the agent-facing state + conventio
 Work (Corvo/Lark 2D visuals + FBLA One 2D dashboard) · a **"From scratch"** Work subsection
 (pathfinding visualizer + ray tracer + neural net, all hand-written) · GitHub heatmap · Leadership
 timeline / Community ledger / Recommendations · Contact · a **Playground** of 4 WebGL toys (ink fluid,
-lava, kaleidoscope, obsidian gem), each with its own control panel · Footer. Section accents cycle **cool tones only** (blues, greens,
-purples, pinks); amber is kept for the brand mark + buttons.
+lava, kaleidoscope, obsidian gem), each with its own control panel · Footer. The **hero is black &
+white** (white VB); section accents then run a **cyan → pink spectrum** across the 8 numbered chapters.
+Amber is kept only for data/stats (heatmap, stat numerals) + action buttons.
 
 ### Open threads (deferred, explicitly requested, NOT done)
 1. **Text Adventure** - the 4th from-scratch demo (web terminal: rooms, inventory, combat, OOP).
@@ -57,8 +58,11 @@ separation.
 
 ## Conventions (the user cares about these)
 - **No em dashes in visible copy.** Use commas / colons / periods. (Code comments are fine.)
-- **Section accents = cool only** (blues/greens/purples/pinks) via `AccentTracker.tsx`
-  `SECTION_ACCENT` + `lib/accent.ts`. The brand amber stays on the hero VB + action buttons.
+- **Section accents = a cyan → pink spectrum** across the 8 chapters (hero = near-white) via
+  `AccentTracker.tsx` `SECTION_ACCENT` + `lib/accent.ts` (`DEFAULT` = hero white). The chapters are
+  numbered 01-08 (About, Work, Lately, Lead, Serve, Words, Contact, Play) consistently across the top
+  nav, the scroll-spine labels, the section-heading eyebrows, and the page dividers. Amber stays only
+  on data/stats (heatmap, stat numerals) + action buttons, NOT the hero.
 - **No bloom / EffectComposer over the page** - an opaque pass renders a visible "box" over the
   non-black Aurora. Use **additive** materials for any 3D glow over the page bg.
 - **Don't hand-code organic 3D models** (raven, animals) from primitives - load an artist GLB.

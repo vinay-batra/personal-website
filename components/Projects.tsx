@@ -271,7 +271,7 @@ export default function Projects() {
       <SectionHeading
         index="02"
         eyebrow="WORK"
-        accent="#5cb88a"
+        accent="#38bdf8"
         lines={["What I've", "built."]}
       />
       <div className="mt-14">

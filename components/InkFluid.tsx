@@ -18,6 +18,7 @@ export interface InkParams {
   force: number; // splat force from cursor movement
   radius: number; // splat size
   brightness: number; // ink glow / intensity
+  rainbow: boolean; // auto-cycle the whole spectrum (ignores colorA/B)
   colorA: [number, number, number];
   colorB: [number, number, number];
 }
@@ -27,13 +28,14 @@ export const DEFAULT_INK: InkParams = {
   force: 6200,
   radius: 0.2,
   brightness: 0.22,
+  rainbow: true, // multicolour by default, like the real fluid sim
   colorA: [0.91, 0.64, 0.24], // amber
   colorB: [0.5, 0.66, 0.73], // sheen teal
 };
 
 // fixed quality/perf settings
 const SIM_RESOLUTION = 128;
-const DYE_RESOLUTION = 600;
+const DYE_RESOLUTION = 1024;
 const VELOCITY_DISSIPATION = 0.2;
 const PRESSURE_ITERATIONS = 22;
 
@@ -475,11 +477,33 @@ export default function InkCanvas({
     };
     if (clearRef) clearRef.current = clearDye;
 
-    // amber↔teal (or whatever palette the controls set) over time
+    const hsv = (h: number, s: number, v: number): [number, number, number] => {
+      const i = Math.floor(h * 6);
+      const f = h * 6 - i;
+      const p = v * (1 - s);
+      const q = v * (1 - f * s);
+      const w = v * (1 - (1 - f) * s);
+      switch (((i % 6) + 6) % 6) {
+        case 0: return [v, w, p];
+        case 1: return [q, v, p];
+        case 2: return [p, v, w];
+        case 3: return [p, q, v];
+        case 4: return [w, p, v];
+        default: return [v, p, q];
+      }
+    };
+    // rainbow auto-cycle, or the amber↔teal (or whatever palette the controls set)
     const palette = (t: number): [number, number, number] => {
       const P = paramsRef.current;
-      const m = 0.5 + 0.5 * Math.sin(t * 0.0006);
       const b = P.brightness;
+      if (P.rainbow) {
+        // hue drifts through the whole spectrum over ~6s, plus a little per-splat
+        // jitter so a single stroke reads as many colours, like the real sim
+        const h = (((t * 0.00016 + (Math.random() - 0.5) * 0.05) % 1) + 1) % 1;
+        const c = hsv(h, 0.9, 1);
+        return [c[0] * b, c[1] * b, c[2] * b];
+      }
+      const m = 0.5 + 0.5 * Math.sin(t * 0.0006);
       return [
         (P.colorA[0] * (1 - m) + P.colorB[0] * m) * b,
         (P.colorA[1] * (1 - m) + P.colorB[1] * m) * b,

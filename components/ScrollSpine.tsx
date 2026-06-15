@@ -41,7 +41,9 @@ export default function ScrollSpine() {
   useEffect(() => {
     const measure = () => {
       const max = document.documentElement.scrollHeight - window.innerHeight;
-      const els = Array.from(document.querySelectorAll<HTMLElement>("[data-section]"));
+      const els = Array.from(document.querySelectorAll<HTMLElement>("[data-section]")).filter(
+        (el) => el.dataset.section !== "MASTHEAD" // the hero is the start, not a chapter
+      );
       setTicks(
         els.map((el) => ({
           f: Math.min(1, Math.max(0, (el.getBoundingClientRect().top + window.scrollY) / (max || 1))),

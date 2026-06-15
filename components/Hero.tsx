@@ -77,7 +77,7 @@ export default function Hero() {
         className="relative z-10 mx-auto w-full max-w-6xl px-6"
       >
         <h1>
-          <span className="mb-5 block font-mono text-[11px] font-medium tracking-[0.22em] text-amber uppercase">
+          <span className="mb-5 block font-mono text-[11px] font-medium tracking-[0.22em] text-bone/55 uppercase">
             <TypeOn text="VINAY BATRA · HIGH SCHOOL QUANT · GREATER PHILADELPHIA" />
           </span>
           <span className="serif-head block font-serif text-[clamp(2.6rem,7.5vw,6.25rem)] leading-[1.0] font-semibold tracking-tight">
@@ -119,7 +119,7 @@ export default function Hero() {
               e.preventDefault();
               lenis?.scrollTo("#work", { offset: -56, duration: 1.4 });
             }}
-            className="font-mono text-[11px] tracking-[0.18em] text-amber uppercase hover:text-bone"
+            className="font-mono text-[11px] tracking-[0.18em] text-bone uppercase transition-opacity hover:opacity-65"
           >
             → View my work
           </a>
@@ -153,7 +153,7 @@ export default function Hero() {
         <motion.span
           animate={{ y: [0, 5, 0] }}
           transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-          className="font-mono text-[10px] text-amber"
+          className="font-mono text-[10px] text-bone/50"
         >
           ▼
         </motion.span>

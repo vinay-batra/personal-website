@@ -124,6 +124,7 @@ export default function Playground() {
   const [linger, setLinger] = useState(DEFAULT_INK.density);
   const [inkSize, setInkSize] = useState(DEFAULT_INK.radius);
   const [glow, setGlow] = useState(DEFAULT_INK.brightness);
+  const [rainbow, setRainbow] = useState(DEFAULT_INK.rainbow);
 
   // ---- obsidian gem (props → memoized component) ----
   const [gemColor, setGemColor] = useState(DEFAULT_GEM.colorIdx);
@@ -138,6 +139,7 @@ export default function Playground() {
   const [lavaCount, setLavaCount] = useState(DEFAULT_LAVA.count);
   const [lavaFlow, setLavaFlow] = useState(DEFAULT_LAVA.flow);
   const [lavaHeat, setLavaHeat] = useState(DEFAULT_LAVA.heat);
+  const [lavaSize, setLavaSize] = useState(DEFAULT_LAVA.size);
 
   // ---- kaleidoscope (live ref → grab-to-turn engine) ----
   const kaleidoRef = useRef<KaleidoParams>({ ...DEFAULT_KALEIDO });
@@ -155,7 +157,7 @@ export default function Playground() {
         viewport={{ once: true, margin: "-80px" }}
         className="mb-10 text-center"
       >
-        <p className="mb-3 font-mono text-[11px] font-medium tracking-[0.24em] text-amber uppercase">Playground</p>
+        <p className="mb-3 font-mono text-[11px] font-medium tracking-[0.24em] text-[#ec4899] uppercase">08 · Playground</p>
         <h2 className="serif-head font-serif text-3xl font-semibold tracking-tight md:text-4xl">For fun.</h2>
         <p className="mx-auto mt-4 max-w-md font-sans text-[15px] leading-[1.7] text-bone/60">
           Four WebGL toys I built. Stir the ink, shove the lava, spin the stone, turn the
@@ -176,20 +178,37 @@ export default function Playground() {
             <Swatches
               label="Color"
               items={INK_PALETTES}
-              active={inkPal}
+              active={rainbow ? -1 : inkPal}
               onPick={(i) => {
                 setInkPal(i);
+                setRainbow(false);
+                inkRef.current.rainbow = false;
                 inkRef.current.colorA = INK_PALETTES[i].a;
                 inkRef.current.colorB = INK_PALETTES[i].b;
               }}
               right={
-                <button
-                  type="button"
-                  onClick={() => inkClear.current?.()}
-                  className="font-mono text-[10px] tracking-[0.16em] text-dim uppercase transition-colors hover:text-amber"
-                >
-                  Clear ✕
-                </button>
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const nv = !rainbow;
+                      setRainbow(nv);
+                      inkRef.current.rainbow = nv;
+                    }}
+                    className={`font-mono text-[10px] tracking-[0.16em] uppercase transition-colors ${
+                      rainbow ? "text-amber" : "text-dim hover:text-bone"
+                    }`}
+                  >
+                    Rainbow
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => inkClear.current?.()}
+                    className="font-mono text-[10px] tracking-[0.16em] text-dim uppercase transition-colors hover:text-amber"
+                  >
+                    Clear ✕
+                  </button>
+                </div>
               }
             />
             <div className="flex gap-6">
@@ -252,7 +271,7 @@ export default function Playground() {
             </div>
             <div className="flex gap-6">
               <Slider label="Heat" display={Math.round(lavaHeat * 100)} value={lavaHeat} min={0.5} max={1.6} step={0.05} onChange={(v) => { setLavaHeat(v); lavaRef.current.heat = v; }} />
-              <span className="flex-1" />
+              <Slider label="Size" display={Math.round(lavaSize * 100)} value={lavaSize} min={0.5} max={1.8} step={0.05} onChange={(v) => { setLavaSize(v); lavaRef.current.size = v; }} />
             </div>
           </div>
         </motion.div>
