@@ -39,7 +39,7 @@ function HoursBar({ hours, row }: { hours: number; row: number }) {
   const count = Math.round(hours / HOURS_PER_GLYPH);
 
   return (
-    <span aria-hidden className="font-mono text-sm leading-none text-amber">
+    <span aria-hidden className="font-mono text-sm leading-none text-[#8b5cf6]">
       {Array.from({ length: count }, (_, i) => (
         <motion.span
           key={i}
@@ -96,7 +96,7 @@ export default function Community() {
             </p>
             <div className="flex items-baseline gap-3 md:justify-end">
               <HoursBar hours={p.hours} row={row} />
-              <span className="font-mono text-2xl text-amber tabular-nums">
+              <span className="font-mono text-2xl text-[#8b5cf6] tabular-nums">
                 <Counter to={p.hours} suffix="+" />
               </span>
             </div>
@@ -110,7 +110,7 @@ export default function Community() {
               Total hours committed
             </span>
             <span className="dotlead" aria-hidden />
-            <span className="font-mono text-3xl font-semibold text-amber tabular-nums md:text-4xl">
+            <span className="font-mono text-3xl font-semibold text-[#8b5cf6] tabular-nums md:text-4xl">
               <Counter to={TOTAL_HOURS} suffix="+" />
             </span>
           </div>

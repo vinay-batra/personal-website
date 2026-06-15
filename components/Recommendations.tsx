@@ -68,7 +68,7 @@ function PullQuote({ quote, simple }: { quote: Quote; simple: boolean }) {
       {/* oversized hanging quotation mark */}
       <motion.span
         aria-hidden
-        className="block h-[0.55em] overflow-visible font-serif text-[120px] leading-none text-amber/90 md:text-[140px]"
+        className="block h-[0.55em] overflow-visible font-serif text-[120px] leading-none text-[#a855f7]/90 md:text-[140px]"
         style={{ transformOrigin: "bottom left" }}
         initial={
           reduced ? { opacity: 0 } : { opacity: 0, rotate: -8, scale: 0.6 }

@@ -159,7 +159,7 @@ export default function Leadership() {
             <p className="font-mono text-[10px] tracking-[0.25em] text-dim uppercase">
               Year
             </p>
-            <p className="mt-2 font-mono text-6xl text-amber tabular-nums md:text-7xl">
+            <p className="mt-2 font-mono text-6xl text-[#6366f1] tabular-nums md:text-7xl">
               {reduced ? YEAR_MAX : year}
             </p>
           </div>
@@ -172,14 +172,14 @@ export default function Leadership() {
           {/* amber scrub — scaleY is exactly section scroll progress */}
           <motion.div
             aria-hidden
-            className="absolute top-0 bottom-0 left-0 w-[2px] origin-top bg-amber shadow-[0_0_10px_rgba(232,163,61,0.5)]"
+            className="absolute top-0 bottom-0 left-0 w-[2px] origin-top bg-[#6366f1] shadow-[0_0_10px_rgba(99,102,241,0.5)]"
             style={reduced ? { scaleY: 1 } : { scaleY: spineProgress }}
           />
           {/* glowing playhead riding the fill */}
           {!reduced && (
             <motion.div
               aria-hidden
-              className="absolute left-px z-10 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-amber"
+              className="absolute left-px z-10 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#6366f1]"
               style={{
                 top: headTop,
                 opacity: headOpacity,
@@ -201,13 +201,13 @@ export default function Leadership() {
               {/* node — diamond centered on the spine */}
               <motion.span
                 aria-hidden
-                className="absolute left-[-5px] top-[calc(3.3rem-5px)] h-2.5 w-2.5 rotate-45 border border-amber"
+                className="absolute left-[-5px] top-[calc(3.3rem-5px)] h-2.5 w-2.5 rotate-45 border border-[#6366f1]"
                 variants={nodeVariants}
               />
               {/* connector tick from spine to text */}
               <motion.span
                 aria-hidden
-                className="absolute left-2 top-[3.3rem] h-px w-6 origin-left bg-amber/60"
+                className="absolute left-2 top-[3.3rem] h-px w-6 origin-left bg-[#6366f1]/60"
                 variants={tickVariants}
               />
 
@@ -215,7 +215,7 @@ export default function Leadership() {
               <h3 className="font-serif text-[1.75rem] leading-tight font-semibold text-bone">
                 {entry.role}
               </h3>
-              <p className="mt-1 font-mono text-[11px] tracking-[0.18em] text-amber uppercase">
+              <p className="mt-1 font-mono text-[11px] tracking-[0.18em] text-[#6366f1] uppercase">
                 {entry.org}
               </p>
               <p className="mt-3 max-w-md text-[15px] leading-relaxed text-bone/60">

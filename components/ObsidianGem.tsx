@@ -33,7 +33,7 @@ export interface GemParams {
   reflect: number; // 0..1 reflection intensity
   colorIdx: number;
 }
-export const DEFAULT_GEM: GemParams = { facets: 16, size: 0.92, fire: 0.62, reflect: 0.6, colorIdx: 0 };
+export const DEFAULT_GEM: GemParams = { facets: 28, size: 0.92, fire: 0.74, reflect: 0.94, colorIdx: 0 };
 
 function seeded(seed: number) {
   let s = seed % 2147483647;

@@ -22,10 +22,12 @@ Full prose lives in `README.md`; this file is the agent-facing state + conventio
 **State (June 2026):** Hero VB particles + click-shatter · About 3D "map of me" constellation ·
 Work (Corvo/Lark 2D visuals + FBLA One 2D dashboard) · a **"From scratch"** Work subsection
 (pathfinding visualizer + ray tracer + neural net, all hand-written) · GitHub heatmap · Leadership
-timeline / Community ledger / Recommendations · Contact · a **Playground** of 4 WebGL toys (ink fluid,
-lava, kaleidoscope, obsidian gem), each with its own control panel · Footer. The **hero is black &
-white** (white VB); section accents then run a **cyan → pink spectrum** across the 8 numbered chapters.
-Amber is kept only for data/stats (heatmap, stat numerals) + action buttons.
+timeline / Community ledger / Recommendations · Contact · a **Playground** of 2 WebGL toys (ink fluid
+sim + obsidian gem; lava + kaleidoscope were removed) · Footer. The **hero is black & white** (white
+VB); section accents then run a **cyan → pink spectrum** across the 8 numbered chapters, and EVERY
+in-section accent (eyebrows, stat numerals, buttons, the GitHub heatmap, pathfinder markers, the
+aurora wash) is recoloured to its section's hue. **Amber is fully retired** from the page (only the
+brand token `--color-amber` remains in the theme, unused on the live page).
 
 ### Open threads (deferred, explicitly requested, NOT done)
 1. **Text Adventure** - the 4th from-scratch demo (web terminal: rooms, inventory, combat, OOP).

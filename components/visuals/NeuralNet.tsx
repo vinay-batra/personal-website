@@ -425,7 +425,7 @@ export default function NeuralNet() {
   const btn = (active: boolean) =>
     `font-mono text-[10px] tracking-[0.14em] uppercase px-2.5 py-1.5 border transition ${
       active
-        ? "border-amber text-amber"
+        ? "border-[#38bdf8] text-[#38bdf8]"
         : "border-bone/15 text-dim hover:border-bone/35 hover:text-bone"
     }`;
 
@@ -449,7 +449,7 @@ export default function NeuralNet() {
         <button
           type="button"
           onClick={() => restart(dataset)}
-          className="ml-1 bg-amber px-3 py-1.5 font-mono text-[10px] font-semibold tracking-[0.16em] text-ink uppercase transition hover:bg-amber/85"
+          className="ml-1 bg-[#38bdf8] px-3 py-1.5 font-mono text-[10px] font-semibold tracking-[0.16em] text-ink uppercase transition hover:bg-[#38bdf8]/85"
         >
           ↻ Restart
         </button>
@@ -491,20 +491,11 @@ export default function NeuralNet() {
           onClick={() => {
             dataRef.current = [];
           }}
-          className="ml-auto font-mono text-[10px] tracking-[0.14em] text-dim uppercase transition-colors hover:text-amber"
+          className="ml-auto font-mono text-[10px] tracking-[0.14em] text-dim uppercase transition-colors hover:text-[#38bdf8]"
         >
           Clear ✕
         </button>
       </div>
-      <p className="mb-3 max-w-2xl font-sans text-[12.5px] leading-[1.55] text-bone/55">
-        <span className="font-mono text-[10px] tracking-[0.14em] text-amber uppercase">How to use</span>
-        {": "}
-        The net is learning to separate the teal dots from the pink ones. Pick a built-in pattern
-        below, or make your own: choose a brush (Class A is teal, Class B is pink, or Erase) and drag
-        on the canvas to place dots. It keeps learning as you go, the glowing white line is the
-        boundary it has found, and the background is its best guess everywhere. Restart shuffles the
-        net and starts over.
-      </p>
       <div
         ref={wrapRef}
         className="relative aspect-[16/10] w-full cursor-crosshair touch-none overflow-hidden rounded-lg bg-[#0a0908]"

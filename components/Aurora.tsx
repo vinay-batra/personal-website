@@ -43,21 +43,16 @@ void main(){
   vec2 q = vec2(fbm(p + t), fbm(p + vec2(5.2,1.3) - t*0.8));
   float n = fbm(p + 2.2*q + t*0.6);
 
-  vec3 ink   = vec3(0.059,0.051,0.039);
-  vec3 amber = vec3(0.91,0.64,0.24);
-  vec3 teal  = vec3(0.53,0.65,0.71);
-  vec3 emer  = vec3(0.36,0.72,0.54);
-  vec3 viol  = vec3(0.55,0.36,0.96);
-
+  // The aurora is driven entirely by the section accent now (no fixed amber /
+  // teal / green washes — those tinted every section the same muddy grey-gold).
+  vec3 ink = vec3(0.05,0.05,0.06);
   vec3 col = ink;
-  col += amber * smoothstep(0.45,0.95,n)        * 0.16;
-  col += teal  * smoothstep(0.55,1.0, q.x)       * 0.12;
-  col += emer  * smoothstep(0.6, 1.0, q.y)       * 0.10;
-  col += viol  * smoothstep(0.65,1.05,n*q.x*1.5) * 0.10;
-
-  // section accent wash — tints the brightest part of the flow toward the
-  // hue of whatever section the reader is on, lerped smoothly on the JS side
-  col += uAccent * smoothstep(0.5,1.05,n) * 0.18;
+  // a faint neutral structure so the smoke still reads where the accent is white
+  col += vec3(0.09,0.10,0.12) * smoothstep(0.45,1.0,n) * 0.7;
+  // section accent wash — the dominant hue, clearly visible, follows the section
+  col += uAccent * smoothstep(0.36,1.0, n)        * 0.5;
+  col += uAccent * smoothstep(0.52,1.0, q.x)      * 0.30;
+  col += uAccent * smoothstep(0.6, 1.05, q.y*1.2) * 0.22;
 
   // keep edges dark
   float vig = smoothstep(1.25,0.25,length(uv-0.5));

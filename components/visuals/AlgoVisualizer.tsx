@@ -275,7 +275,7 @@ export default function AlgoVisualizer() {
   const btn = (active: boolean) =>
     `font-mono text-[10px] tracking-[0.14em] uppercase px-2.5 py-1.5 border transition ${
       active
-        ? "border-amber text-amber"
+        ? "border-[#38bdf8] text-[#38bdf8]"
         : "border-bone/15 text-dim hover:border-bone/35 hover:text-bone"
     }`;
   const cur = ALGOS.find((a) => a.id === algo)!;
@@ -300,7 +300,7 @@ export default function AlgoVisualizer() {
         <button
           type="button"
           onClick={run}
-          className="ml-1 bg-amber px-3 py-1.5 font-mono text-[10px] font-semibold tracking-[0.16em] text-ink uppercase transition hover:bg-amber/85"
+          className="ml-1 bg-[#38bdf8] px-3 py-1.5 font-mono text-[10px] font-semibold tracking-[0.16em] text-ink uppercase transition hover:bg-[#38bdf8]/85"
         >
           ▶ Run
         </button>
@@ -317,13 +317,8 @@ export default function AlgoVisualizer() {
         </button>
       </div>
 
-      <p className="mb-3 max-w-2xl font-sans text-[12.5px] leading-[1.55] text-bone/70">
-        Pick an algorithm, then press <span className="text-amber">Run</span> to watch it find the
-        shortest path between the two dots. Drag on the grid to draw walls, drag either dot to move the
-        start or goal, and press Maze for a random maze.
-      </p>
       <p className="mb-3 max-w-2xl font-sans text-[12.5px] leading-[1.55] text-bone/55">
-        <span className="font-mono text-[10px] tracking-[0.14em] text-amber uppercase">
+        <span className="font-mono text-[10px] tracking-[0.14em] text-[#38bdf8] uppercase">
           {cur.full}
         </span>
         {": "}
@@ -333,7 +328,7 @@ export default function AlgoVisualizer() {
       {result && (
         <div className="mb-3 flex flex-wrap items-center gap-x-5 gap-y-1 font-mono text-[10px] tracking-[0.14em] uppercase">
           <span className="text-bone/50">
-            Path <span className="tabular-nums text-amber">{result.path.length || "none"}</span>
+            Path <span className="tabular-nums text-[#38bdf8]">{result.path.length || "none"}</span>
           </span>
           <span className="text-bone/50">
             Explored <span className="tabular-nums text-bone/80">{result.visited.length}</span>
@@ -362,8 +357,8 @@ export default function AlgoVisualizer() {
           let cls = "aspect-square bg-[#0b0907]";
           const style: React.CSSProperties = {};
           if (walls.has(i)) cls = "aspect-square bg-bone/80";
-          else if (i === start) cls = "aspect-square bg-up";
-          else if (i === end) cls = "aspect-square bg-amber";
+          else if (i === start) cls = "aspect-square bg-[#22d3ee]";
+          else if (i === end) cls = "aspect-square bg-[#ec4899]";
           else if (po !== undefined) {
             cls = "aspect-square algo-path";
             style.animationDelay = `${total * SPEED + po * PATH_SPEED}ms`;

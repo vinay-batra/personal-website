@@ -9,10 +9,10 @@ import { fadeUp } from "@/lib/motion";
 const USER = "vinay-batra";
 const COLORS = [
   "rgba(237,228,211,0.07)",
-  "rgba(232,163,61,0.32)",
-  "rgba(232,163,61,0.52)",
-  "rgba(232,163,61,0.74)",
-  "rgba(232,163,61,0.96)",
+  "rgba(59,130,246,0.32)",
+  "rgba(59,130,246,0.52)",
+  "rgba(59,130,246,0.74)",
+  "rgba(59,130,246,0.96)",
 ];
 
 interface Day {
@@ -100,7 +100,7 @@ export default function GithubActivity() {
       <div className="mt-8 flex flex-wrap items-baseline gap-x-3 gap-y-1 font-mono text-[13px] text-bone/70">
         {total !== null ? (
           <>
-            <span className="text-2xl font-semibold text-amber tabular-nums">
+            <span className="text-2xl font-semibold text-[#3b82f6] tabular-nums">
               <Counter to={total} />
             </span>
             <span>contributions in the last year</span>

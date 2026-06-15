@@ -75,13 +75,13 @@ export default function About() {
               custom={2}
             >
               <p className="flex items-center gap-2.5 font-mono text-[10px] tracking-[0.25em] text-dim uppercase">
-                <span className="h-px w-4 bg-amber/50" />
+                <span className="h-px w-4 bg-[#22d3ee]/50" />
                 Test Scores
               </p>
               <div className="mt-5 grid grid-cols-2 gap-x-6">
                 {SCORES.map((s) => (
                   <div key={s.test} className="flex items-baseline gap-3">
-                    <span className="font-serif text-[2.4rem] leading-none text-amber tabular-nums">
+                    <span className="font-serif text-[2.4rem] leading-none text-[#22d3ee] tabular-nums">
                       {s.score}
                     </span>
                     <div className="flex flex-col gap-1 pb-1">
@@ -106,7 +106,7 @@ export default function About() {
               custom={3}
             >
               <p className="flex items-center gap-2.5 font-mono text-[10px] tracking-[0.25em] text-dim uppercase">
-                <span className="h-px w-4 bg-amber/50" />
+                <span className="h-px w-4 bg-[#22d3ee]/50" />
                 Languages
               </p>
               <ul className="mt-3 divide-y divide-bone/10">

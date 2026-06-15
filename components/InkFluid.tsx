@@ -23,11 +23,11 @@ export interface InkParams {
   colorB: [number, number, number];
 }
 export const DEFAULT_INK: InkParams = {
-  curl: 30,
-  density: 0.97,
+  curl: 32,
+  density: 0.98,
   force: 6200,
-  radius: 0.2,
-  brightness: 0.22,
+  radius: 0.5, // max size
+  brightness: 0.5, // max glow
   rainbow: true, // multicolour by default, like the real fluid sim
   colorA: [0.91, 0.64, 0.24], // amber
   colorB: [0.5, 0.66, 0.73], // sheen teal
