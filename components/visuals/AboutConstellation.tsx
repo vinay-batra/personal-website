@@ -4,9 +4,12 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import * as THREE from "three";
+import { LineSegments2 } from "three/examples/jsm/lines/LineSegments2.js";
+import { LineSegmentsGeometry } from "three/examples/jsm/lines/LineSegmentsGeometry.js";
+import { LineMaterial } from "three/examples/jsm/lines/LineMaterial.js";
 import { useReducedMotionSafe } from "@/lib/useReducedMotionSafe";
 
-const AMBER = new THREE.Color("#E8A33D");
+const AMBER = new THREE.Color("#22d3ee"); // the About (cyan) accent — interaction highlight
 const BONE = new THREE.Color("#EDE4D3");
 const RADIUS = 4.2;
 // the sphere sits at the scene origin (canvas center); the canvas itself is
@@ -92,7 +95,7 @@ const ITEMS: Item[] = [
   { label: "Skiing", kind: "skill", blurb: "I ski whenever I get the chance." },
   { label: "Working out", kind: "skill", blurb: "I lift and train regularly." },
   { label: "Nala", kind: "skill", blurb: "My dog, Nala — the best part of any day." },
-  { label: "Playa Bowls", kind: "skill", blurb: "Mildly, happily obsessed with Playa Bowls." },
+  { label: "Playa Bowls", kind: "skill", blurb: "I go every Friday." },
 ];
 
 interface NodeData extends Item {
@@ -250,7 +253,7 @@ function Scene({
           float core = smoothstep(0.22, 0.0, d);
           float halo = smoothstep(0.5, 0.22, d);
           float fade = clamp((16.0 - vDepth) / 11.0, 0.5, 1.0);
-          vec3 amber = vec3(0.909, 0.639, 0.239);
+          vec3 amber = vec3(0.133, 0.827, 0.933); // cyan hover highlight
           vec3 col = mix(vColor, amber, clamp(vHot, 0.0, 1.0));
           float a = (core * 1.0 + halo * 0.42) * fade;
           gl_FragColor = vec4(col, a);
@@ -261,25 +264,34 @@ function Scene({
   }, [nodes]);
 
   // --- edges ---
-  const { geom: linesGeom, material: linesMat } = useMemo(() => {
-    const geom = new THREE.BufferGeometry();
-    const pos = new Float32Array(edges.length * 2 * 3);
-    const col = new Float32Array(edges.length * 2 * 3);
+  // fat lines (LineSegments2) — real pixel thickness, which plain WebGL lines
+  // can't do; additive-blended so they read as a soft glow between the nodes
+  const lines = useMemo(() => {
+    const geom = new LineSegmentsGeometry();
+    const pos = new Float32Array(edges.length * 6);
     edges.forEach(([i, j], e) => {
       const a = nodes[i].target;
       const b = nodes[j].target;
       pos.set([a.x, a.y, a.z, b.x, b.y, b.z], e * 6);
     });
-    geom.setAttribute("position", new THREE.BufferAttribute(pos, 3));
-    geom.setAttribute("color", new THREE.BufferAttribute(col, 3));
-    const material = new THREE.LineBasicMaterial({
+    geom.setPositions(pos);
+    const colors = new Float32Array(edges.length * 6);
+    geom.setColors(colors);
+    const material = new LineMaterial({
+      linewidth: 2.6, // pixels
+      worldUnits: false,
       vertexColors: true,
       transparent: true,
       depthWrite: false,
       blending: THREE.AdditiveBlending,
     });
-    return { geom, material };
-  }, [nodes, edges]);
+    material.resolution.set(gl.domElement.width, gl.domElement.height);
+    const seg = new LineSegments2(geom, material);
+    seg.frustumCulled = false;
+    const colorBuf = (geom.getAttribute("instanceColorStart") as THREE.InterleavedBufferAttribute)
+      .data as THREE.InstancedInterleavedBuffer;
+    return { seg, material, colors, colorBuf };
+  }, [nodes, edges, gl]);
 
   // --- far background starfield (sits well behind the sphere, never in front) ---
   const dust = useMemo(() => {
@@ -473,14 +485,13 @@ function Scene({
     }
     hotAttr.needsUpdate = true;
 
-    const lineCol = linesGeom.attributes.color as THREE.BufferAttribute;
-    const lc = lineCol.array as Float32Array;
+    const lc = lines.colors;
     const lineIntro = clamp((prog.current - 0.45) / 0.5, 0, 1);
     edges.forEach(([i, j], idx) => {
       const heat = Math.max(hot[i], hot[j]);
       [i, j].forEach((ni, k) => {
         const depth = clamp((1 - screen[ni].z) * 0.6 + 0.36, 0.36, 1);
-        const base = (0.24 + heat * 0.6) * depth * lineIntro;
+        const base = (0.55 + heat * 0.75) * depth * lineIntro; // much brighter than before (was 0.24)
         const col = heat > 0.02 ? AMBER : BONE;
         const o = (idx * 2 + k) * 3;
         lc[o] = col.r * base;
@@ -488,7 +499,8 @@ function Scene({
         lc[o + 2] = col.b * base;
       });
     });
-    lineCol.needsUpdate = true;
+    lines.colorBuf.needsUpdate = true;
+    lines.material.resolution.set(gl.domElement.width, gl.domElement.height);
 
     // labels overlay
     const cv = overlay.current;
@@ -541,7 +553,7 @@ function Scene({
       {/* far starfield — static, parked behind, never rotates into the front */}
       <points geometry={dust.geom} material={dust.material} frustumCulled={false} />
       <group ref={group} position={[GROUP_X, GROUP_Y, 0]}>
-        <lineSegments geometry={linesGeom} material={linesMat} frustumCulled={false} />
+        <primitive object={lines.seg} />
         <points geometry={pointsGeom} material={pointsMat} frustumCulled={false} />
       </group>
     </>
@@ -642,12 +654,12 @@ export default function AboutConstellation() {
         className="pointer-events-none absolute bottom-3 left-1/2 flex -translate-x-1/2 translate-y-7 flex-col items-center gap-1.5 text-center"
         style={{ textShadow: "0 1px 10px rgba(0,0,0,0.9)" }}
       >
-        <p className="font-mono text-[11px] tracking-[0.32em] text-amber/80 uppercase">
+        <p className="font-mono text-[11px] tracking-[0.32em] text-[#22d3ee]/80 uppercase">
           A map of me
         </p>
         <p
           className={`font-mono text-[11px] tracking-[0.18em] uppercase transition-colors ${
-            paused ? "text-amber" : "text-bone/55"
+            paused ? "text-[#22d3ee]" : "text-bone/55"
           }`}
         >
           {paused
@@ -664,19 +676,19 @@ export default function AboutConstellation() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.92, y: 4 }}
             transition={{ type: "spring", stiffness: 460, damping: 26, mass: 0.7 }}
-            className="absolute z-10 w-[240px] origin-top overflow-hidden rounded-xl border border-amber/30 bg-gradient-to-b from-[#211810]/95 to-[#100c08]/96 shadow-[0_18px_48px_-12px_rgba(0,0,0,0.85)] backdrop-blur-md"
+            className="absolute z-10 w-[240px] origin-top overflow-hidden rounded-xl border border-[#22d3ee]/30 bg-gradient-to-b from-[#0c1a1d]/95 to-[#07100f]/96 shadow-[0_18px_48px_-12px_rgba(0,0,0,0.85)] backdrop-blur-md"
             style={{ left: popup.left, top: popup.top }}
           >
             {/* animated top accent sweep */}
             <motion.div
-              className="h-px w-full bg-gradient-to-r from-transparent via-amber to-transparent"
+              className="h-px w-full bg-gradient-to-r from-transparent via-[#22d3ee] to-transparent"
               initial={{ opacity: 0.3, scaleX: 0.4 }}
               animate={{ opacity: [0.4, 0.9, 0.4], scaleX: 1 }}
               transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
             />
             <div className="flex items-start gap-2.5 px-3.5 pt-3">
               <motion.span
-                className="mt-[6px] h-1.5 w-1.5 shrink-0 rounded-full bg-amber"
+                className="mt-[6px] h-1.5 w-1.5 shrink-0 rounded-full bg-[#22d3ee]"
                 animate={{
                   scale: [1, 1.35, 1],
                   boxShadow: [
@@ -687,19 +699,19 @@ export default function AboutConstellation() {
                 }}
                 transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
               />
-              <p className="flex-1 font-mono text-[10px] leading-[1.45] tracking-[0.16em] text-amber uppercase">
+              <p className="flex-1 font-mono text-[10px] leading-[1.45] tracking-[0.16em] text-[#22d3ee] uppercase">
                 {item.label}
               </p>
               <button
                 onClick={closePopup}
                 aria-label="Close"
                 data-cursor="close"
-                className="-mt-1 -mr-1 grid h-6 w-6 shrink-0 place-items-center rounded-full text-[15px] leading-none text-dim transition-colors hover:bg-amber/10 hover:text-amber"
+                className="-mt-1 -mr-1 grid h-6 w-6 shrink-0 place-items-center rounded-full text-[15px] leading-none text-dim transition-colors hover:bg-[#22d3ee]/10 hover:text-[#22d3ee]"
               >
                 ×
               </button>
             </div>
-            <div className="mx-3.5 mt-2.5 h-px bg-gradient-to-r from-amber/25 via-amber/10 to-transparent" />
+            <div className="mx-3.5 mt-2.5 h-px bg-gradient-to-r from-[#22d3ee]/25 via-[#22d3ee]/10 to-transparent" />
             <motion.p
               initial={{ opacity: 0, y: 4 }}
               animate={{ opacity: 1, y: 0 }}

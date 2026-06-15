@@ -3,8 +3,8 @@
 Live: **https://vinaybatra.org**
 Repo: github.com/vinay-batra/personal-website (auto-deploys to Vercel on push to `main`)
 
-A high-end personal site: warm-noir aesthetic (ink `#0F0D0A`, bone `#EDE4D3`; amber `#E8A33D` kept for
-data/stats + action buttons), Fraunces + IBM Plex, and lots of scroll-driven / generative /
+A high-end personal site: warm-noir aesthetic (ink `#0F0D0A`, bone `#EDE4D3`; the old amber `#E8A33D`
+brand is now fully retired from the page), Fraunces + IBM Plex, and lots of scroll-driven / generative /
 cursor-reactive motion. The **hero is black & white** (white "VB" particles); the per-section
 **accent** that tints the cursor/spine/aurora then runs a **cyan → pink spectrum** down the 8 chapters.
 
@@ -38,7 +38,7 @@ cursor-reactive motion. The **hero is black & white** (white "VB" particles); th
 - **About** (`visuals/AboutConstellation.tsx`) — a true **3D R3F "map of me"**: ~37 nodes (facts,
   products, skills, community, languages, hobbies) as uniform white glowing points wired into a
   constellation. **Drag to orbit** (it holds wherever you drag it and keeps a slow clockwise spin);
-  **hover** lights a node + its label + edges amber; **tap a node** opens an anchored popup card with a
+  **hover** lights a node + its label + its (thick, glowing) edges in the section's cyan; **tap a node** opens an anchored popup card with a
   one-line blurb (the map keeps spinning behind it); **long-press** pauses/resumes. Labels are always
   on, white, depth-weighted, and clamped so none clip. **No bloom** — the glow is additive soft-disc
   points (a `Bloom`/EffectComposer pass renders an opaque rectangle over the aurora, i.e. a visible
