@@ -2,13 +2,38 @@
 
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Environment, Lightformer, MeshTransmissionMaterial } from "@react-three/drei";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { memo, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import { ConvexGeometry } from "three/examples/jsm/geometries/ConvexGeometry.js";
 import { useReducedMotionSafe } from "@/lib/useReducedMotionSafe";
 import { useIsDesktop } from "@/lib/useIsDesktop";
 
 const clamp = (v: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, v));
+const mixN = (a: number, b: number, t: number) => a + (b - a) * t;
+
+export interface GemPalette {
+  name: string;
+  surf: string; // refracted body tint
+  fire: string; // inner attenuation "fire"
+  l1: string; // main lightformer
+  l2: string; // fill lightformer
+  glow: string; // rgb for the backdrop glow
+}
+export const GEM_PALETTES: GemPalette[] = [
+  { name: "Violet", surf: "#c4b3e0", fire: "#7c3aed", l1: "#7c3aed", l2: "#a78bfa", glow: "124,58,237" },
+  { name: "Indigo", surf: "#b8c2ea", fire: "#4f46e5", l1: "#4f46e5", l2: "#818cf8", glow: "79,70,229" },
+  { name: "Teal", surf: "#a8e0d8", fire: "#0d9488", l1: "#0d9488", l2: "#5eead4", glow: "13,148,136" },
+  { name: "Magenta", surf: "#e8b3d8", fire: "#be185d", l1: "#be185d", l2: "#f472b6", glow: "190,24,93" },
+];
+
+export interface GemParams {
+  facets: number; // convex-hull points → number of faces
+  size: number; // 0.7..1.15 scale
+  fire: number; // 0..1 inner glow
+  reflect: number; // 0..1 reflection intensity
+  colorIdx: number;
+}
+export const DEFAULT_GEM: GemParams = { facets: 16, size: 0.92, fire: 0.62, reflect: 0.6, colorIdx: 0 };
 
 function seeded(seed: number) {
   let s = seed % 2147483647;
@@ -18,10 +43,10 @@ function seeded(seed: number) {
 
 /** Faceted obsidian crystal — a seeded convex hull, elongated, with sharp
  *  top/bottom points and flat (faceted) normals so each face refracts cleanly. */
-function useCrystalGeometry() {
+function useCrystalGeometry(facets: number) {
   return useMemo(() => {
     const r = seeded(2026);
-    const N = 16; // more points → more facets
+    const N = clamp(Math.round(facets), 6, 30);
     const pts: THREE.Vector3[] = [];
     for (let i = 0; i < N; i++) {
       const y = 1 - (i / (N - 1)) * 2;
@@ -36,7 +61,7 @@ function useCrystalGeometry() {
     geo.computeVertexNormals();
     geo.center();
     return geo;
-  }, []);
+  }, [facets]);
 }
 
 function radialTexture(inner: string, outer: string): THREE.Texture {
@@ -51,22 +76,20 @@ function radialTexture(inner: string, outer: string): THREE.Texture {
   return new THREE.CanvasTexture(c);
 }
 
-function Backdrop() {
-  // just a soft amber glow behind the crystal — the bars were removed; the
-  // environment Lightformers still give the gem its reflections/fire.
-  const glow = useMemo(() => radialTexture("rgba(139,92,246,0.8)", "rgba(124,58,237,0)"), []);
+function Backdrop({ glow }: { glow: string }) {
+  const tex = useMemo(() => radialTexture(`rgba(${glow},0.8)`, `rgba(${glow},0)`), [glow]);
   return (
     <group position={[0, 0, -2.4]}>
       <mesh position={[0, 0, -0.6]}>
         <planeGeometry args={[9, 9]} />
-        <meshBasicMaterial map={glow} transparent opacity={0.9} blending={THREE.AdditiveBlending} depthWrite={false} />
+        <meshBasicMaterial map={tex} transparent opacity={0.9} blending={THREE.AdditiveBlending} depthWrite={false} />
       </mesh>
     </group>
   );
 }
 
-function Crystal({ reduced, hi }: { reduced: boolean; hi: boolean }) {
-  const geom = useCrystalGeometry();
+function Crystal({ reduced, hi, p, pal }: { reduced: boolean; hi: boolean; p: GemParams; pal: GemPalette }) {
+  const geom = useCrystalGeometry(p.facets);
   const mesh = useRef<THREE.Mesh>(null!);
   const { gl } = useThree();
   const rot = useRef({ x: -0.12, y: 0.3, vx: 0, vy: 0 });
@@ -126,7 +149,7 @@ function Crystal({ reduced, hi }: { reduced: boolean; hi: boolean }) {
   });
 
   return (
-    <mesh ref={mesh} geometry={geom} scale={0.92}>
+    <mesh ref={mesh} geometry={geom} scale={p.size}>
       <MeshTransmissionMaterial
         transmission={1}
         thickness={1.85}
@@ -137,9 +160,9 @@ function Crystal({ reduced, hi }: { reduced: boolean; hi: boolean }) {
         distortion={0.28}
         distortionScale={0.4}
         temporalDistortion={0.06}
-        color="#c4b3e0"
-        attenuationColor="#7c3aed"
-        attenuationDistance={0.5}
+        color={pal.surf}
+        attenuationColor={pal.fire}
+        attenuationDistance={mixN(1.1, 0.32, clamp(p.fire, 0, 1))}
         background={new THREE.Color("#060409")}
         resolution={hi ? 1024 : 640}
         samples={hi ? 8 : 5}
@@ -150,33 +173,42 @@ function Crystal({ reduced, hi }: { reduced: boolean; hi: boolean }) {
   );
 }
 
-function Scene({ reduced, hi }: { reduced: boolean; hi: boolean }) {
+function Scene({ reduced, hi, p }: { reduced: boolean; hi: boolean; p: GemParams }) {
+  const pal = GEM_PALETTES[clamp(p.colorIdx, 0, GEM_PALETTES.length - 1)] ?? GEM_PALETTES[0];
+  const rm = 0.5 + clamp(p.reflect, 0, 1) * 1.2; // reflection intensity multiplier
   return (
     <>
       <ambientLight intensity={0.3} />
-      <Backdrop />
-      <Crystal reduced={reduced} hi={hi} />
+      <Backdrop glow={pal.glow} />
+      <Crystal reduced={reduced} hi={hi} p={p} pal={pal} />
       <Environment resolution={256}>
-        {/* near-black world so the crystal reads as obsidian where unlit */}
         <color attach="background" args={["#050308"]} />
-        {/* violet fire */}
-        <Lightformer intensity={2.6} color="#7c3aed" position={[-3, 1.5, -1]} scale={[3, 4, 1]} />
-        <Lightformer intensity={1.6} color="#a78bfa" position={[3, 2, 1]} scale={[2, 5, 1]} />
-        <Lightformer intensity={1.8} color="#8b5cf6" position={[0, -3, 2]} scale={[5, 2, 1]} form="ring" />
+        {/* coloured "fire" */}
+        <Lightformer intensity={2.6 * rm} color={pal.l1} position={[-3, 1.5, -1]} scale={[3, 4, 1]} />
+        <Lightformer intensity={1.6 * rm} color={pal.l2} position={[3, 2, 1]} scale={[2, 5, 1]} />
+        <Lightformer intensity={1.8 * rm} color={pal.l1} position={[0, -3, 2]} scale={[5, 2, 1]} form="ring" />
         {/* small, bright white sources = sharp specular glints → reads "real" */}
-        <Lightformer intensity={3} color="#ffffff" position={[1.6, 3, -2]} scale={[0.9, 0.9, 1]} />
-        <Lightformer intensity={2} color="#ffffff" position={[-2, -1.5, 3]} scale={[0.6, 0.6, 1]} />
+        <Lightformer intensity={3 * rm} color="#ffffff" position={[1.6, 3, -2]} scale={[0.9, 0.9, 1]} />
+        <Lightformer intensity={2 * rm} color="#ffffff" position={[-2, -1.5, 3]} scale={[0.6, 0.6, 1]} />
       </Environment>
     </>
   );
 }
 
-/** The obsidian gem as a canvas-only engine — the parent supplies the framed box. */
-export default function ObsidianGem() {
+/** The obsidian gem as a canvas-only engine. Memoized on its primitive params
+ *  so unrelated Playground state (other toys' sliders) never re-renders it. */
+function ObsidianGem({ facets, size, fire, reflect, colorIdx }: Partial<GemParams> = {}) {
   const reduced = useReducedMotionSafe();
   const isDesktop = useIsDesktop();
   const wrap = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(true);
+  const p: GemParams = {
+    facets: facets ?? DEFAULT_GEM.facets,
+    size: size ?? DEFAULT_GEM.size,
+    fire: fire ?? DEFAULT_GEM.fire,
+    reflect: reflect ?? DEFAULT_GEM.reflect,
+    colorIdx: colorIdx ?? DEFAULT_GEM.colorIdx,
+  };
 
   useEffect(() => {
     const el = wrap.current;
@@ -194,8 +226,10 @@ export default function ObsidianGem() {
         frameloop={active ? "always" : "never"}
         gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
       >
-        <Scene reduced={reduced} hi={isDesktop} />
+        <Scene reduced={reduced} hi={isDesktop} p={p} />
       </Canvas>
     </div>
   );
 }
+
+export default memo(ObsidianGem);

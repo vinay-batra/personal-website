@@ -23,18 +23,22 @@ Full prose lives in `README.md`; this file is the agent-facing state + conventio
 Work (Corvo/Lark 2D visuals + FBLA One 2D dashboard) · a **"From scratch"** Work subsection
 (pathfinding visualizer + ray tracer + neural net, all hand-written) · GitHub heatmap · Leadership
 timeline / Community ledger / Recommendations · Contact · a **Playground** of 4 WebGL toys (ink fluid,
-lava, kaleidoscope, obsidian gem) · Footer. Section accents cycle **cool tones only** (blues, greens,
+lava, kaleidoscope, obsidian gem), each with its own control panel · Footer. Section accents cycle **cool tones only** (blues, greens,
 purples, pinks); amber is kept for the brand mark + buttons.
 
 ### Open threads (deferred, explicitly requested, NOT done)
-1. **Settings/controls on 3 of the 4 Playground toys** - obsidian (facets / reflections / colors /
-   size), lava, kaleidoscope. Only the ink has controls. Needs a uniforms-ref plumbed through
-   `ShaderToy.tsx` + a reactive `ObsidianGem` material/geometry.
-2. **Text Adventure** - the 4th from-scratch demo (web terminal: rooms, inventory, combat, OOP).
-3. **Algo-grid on mobile** - cells are ~9px (works but cramped); give it fewer COLS on phones.
-4. **Raven companion** - `RavenCompanion.tsx` is built but **unmounted/inactive**; it renders null
+1. **Text Adventure** - the 4th from-scratch demo (web terminal: rooms, inventory, combat, OOP).
+2. **Algo-grid on mobile** - cells are ~9px (works but cramped); give it fewer COLS on phones.
+3. **Raven companion** - `RavenCompanion.tsx` is built but **unmounted/inactive**; it renders null
    until a real artist-made `raven.glb` is dropped in `/public`. Do NOT hand-build a raven from
    primitives (it always looks wrong; tried 10+ times) - load a real GLB.
+
+Done June 14 (2nd pass): **all 4 Playground toys now have control panels** and the **lava is a real
+cursor-push metaball sim** (CPU blob physics → `uBlobs[]` uniform; the cursor is a force field, not a
+blob). The **ray tracer** got a zoom-in + a sharp anti-aliased settle pass (medium res while
+dragging, no more pixelation) + a visible sun. The **neural net** got a finer decision field, slower
+watchable training, paint-your-own-data (Class A / B / Erase brushes), and 5 presets (spiral, circles,
+moons, xor, blobs).
 
 ---
 
