@@ -19,7 +19,6 @@ const SECTION_ACCENT: Record<string, string> = {
   COMMUNITY: "#8b5cf6", // violet
   WORDS: "#a855f7", // purple
   CONTACT: "#d946ef", // fuchsia
-  PLAYGROUND: "#ec4899", // pink
 };
 
 export default function AccentTracker() {

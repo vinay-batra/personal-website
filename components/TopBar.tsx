@@ -11,7 +11,6 @@ const LINKS: [string, string, string][] = [
   ["05", "SERVE", "#community"],
   ["06", "RECOMMENDATIONS", "#words"],
   ["07", "CONTACT", "#contact"],
-  ["08", "PLAY", "#playground"],
 ];
 
 export default function TopBar() {

@@ -23,7 +23,6 @@ const LABELS: Record<string, string> = {
   COMMUNITY: "Serve",
   WORDS: "Recommendations",
   CONTACT: "Contact",
-  PLAYGROUND: "Play",
 };
 
 type Tick = { f: number; ds: string };

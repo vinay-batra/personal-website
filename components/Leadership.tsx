@@ -43,9 +43,9 @@ const ENTRIES: Entry[] = [
   },
   {
     year: "2026",
-    role: "CSO · SSAC Lead",
+    role: "CSO · SSIC Lead",
     org: "COUNCIL ROCK HS SOUTH",
-    desc: "Designed and launched the STEM Solutions Innovation Competition. Secured $1,500+ in grants and built the prompts, judging rubric, and a mixed panel of teachers, students, and community members.",
+    desc: "Designed and launched the STEM Solutions Innovation Challenge. Secured $1,500+ in grants and built the prompts, judging rubric, and a mixed panel of teachers, students, and community members.",
   },
   {
     year: "2025",
