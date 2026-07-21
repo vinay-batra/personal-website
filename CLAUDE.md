@@ -59,6 +59,8 @@ separation.
 ---
 
 ## Conventions (the user cares about these)
+- **Push to `main` automatically** once a change is made and verified (build/preview clean) - don't
+  ask for confirmation first. Standing instruction from Vinay (2026-07-21).
 - **No em dashes in visible copy.** Use commas / colons / periods. (Code comments are fine.)
 - **Section accents = a cyan → pink spectrum** across the 8 chapters (hero = near-white) via
   `AccentTracker.tsx` `SECTION_ACCENT` + `lib/accent.ts` (`DEFAULT` = hero white). The chapters are
