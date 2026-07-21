@@ -55,8 +55,8 @@ const CHANNELS: Channel[] = [
   },
   {
     label: "EMAIL",
-    value: "VINAYBATRA2010@GMAIL.COM",
-    href: "mailto:vinaybatra2010@gmail.com",
+    value: "VINAYBPROJECTS@GMAIL.COM",
+    href: "mailto:vinaybprojects@gmail.com",
     external: false,
     accent: false,
   },

@@ -21,7 +21,7 @@ const LABELS: Record<string, string> = {
   GITHUB: "Lately",
   LEADERSHIP: "Lead",
   COMMUNITY: "Serve",
-  WORDS: "Words",
+  WORDS: "Recommendations",
   CONTACT: "Contact",
   PLAYGROUND: "Play",
 };

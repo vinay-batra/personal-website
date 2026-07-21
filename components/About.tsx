@@ -14,14 +14,53 @@ const VIEWPORT = { once: true, margin: "-80px" } as const;
 
 const SCORES = [
   { test: "ACT", score: "35", max: "36", note: "99th · Feb 2026" },
-  { test: "SSAT", score: "2398", max: "2400", note: "99th · Apr 2025" },
 ];
 
 const LANGS = [
   { name: "English", level: "Native" },
   { name: "Hindi", level: "Native" },
-  { name: "Spanish", level: "Professional · Duolingo 115" },
+  { name: "Spanish", level: "Professional · Duolingo 115 · Spanish Honor Society" },
   { name: "Urdu", level: "Professional" },
+];
+
+const COURSEWORK = [
+  {
+    grade: "11th",
+    gpa: null as string | null,
+    courses: [
+      "AP Calc BC",
+      "Honors Spanish 4",
+      "Honors Physics",
+      "AP European History",
+      "AP Lang",
+      "AP Biology",
+      "AP Psychology (self-study)",
+      "AP Environmental Science (self-study)",
+    ],
+  },
+  {
+    grade: "10th",
+    gpa: "4.55",
+    courses: [
+      "Honors Analysis",
+      "Honors Spanish 3",
+      "Honors Biology",
+      "AP US History",
+      "Honors English 10",
+      "AP Computer Science Principles",
+    ],
+  },
+  {
+    grade: "9th",
+    gpa: "4.37",
+    courses: [
+      "Honors Algebra 2",
+      "Honors Spanish 2",
+      "Accelerated Chem/Physics",
+      "Honors History 9",
+      "Honors English 9",
+    ],
+  },
 ];
 
 export default function About() {
@@ -78,7 +117,7 @@ export default function About() {
                 <span className="h-px w-4 bg-[#22d3ee]/50" />
                 Test Scores
               </p>
-              <div className="mt-5 grid grid-cols-2 gap-x-6">
+              <div className="mt-5">
                 {SCORES.map((s) => (
                   <div key={s.test} className="flex items-baseline gap-3">
                     <span className="font-serif text-[2.4rem] leading-none text-[#22d3ee] tabular-nums">
@@ -124,6 +163,32 @@ export default function About() {
                   </li>
                 ))}
               </ul>
+            </motion.div>
+
+            <motion.div
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="show"
+              viewport={VIEWPORT}
+              custom={4}
+            >
+              <p className="flex items-center gap-2.5 font-mono text-[10px] tracking-[0.25em] text-dim uppercase">
+                <span className="h-px w-4 bg-[#22d3ee]/50" />
+                Coursework
+              </p>
+              <div className="mt-4 space-y-4">
+                {COURSEWORK.map((c) => (
+                  <div key={c.grade}>
+                    <p className="flex items-baseline justify-between font-mono text-[10px] tracking-[0.14em] text-bone/60 uppercase">
+                      <span>{c.grade} Grade</span>
+                      <span className="text-dim">{c.gpa ? `${c.gpa} GPA` : "In progress"}</span>
+                    </p>
+                    <p className="mt-1.5 font-sans text-[13px] leading-[1.6] text-bone/80">
+                      {c.courses.join(", ")}
+                    </p>
+                  </div>
+                ))}
+              </div>
             </motion.div>
           </div>
         </div>

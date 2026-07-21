@@ -57,7 +57,8 @@ const ITEMS: Item[] = [
   { label: "FBLA One", kind: "fact", blurb: "FBLA One — an all-in-one platform I built for running FBLA chapters." },
   { label: "Investing since 2021", kind: "fact", blurb: "I've independently managed a long-term investment portfolio since 2021, benchmarking my returns against the S&P 500." },
   { label: "185+ volunteer hrs", kind: "fact", blurb: "Logged 185+ volunteer hours across literacy, food security, and environmental causes." },
-  { label: "ACT 35 · SSAT 2398", kind: "fact", blurb: "Scored a 35 on the ACT and 2398 on the SSAT — both 99th percentile." },
+  { label: "ACT 35", kind: "fact", blurb: "Scored a 35 on the ACT (36 max), 99th percentile." },
+  { label: "Published, Stone Soup", kind: "fact", blurb: "Attended a 4-week creative writing program at CTY (Johns Hopkins' Center for Talented Youth) in Rhode Island and had a piece published in Stone Soup magazine, 2022." },
   { label: "Wharton Youth '26", kind: "fact", blurb: "Accepted to UPenn's Wharton Global Youth Essentials of Entrepreneurship program this summer." },
   { label: "Chief Science Officer", kind: "fact", blurb: "Chief Science Officer at Council Rock South, leading a student-led STEM innovation competition." },
 
@@ -90,7 +91,7 @@ const ITEMS: Item[] = [
 
   // off the screen
   { label: "Reading", kind: "skill", blurb: "I read widely: mystery, speculative fiction, and increasingly poetry." },
-  { label: "Soccer", kind: "skill", blurb: "I play soccer." },
+  { label: "Soccer", kind: "skill", blurb: "Right back for Yardley Makefield Soccer's EDP 1 team, about 10 hours a week." },
   { label: "Lacrosse", kind: "skill", blurb: "I play lacrosse." },
   { label: "Skiing", kind: "skill", blurb: "I ski whenever I get the chance." },
   { label: "Working out", kind: "skill", blurb: "I lift and train regularly." },

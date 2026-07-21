@@ -11,6 +11,7 @@ type Quote = {
   text: string;
   name: string;
   title: string;
+  linkedin: string;
   align: "left" | "right";
 };
 
@@ -20,6 +21,7 @@ const QUOTES: Quote[] = [
     text: "Vinay demonstrated a strong combination of curiosity, technical ability, and initiative. He was quick to grasp complex concepts, translate them into practical solutions, and continuously iterate to improve model performance. I'm confident he will continue to do excellent work at the intersection of finance and AI.",
     name: "Anushka Goyal",
     title: "Director of Programs, BetterMind Labs",
+    linkedin: "https://www.linkedin.com/in/abettermind/",
     align: "left",
   },
   {
@@ -27,6 +29,7 @@ const QUOTES: Quote[] = [
     text: "Vinay has dedicated his free time to our community by writing monthly book reviews for our young adult patrons. He has shown consistency and dependability, and challenged himself by reviewing different genres to reach a broader audience. I would strongly recommend Vinay Batra without hesitation.",
     name: "Susan Elko",
     title: "Reference Librarian, Free Library of Northampton Twp",
+    linkedin: "https://www.linkedin.com/in/susan-elko-8222333b5/",
     align: "right",
   },
 ];
@@ -112,9 +115,14 @@ function PullQuote({ quote, simple }: { quote: Quote; simple: boolean }) {
 
       {/* mono ledger attribution */}
       <figcaption className="mt-8 flex max-w-md items-baseline">
-        <span className="font-mono text-[12px] tracking-[0.15em] text-bone uppercase">
+        <a
+          href={quote.linkedin}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-mono text-[12px] tracking-[0.15em] text-bone uppercase underline decoration-bone/25 underline-offset-4 transition-colors hover:decoration-bone/70"
+        >
           {quote.name}
-        </span>
+        </a>
         <span className="dotlead" aria-hidden />
         <span className="text-right font-mono text-[11px] text-dim uppercase">
           {quote.title}

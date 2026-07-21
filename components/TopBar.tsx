@@ -9,7 +9,7 @@ const LINKS: [string, string, string][] = [
   ["03", "LATELY", "#github"],
   ["04", "LEAD", "#leadership"],
   ["05", "SERVE", "#community"],
-  ["06", "WORDS", "#words"],
+  ["06", "RECOMMENDATIONS", "#words"],
   ["07", "CONTACT", "#contact"],
   ["08", "PLAY", "#playground"],
 ];

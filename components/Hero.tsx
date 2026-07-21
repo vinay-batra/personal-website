@@ -78,7 +78,7 @@ export default function Hero() {
       >
         <h1>
           <span className="mb-5 block font-mono text-[11px] font-medium tracking-[0.22em] text-bone/55 uppercase">
-            <TypeOn text="VINAY BATRA · HIGH SCHOOL QUANT · GREATER PHILADELPHIA" />
+            <TypeOn text="VINAY BATRA · BUILDER & INVESTOR · 3 PRODUCTS SHIPPED · GREATER PHILADELPHIA" />
           </span>
           <span className="serif-head block font-serif text-[clamp(2.6rem,7.5vw,6.25rem)] leading-[1.0] font-semibold tracking-tight">
             {lines.map((line, i) => (
@@ -132,7 +132,7 @@ export default function Hero() {
             LinkedIn
           </a>
           <a
-            href="mailto:vinaybatra2010@gmail.com"
+            href="mailto:vinaybprojects@gmail.com"
             className="inklink font-mono text-[11px] tracking-[0.18em] text-dim uppercase"
           >
             Email
