@@ -9,6 +9,7 @@ import { EASE } from "@/lib/motion";
 
 // Every product shares the same core stack — shown identically on each block.
 const STACK = ["Next.js", "TypeScript", "FastAPI", "Python", "Supabase", "Claude API"];
+const MORECO_STACK = ["Next.js", "TypeScript", "Tailwind CSS", "Supabase", "Resend", "Claude API"];
 
 const container: Variants = {
   hidden: {},
@@ -22,6 +23,7 @@ const item: Variants = {
 const CorvoChart = dynamic(() => import("./visuals/CorvoChart"), { ssr: false });
 const LarkStrings = dynamic(() => import("./visuals/LarkStrings"), { ssr: false });
 const FblaDashboard = dynamic(() => import("./visuals/FblaDashboard"), { ssr: false });
+const MorecoUnits = dynamic(() => import("./visuals/MorecoUnits"), { ssr: false });
 
 type Project = {
   index: string;
@@ -34,7 +36,7 @@ type Project = {
   tags: string[];
   links: { label: string; href: string; primary?: boolean }[];
   preview?: { src: string; href: string };
-  kind: "corvo" | "lark" | "fbla";
+  kind: "corvo" | "lark" | "fbla" | "moreco";
 };
 
 const PROJECTS: Project[] = [
@@ -96,9 +98,29 @@ const PROJECTS: Project[] = [
     preview: { src: "/fbla-preview.png", href: "https://fbla.one" },
     kind: "fbla",
   },
+  {
+    index: "04",
+    name: "Moreco Properties",
+    mandate: "Rental listings site for a local property manager",
+    status: "LIVE",
+    brand: "#b04426",
+    desc: "Moreco Properties needed a real website instead of word of mouth and paper flyers. I built the family's first site: live unit availability, an AI chat that answers renter questions, and one form covering both inquiries and maintenance. My first time building for someone else's business instead of my own. Next up: a private finance dashboard so the owner can track rent and bills in one place.",
+    features: [
+      "Live unit availability",
+      "AI chat for renter questions",
+      "Unified inquiry + maintenance form",
+      "Owner finance dashboard (in progress)",
+    ],
+    tags: MORECO_STACK,
+    links: [
+      { label: "Visit morecoproperties.com", href: "https://morecoproperties.com", primary: true },
+    ],
+    preview: { src: "/moreco-preview.png", href: "https://morecoproperties.com" },
+    kind: "moreco",
+  },
 ];
 
-const VISUALS = { corvo: CorvoChart, lark: LarkStrings, fbla: FblaDashboard };
+const VISUALS = { corvo: CorvoChart, lark: LarkStrings, fbla: FblaDashboard, moreco: MorecoUnits };
 
 function ProjectBlock({ project, flip }: { project: Project; flip: boolean }) {
   const ref = useRef<HTMLElement>(null);
