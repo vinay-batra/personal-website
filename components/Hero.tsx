@@ -78,7 +78,7 @@ export default function Hero() {
       >
         <h1>
           <span className="mb-5 block font-mono text-[11px] font-medium tracking-[0.22em] text-bone/55 uppercase">
-            <TypeOn text="VINAY BATRA · BUILDER & INVESTOR · 3 PRODUCTS SHIPPED · GREATER PHILADELPHIA" />
+            <TypeOn text="VINAY BATRA · BUILDER & INVESTOR · 4 PRODUCTS SHIPPED · GREATER PHILADELPHIA" />
           </span>
           <span className="serif-head block font-serif text-[clamp(2.6rem,7.5vw,6.25rem)] leading-[1.0] font-semibold tracking-tight">
             {lines.map((line, i) => (
@@ -103,8 +103,8 @@ export default function Hero() {
           className="mt-8 max-w-lg font-sans text-[16px] leading-[1.7] text-bone/70 md:text-[17px]"
         >
           I&rsquo;m a high school student in the Philadelphia area. I&rsquo;ve shipped
-          three products: Corvo, Lark, and FBLA One. I&rsquo;ve also managed my own
-          investment portfolio since 2021.
+          four products: Corvo, Lark, FBLA One, and Moreco Properties. I&rsquo;ve also
+          managed my own investment portfolio since 2021.
         </motion.p>
 
         <motion.div
@@ -130,12 +130,6 @@ export default function Hero() {
             className="inklink font-mono text-[11px] tracking-[0.18em] text-dim uppercase"
           >
             LinkedIn
-          </a>
-          <a
-            href="mailto:vinaybprojects@gmail.com"
-            className="inklink font-mono text-[11px] tracking-[0.18em] text-dim uppercase"
-          >
-            Email
           </a>
         </motion.div>
       </motion.div>
