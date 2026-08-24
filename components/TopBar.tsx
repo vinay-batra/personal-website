@@ -83,7 +83,7 @@ export default function TopBar() {
               >
                 <span
                   className={`transition-colors ${
-                    isActive ? "text-amber" : "text-amber/50 group-hover:text-amber"
+                    isActive ? "text-hi" : "text-hi/50 group-hover:text-hi"
                   }`}
                 >
                   {idx}

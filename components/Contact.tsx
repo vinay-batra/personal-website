@@ -9,56 +9,28 @@ type Channel = {
   value: string;
   href: string;
   external: boolean;
-  accent: boolean;
   note?: string;
 };
 
 const CHANNELS: Channel[] = [
-  // the work — live products, in amber
   {
-    label: "CORVO",
-    value: "CORVO.CAPITAL",
-    href: "https://corvo.capital",
-    external: true,
-    accent: true,
+    label: "EMAIL",
+    value: "VINAYBPROJECTS@GMAIL.COM",
+    href: "mailto:vinaybprojects@gmail.com",
+    external: false,
   },
   {
-    label: "LARK",
-    value: "LARK.COACH",
-    href: "https://lark.coach",
-    external: true,
-    accent: true,
-  },
-  {
-    label: "FBLA ONE",
-    value: "FBLA.ONE",
-    href: "https://fbla.one",
-    external: true,
-    accent: true,
-  },
-  // find me
-  {
-    label: "GITHUB",
-    value: "@VINAY-BATRA",
-    href: "https://github.com/vinay-batra",
-    external: true,
-    accent: false,
-    note: "3.2K commits",
+    label: "PHONE",
+    value: "(215) 883-6680",
+    href: "tel:+12158836680",
+    external: false,
   },
   {
     label: "LINKEDIN",
     value: "/IN/VINAY-BATRA",
     href: "https://www.linkedin.com/in/vinay-batra",
     external: true,
-    accent: false,
     note: "2.3K followers · 2.3K connections",
-  },
-  {
-    label: "EMAIL",
-    value: "VINAYBPROJECTS@GMAIL.COM",
-    href: "mailto:vinaybprojects@gmail.com",
-    external: false,
-    accent: false,
   },
 ];
 
@@ -66,7 +38,7 @@ export default function Contact() {
   return (
     <section id="contact" data-section="CONTACT" className="relative">
       <div className="mx-auto max-w-6xl px-6 pt-28 md:pt-44 pb-20">
-        <SectionHeading index="07" eyebrow="CONTACT" accent="#d946ef" lines={["Get in", "touch."]} />
+        <SectionHeading index="07" eyebrow="CONTACT" accent="#dfe7ee" lines={["Get in", "touch."]} />
 
         <motion.p
           className="mt-8 max-w-md font-sans text-[16px] leading-[1.7] text-bone/70"
@@ -86,7 +58,7 @@ export default function Contact() {
               key={c.label}
               href={c.href}
               {...(c.external ? { target: "_blank", rel: "noopener" } : {})}
-              className="group flex items-baseline border-b border-bone/12 py-5 outline-amber focus-visible:outline"
+              className="group flex items-baseline border-b border-bone/12 py-5 outline-hi focus-visible:outline"
               variants={fadeUp}
               initial="hidden"
               whileInView="show"
@@ -98,11 +70,7 @@ export default function Contact() {
               </span>
               <span className="dotlead" aria-hidden />
               <span className="flex flex-col items-end leading-tight">
-                <span
-                  className={`font-mono text-[13px] tracking-wide uppercase ${
-                    c.accent ? "text-amber" : "text-bone"
-                  }`}
-                >
+                <span className="font-mono text-[13px] tracking-wide text-bone uppercase">
                   {c.value}
                 </span>
                 {c.note && (

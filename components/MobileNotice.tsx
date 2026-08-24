@@ -48,7 +48,7 @@ export default function MobileNotice() {
             exit={{ opacity: 0, y: 24, scale: 0.96 }}
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
           >
-            <p className="font-mono text-[10px] tracking-[0.25em] text-amber uppercase">
+            <p className="font-mono text-[10px] tracking-[0.25em] text-hi uppercase">
               A quick note
             </p>
             <h2 className="serif-head mt-3 font-serif text-[1.9rem] leading-tight font-semibold text-bone">
@@ -60,7 +60,7 @@ export default function MobileNotice() {
             </p>
             <button
               onClick={dismiss}
-              className="mt-6 w-full border border-amber/40 bg-amber/10 py-3 font-mono text-[11px] tracking-[0.18em] text-amber uppercase transition-colors hover:bg-amber/20"
+              className="mt-6 w-full border border-hi/40 bg-hi/10 py-3 font-mono text-[11px] tracking-[0.18em] text-hi uppercase transition-colors hover:bg-hi/20"
             >
               Got it
             </button>

@@ -12,10 +12,6 @@ const AboutConstellation = dynamic(() => import("./visuals/AboutConstellation"),
 
 const VIEWPORT = { once: true, margin: "-80px" } as const;
 
-const SCORES = [
-  { test: "ACT", score: "35", max: "36", note: "99th · Feb 2026" },
-];
-
 const LANGS = [
   { name: "English", level: "Native" },
   { name: "Hindi", level: "Native" },
@@ -30,10 +26,10 @@ const COURSEWORK = [
     courses: [
       "AP Calc BC",
       "Honors Spanish 4",
+      "Honors Chemistry",
       "Honors Physics",
       "AP European History",
       "AP Lang",
-      "AP Biology",
       "AP Psychology (self-study)",
       "AP Environmental Science (self-study)",
     ],
@@ -76,7 +72,7 @@ export default function About() {
           <SectionHeading
             index="01"
             eyebrow="ABOUT"
-            accent="#22d3ee"
+            accent="#dfe7ee"
             lines={["A bit", "about me."]}
           />
           <div className="mt-8 font-sans text-[16px] leading-[1.7] text-bone/80 md:text-[17px]">
@@ -88,8 +84,7 @@ export default function About() {
               custom={0}
             >
               I&rsquo;m a student at Council Rock High School South. I build
-              software, usually because I wanted something to exist and it
-              didn&rsquo;t yet.
+              software for myself, the community, and businesses.
             </motion.p>
             <motion.p
               className="mt-4"
@@ -99,12 +94,12 @@ export default function About() {
               viewport={VIEWPORT}
               custom={1}
             >
-              Outside of that I lead a few clubs, volunteer around my community,
-              and read a lot. Drag the constellation to explore what I&rsquo;m into.
+              Outside of that I lead clubs, volunteer locally, and stay active.
+              Drag the constellation to explore what I&rsquo;m into.
             </motion.p>
           </div>
 
-          {/* test scores + languages — stacked, clean */}
+          {/* languages + coursework — stacked, clean */}
           <div className="mt-10 max-w-md space-y-8">
             <motion.div
               variants={fadeUp}
@@ -114,38 +109,7 @@ export default function About() {
               custom={2}
             >
               <p className="flex items-center gap-2.5 font-mono text-[10px] tracking-[0.25em] text-dim uppercase">
-                <span className="h-px w-4 bg-[#22d3ee]/50" />
-                Test Scores
-              </p>
-              <div className="mt-5">
-                {SCORES.map((s) => (
-                  <div key={s.test} className="flex items-baseline gap-3">
-                    <span className="font-serif text-[2.4rem] leading-none text-[#22d3ee] tabular-nums">
-                      {s.score}
-                    </span>
-                    <div className="flex flex-col gap-1 pb-1">
-                      <span className="font-mono text-[11px] tracking-[0.16em] text-bone/75 uppercase">
-                        {s.test}
-                        <span className="text-dim"> /{s.max}</span>
-                      </span>
-                      <span className="font-mono text-[9px] tracking-[0.12em] text-dim uppercase">
-                        {s.note}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-
-            <motion.div
-              variants={fadeUp}
-              initial="hidden"
-              whileInView="show"
-              viewport={VIEWPORT}
-              custom={3}
-            >
-              <p className="flex items-center gap-2.5 font-mono text-[10px] tracking-[0.25em] text-dim uppercase">
-                <span className="h-px w-4 bg-[#22d3ee]/50" />
+                <span className="h-px w-4 bg-[#dfe7ee]/50" />
                 Languages
               </p>
               <ul className="mt-3 divide-y divide-bone/10">
@@ -170,10 +134,10 @@ export default function About() {
               initial="hidden"
               whileInView="show"
               viewport={VIEWPORT}
-              custom={4}
+              custom={3}
             >
               <p className="flex items-center gap-2.5 font-mono text-[10px] tracking-[0.25em] text-dim uppercase">
-                <span className="h-px w-4 bg-[#22d3ee]/50" />
+                <span className="h-px w-4 bg-[#dfe7ee]/50" />
                 Coursework
               </p>
               <div className="mt-4 space-y-4">

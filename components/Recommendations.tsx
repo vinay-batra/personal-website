@@ -71,7 +71,7 @@ function PullQuote({ quote, simple }: { quote: Quote; simple: boolean }) {
       {/* oversized hanging quotation mark */}
       <motion.span
         aria-hidden
-        className="block h-[0.55em] overflow-visible font-serif text-[120px] leading-none text-[#a855f7]/90 md:text-[140px]"
+        className="block h-[0.55em] overflow-visible font-serif text-[120px] leading-none text-[#dfe7ee]/90 md:text-[140px]"
         style={{ transformOrigin: "bottom left" }}
         initial={
           reduced ? { opacity: 0 } : { opacity: 0, rotate: -8, scale: 0.6 }
@@ -146,7 +146,7 @@ export default function Recommendations() {
       <SectionHeading
         index="06"
         eyebrow="RECOMMENDATIONS"
-        accent="#a855f7"
+        accent="#dfe7ee"
         lines={["What people", "say."]}
       />
 

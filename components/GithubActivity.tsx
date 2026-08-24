@@ -82,13 +82,13 @@ export default function GithubActivity() {
         viewport={{ once: true, margin: "-80px" }}
       >
         <p
-          className="mb-4 flex items-center gap-2.5 font-mono text-[11px] font-medium tracking-[0.18em] text-[#3b82f6] uppercase"
+          className="mb-4 flex items-center gap-2.5 font-mono text-[11px] font-medium tracking-[0.18em] text-[#dfe7ee] uppercase"
         >
           <span className="relative flex h-1.5 w-1.5">
             {live && (
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#3b82f6]/60" />
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#dfe7ee]/60" />
             )}
-            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[#3b82f6]" />
+            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[#dfe7ee]" />
           </span>
           <TypeOn text="03 · GITHUB · LIVE" />
         </p>
@@ -100,7 +100,7 @@ export default function GithubActivity() {
       <div className="mt-8 flex flex-wrap items-baseline gap-x-3 gap-y-1 font-mono text-[13px] text-bone/70">
         {total !== null ? (
           <>
-            <span className="text-2xl font-semibold text-[#3b82f6] tabular-nums">
+            <span className="text-2xl font-semibold text-[#dfe7ee] tabular-nums">
               <Counter to={total} />
             </span>
             <span>contributions in the last year</span>

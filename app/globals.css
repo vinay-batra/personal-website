@@ -9,7 +9,7 @@
   --color-surface: #1a1712;
   --color-bone: #ede4d3;
   --color-dim: #9c9080;
-  --color-amber: #e8a33d;
+  --color-hi: #e6edf3;
   --color-sheen: #87a5b4;
   --color-up: #5da271;
   --color-down: #d14d41;
@@ -32,7 +32,7 @@ body {
 }
 
 ::selection {
-  background: #e8a33d;
+  background: #e6edf3;
   color: #0f0d0a;
 }
 
@@ -87,9 +87,9 @@ html.xcursor * {
   transition: text-decoration-color 0.2s, color 0.2s;
 }
 .inklink:hover {
-  color: #e8a33d;
+  color: #e6edf3;
   text-decoration-style: solid;
-  text-decoration-color: #e8a33d;
+  text-decoration-color: #e6edf3;
 }
 .inklink:hover::after {
   content: " ↗";
@@ -105,7 +105,7 @@ html.xcursor * {
   float: left;
   padding-right: 0.08em;
   padding-top: 0.05em;
-  color: #e8a33d;
+  color: #e6edf3;
 }
 
 /* headline italic word treatment */
@@ -166,4 +166,29 @@ html.xcursor * {
   .gh-cell { animation: none !important; opacity: 1 !important; }
   .algo-visited { animation: none; background-color: rgba(135, 165, 180, 0.3); }
   .algo-path { animation: none; background-color: rgba(236, 72, 153, 0.92); }
+}
+
+/* ---------- volunteer tally grid (Community) ---------- */
+@keyframes tallyIn {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.tally span {
+  opacity: 0;
+}
+.tally[data-in="true"] span {
+  animation: tallyIn 0.42s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@media (prefers-reduced-motion: reduce) {
+  .tally span,
+  .tally[data-in="true"] span {
+    animation: none;
+    opacity: 1;
+  }
 }

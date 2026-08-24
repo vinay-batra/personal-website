@@ -9,7 +9,7 @@ import { LineSegmentsGeometry } from "three/examples/jsm/lines/LineSegmentsGeome
 import { LineMaterial } from "three/examples/jsm/lines/LineMaterial.js";
 import { useReducedMotionSafe } from "@/lib/useReducedMotionSafe";
 
-const AMBER = new THREE.Color("#22d3ee"); // the About (cyan) accent — interaction highlight
+const AMBER = new THREE.Color("#dfe7ee"); // the About (cyan) accent — interaction highlight
 const BONE = new THREE.Color("#EDE4D3");
 const RADIUS = 4.2;
 // the sphere sits at the scene origin (canvas center); the canvas itself is
@@ -57,7 +57,6 @@ const ITEMS: Item[] = [
   { label: "FBLA One", kind: "fact", blurb: "FBLA One — an all-in-one platform I built for running FBLA chapters." },
   { label: "Investing since 2021", kind: "fact", blurb: "I've independently managed a long-term investment portfolio since 2021, benchmarking my returns against the S&P 500." },
   { label: "185+ volunteer hrs", kind: "fact", blurb: "Logged 185+ volunteer hours across literacy, food security, and environmental causes." },
-  { label: "ACT 35", kind: "fact", blurb: "Scored a 35 on the ACT (36 max), 99th percentile." },
   { label: "Published, Stone Soup", kind: "fact", blurb: "Attended a 4-week creative writing program at CTY (Johns Hopkins' Center for Talented Youth) in Rhode Island and had a piece published in Stone Soup magazine, 2022." },
   { label: "Wharton Youth '26", kind: "fact", blurb: "Accepted to UPenn's Wharton Global Youth Essentials of Entrepreneurship program this summer." },
   { label: "Chief Science Officer", kind: "fact", blurb: "Chief Science Officer at Council Rock South, leading a student-led STEM innovation competition." },
@@ -629,7 +628,7 @@ export default function AboutConstellation() {
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(42% 38% at 50% 41%, rgba(214,212,220,0.07), rgba(232,163,61,0.035) 45%, transparent 70%)",
+            "radial-gradient(42% 38% at 50% 41%, rgba(214,212,220,0.07), rgba(223,231,238,0.035) 45%, transparent 70%)",
         }}
       />
       <Canvas
@@ -655,12 +654,12 @@ export default function AboutConstellation() {
         className="pointer-events-none absolute bottom-3 left-1/2 flex -translate-x-1/2 translate-y-7 flex-col items-center gap-1.5 text-center"
         style={{ textShadow: "0 1px 10px rgba(0,0,0,0.9)" }}
       >
-        <p className="font-mono text-[11px] tracking-[0.32em] text-[#22d3ee]/80 uppercase">
+        <p className="font-mono text-[11px] tracking-[0.32em] text-[#dfe7ee]/80 uppercase">
           A map of me
         </p>
         <p
           className={`font-mono text-[11px] tracking-[0.18em] uppercase transition-colors ${
-            paused ? "text-[#22d3ee]" : "text-bone/55"
+            paused ? "text-[#dfe7ee]" : "text-bone/55"
           }`}
         >
           {paused
@@ -677,42 +676,42 @@ export default function AboutConstellation() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.92, y: 4 }}
             transition={{ type: "spring", stiffness: 460, damping: 26, mass: 0.7 }}
-            className="absolute z-10 w-[240px] origin-top overflow-hidden rounded-xl border border-[#22d3ee]/30 bg-gradient-to-b from-[#0c1a1d]/95 to-[#07100f]/96 shadow-[0_18px_48px_-12px_rgba(0,0,0,0.85)] backdrop-blur-md"
+            className="absolute z-10 w-[240px] origin-top overflow-hidden rounded-xl border border-[#dfe7ee]/30 bg-gradient-to-b from-[#0c1a1d]/95 to-[#07100f]/96 shadow-[0_18px_48px_-12px_rgba(0,0,0,0.85)] backdrop-blur-md"
             style={{ left: popup.left, top: popup.top }}
           >
             {/* animated top accent sweep */}
             <motion.div
-              className="h-px w-full bg-gradient-to-r from-transparent via-[#22d3ee] to-transparent"
+              className="h-px w-full bg-gradient-to-r from-transparent via-[#dfe7ee] to-transparent"
               initial={{ opacity: 0.3, scaleX: 0.4 }}
               animate={{ opacity: [0.4, 0.9, 0.4], scaleX: 1 }}
               transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
             />
             <div className="flex items-start gap-2.5 px-3.5 pt-3">
               <motion.span
-                className="mt-[6px] h-1.5 w-1.5 shrink-0 rounded-full bg-[#22d3ee]"
+                className="mt-[6px] h-1.5 w-1.5 shrink-0 rounded-full bg-[#dfe7ee]"
                 animate={{
                   scale: [1, 1.35, 1],
                   boxShadow: [
-                    "0 0 6px 1px rgba(232,163,61,0.55)",
-                    "0 0 12px 3px rgba(232,163,61,0.85)",
-                    "0 0 6px 1px rgba(232,163,61,0.55)",
+                    "0 0 6px 1px rgba(223,231,238,0.55)",
+                    "0 0 12px 3px rgba(223,231,238,0.85)",
+                    "0 0 6px 1px rgba(223,231,238,0.55)",
                   ],
                 }}
                 transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
               />
-              <p className="flex-1 font-mono text-[10px] leading-[1.45] tracking-[0.16em] text-[#22d3ee] uppercase">
+              <p className="flex-1 font-mono text-[10px] leading-[1.45] tracking-[0.16em] text-[#dfe7ee] uppercase">
                 {item.label}
               </p>
               <button
                 onClick={closePopup}
                 aria-label="Close"
                 data-cursor="close"
-                className="-mt-1 -mr-1 grid h-6 w-6 shrink-0 place-items-center rounded-full text-[15px] leading-none text-dim transition-colors hover:bg-[#22d3ee]/10 hover:text-[#22d3ee]"
+                className="-mt-1 -mr-1 grid h-6 w-6 shrink-0 place-items-center rounded-full text-[15px] leading-none text-dim transition-colors hover:bg-[#dfe7ee]/10 hover:text-[#dfe7ee]"
               >
                 ×
               </button>
             </div>
-            <div className="mx-3.5 mt-2.5 h-px bg-gradient-to-r from-[#22d3ee]/25 via-[#22d3ee]/10 to-transparent" />
+            <div className="mx-3.5 mt-2.5 h-px bg-gradient-to-r from-[#dfe7ee]/25 via-[#dfe7ee]/10 to-transparent" />
             <motion.p
               initial={{ opacity: 0, y: 4 }}
               animate={{ opacity: 1, y: 0 }}

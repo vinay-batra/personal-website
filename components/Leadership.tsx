@@ -15,97 +15,164 @@ import { useReducedMotionSafe } from "@/lib/useReducedMotionSafe";
 const YEAR_MIN = 2021;
 const YEAR_MAX = 2026;
 
-type Entry = {
-  year: string;
-  role: string;
-  org: string;
+/**
+ * Entries are grouped by organization, mirroring how LinkedIn stacks multiple
+ * roles under one employer (Member then President, State Competitor then
+ * Competition Chair). Newest role first, both within a group and across groups.
+ */
+type Role = {
+  title: string;
+  period: string;
   desc: string;
+};
+
+type Entry = {
+  org: string;
+  sortYear: string; // the year shown on the spine (most recent role)
+  roles: Role[];
 };
 
 const ENTRIES: Entry[] = [
   {
-    year: "2026",
-    role: "Founder",
-    org: "CORVO · CORVO.CAPITAL",
-    desc: "Built Corvo, a portfolio intelligence platform: Monte Carlo simulation, volatility and drawdown analysis, value-at-risk, and an AI analyst. FastAPI and Next.js. Launched on Product Hunt.",
+    org: "MORECO PROPERTIES",
+    sortYear: "2026",
+    roles: [
+      {
+        title: "Founder & Builder",
+        period: "Aug 2026 - Present",
+        desc: "Built morecoproperties.com, the first real website for a local family property manager: live unit availability, an AI chat that answers renter questions, and one form covering both rental inquiries and maintenance. My first build for someone else's business.",
+      },
+    ],
   },
   {
-    year: "2026",
-    role: "Essentials of Entrepreneurship",
-    org: "WHARTON GLOBAL YOUTH · UPENN",
-    desc: "Accepted to Wharton's summer entrepreneurship program at the University of Pennsylvania.",
+    org: "FBLA ONE · SELF-EMPLOYED",
+    sortYear: "2026",
+    roles: [
+      {
+        title: "Founder & Builder",
+        period: "Jun 2026 - Present",
+        desc: "Built FBLA One (fbla.one), an all-in-one platform for FBLA chapters. Engineered an AI practice-test generator on the Claude API with a tool-use loop and a custom calculator engine that guarantees numerically correct answers. Added an advisor dashboard, 55 competition guides, and a Road-to-Nationals study plan. Piloted at Council Rock South, built to scale to 230,000+ members nationally.",
+      },
+    ],
   },
   {
-    year: "2026",
-    role: "Competition Chair",
+    org: "LARK · SELF-EMPLOYED",
+    sortYear: "2026",
+    roles: [
+      {
+        title: "Founder & Builder",
+        period: "Apr 2026 - Present",
+        desc: "Built Lark (lark.coach), an AI guitar tutor that hears you play. Engineered a browser audio pipeline for real-time pitch and chord detection with the Web Audio API, powering note-by-note scoring across 83 songs and a 6-stage curriculum, plus an AI coach that returns specific feedback after each take.",
+      },
+    ],
+  },
+  {
     org: "FBLA",
-    desc: "Lead chapter participation in FBLA competitions: event selection, prep sessions, shared resources, and progress tracking.",
+    sortYear: "2026",
+    roles: [
+      {
+        title: "Competition Chair",
+        period: "Mar 2026 - Present",
+        desc: "Lead chapter participation in FBLA competitions: event selection, prep sessions, shared resources, and progress tracking, plus all communication around deadlines and strategy.",
+      },
+      {
+        title: "State Competitor",
+        period: "Sep 2025 - Mar 2026",
+        desc: "Qualified for and competed at the FBLA state level, applying business, finance, and analytical concepts in timed events.",
+      },
+    ],
   },
   {
-    year: "2026",
-    role: "CSO · SSIC Lead",
+    org: "CORVO · SELF-EMPLOYED",
+    sortYear: "2026",
+    roles: [
+      {
+        title: "Founder & Builder",
+        period: "Feb 2026 - Present",
+        desc: "Built Corvo, a free portfolio intelligence platform focused on risk and decision-making rather than prediction. Engineered the financial models: Monte Carlo simulation over 10,000 fat-tailed paths, Value at Risk, volatility, drawdown, Sharpe ratio, correlation, and S&P 500 benchmarking. FastAPI and Python behind Next.js and TypeScript. Launched publicly on Product Hunt.",
+      },
+    ],
+  },
+  {
     org: "COUNCIL ROCK HS SOUTH",
-    desc: "Designed and launched the STEM Solutions Innovation Challenge. Secured $1,500+ in grants and built the prompts, judging rubric, and a mixed panel of teachers, students, and community members.",
+    sortYear: "2026",
+    roles: [
+      {
+        title: "CSO · SSIC Lead",
+        period: "Jan 2026 - Present",
+        desc: "Designed and launched the STEM Solutions Innovation Challenge, a student-led competition run through the Chief Science Officers program. Secured $1,500+ in grant funding and built the whole thing: tiered problem prompts, a standardized judging rubric, and a mixed panel of teachers, students, and community members.",
+      },
+      {
+        title: "Chief Science Officer",
+        period: "Sep 2025 - Jan 2026",
+        desc: "One of two students selected to represent the school in the international Chief Science Officers program, contributing to STEM planning and community engagement.",
+      },
+    ],
   },
   {
-    year: "2025",
-    role: "Chief Science Officer",
-    org: "COUNCIL ROCK HS SOUTH",
-    desc: "One of two students chosen to represent the school in the international CSO program: STEM planning and community engagement.",
-  },
-  {
-    year: "2025",
-    role: "State Competitor",
-    org: "FBLA",
-    desc: "Competed at FBLA state events, with nationals next, applying finance and analysis under pressure through structured prep.",
-  },
-  {
-    year: "2025",
-    role: "President",
     org: "ENVIRONMENTAL ACTION CLUB",
-    desc: "Lead the club on sustainability and resource management. Ran school-wide e-waste and toner-cartridge recycling drives. 60+ volunteer hours.",
+    sortYear: "2025",
+    roles: [
+      {
+        title: "President",
+        period: "Sep 2025 - Present",
+        desc: "Lead the club on sustainability and resource management. Run school-wide e-waste and toner-cartridge recycling drives end to end, managing volunteers, logistics, and outreach. 60+ volunteer hours.",
+      },
+      {
+        title: "Member",
+        period: "Sep 2024 - Sep 2025",
+        desc: "Supported student-led sustainability work: awareness campaigns, better recycling systems, and school-wide environmental events.",
+      },
+    ],
   },
   {
-    year: "2025",
-    role: "Director of Technology",
     org: "JITO YOUTH (FJLP)",
-    desc: "Run all digital infrastructure for a 100+ member national youth network: the website, systems, and the annual technology initiatives, planned alongside the board.",
+    sortYear: "2025",
+    roles: [
+      {
+        title: "Director of Technology",
+        period: "Sep 2025 - Present",
+        desc: "Manage the digital infrastructure for a 100+ member national youth network: the website, content, and systems, plus the annual technology initiatives planned alongside the board.",
+      },
+      {
+        title: "Member",
+        period: "Sep 2024 - Sep 2025",
+        desc: "Attended every meeting of the Future Jain Leadership Program and took part in its entrepreneurship competitions, then applied to the executive board and was selected.",
+      },
+    ],
   },
   {
-    year: "2024",
-    role: "Member",
-    org: "ENVIRONMENTAL ACTION CLUB",
-    desc: "Supported student-led sustainability work: awareness campaigns, better recycling systems, and school-wide environmental events.",
-  },
-  {
-    year: "2024",
-    role: "Member",
-    org: "JITO YOUTH (FJLP)",
-    desc: "Joined the Future Jain Leadership Program, took part in every meeting and its entrepreneurship competitions, then earned a board seat.",
-  },
-  {
-    year: "2024",
-    role: "Software Intern",
     org: "BETTERMIND LABS",
-    desc: "Built a full-stack stock-forecasting app on my own with Python, TensorFlow, Prophet, and Streamlit, from training the model to shipping the frontend.",
+    sortYear: "2024",
+    roles: [
+      {
+        title: "Software Intern",
+        period: "May 2024 - Sep 2024",
+        desc: "Built a full-stack stock forecasting app on my own with Python, TensorFlow, Prophet, and Streamlit, from training the models to shipping the frontend, and learned firsthand where financial prediction breaks down.",
+      },
+    ],
   },
   {
-    year: "2022",
-    role: "Reseller",
     org: "DEPOP · GRAILED",
-    desc: "Sourced and flipped clothes and shoes on Depop and Grailed, pricing for demand and turning over dozens of pieces. Brought in around $800, my first real read on a marketplace.",
+    sortYear: "2022",
+    roles: [
+      {
+        title: "Reseller",
+        period: "2022",
+        desc: "Sourced and flipped clothes and shoes on Depop and Grailed, pricing for demand and turning over dozens of pieces. Brought in around $800, my first real read on a marketplace. Ran a small dropshipping store alongside it.",
+      },
+    ],
   },
   {
-    year: "2022",
-    role: "Founder",
-    org: "DROPSHIPPING STORE",
-    desc: "Ran a small dropshipping store selling clothes: sourcing, listings, and fulfillment, all handled myself. Made about $50, small, but it's where I first learned how a storefront actually works end to end.",
-  },
-  {
-    year: "2021",
-    role: "Long-term Investor",
     org: "SELF-MANAGED PORTFOLIO · VS S&P 500",
-    desc: "Started managing my own capital. Moved from stock-picking to structured, long-term allocation, benchmarked against the S&P 500. It's the discipline everything else here is built on.",
+    sortYear: "2021",
+    roles: [
+      {
+        title: "Long-term Investor",
+        period: "Jun 2021 - Present",
+        desc: "Manage a personal portfolio held since 2021, focused on long-term allocation, risk management, and compounding, tracked against the S&P 500. I approach it as a systems problem: structure and risk exposure rather than short-term prediction.",
+      },
+    ],
   },
 ];
 
@@ -115,10 +182,10 @@ const entryVariants: Variants = {
 };
 
 const nodeVariants: Variants = {
-  hidden: { backgroundColor: "#0F0D0A", boxShadow: "0 0 0 0 rgba(232,163,61,0)" },
+  hidden: { backgroundColor: "#0F0D0A", boxShadow: "0 0 0 0 rgba(223,231,238,0)" },
   show: {
-    backgroundColor: "#E8A33D",
-    boxShadow: "0 0 12px 2px rgba(232,163,61,0.6)",
+    backgroundColor: "#dfe7ee",
+    boxShadow: "0 0 12px 2px rgba(223,231,238,0.6)",
     transition: { duration: 0.4, ease: EASE },
   },
 };
@@ -133,8 +200,8 @@ export default function Leadership() {
   const reduced = useReducedMotionSafe();
   const [year, setYear] = useState(YEAR_MAX);
 
-  // Drives the big mono year readout — entries now run newest to oldest,
-  // so the readout counts down from 2026 to 2021 as you scroll.
+  // Drives the big mono year readout — entries run newest to oldest, so the
+  // readout counts down from 2026 to 2021 as you scroll.
   const { scrollYProgress: yearProgress } = useScroll({
     target: sectionRef,
     offset: ["start center", "end center"],
@@ -160,19 +227,19 @@ export default function Leadership() {
       className="relative mx-auto max-w-6xl px-6 py-28 md:py-40"
     >
       <div className="grid gap-12 md:grid-cols-[4fr_8fr]">
-        {/* LEFT — sticky heading + session-year readout */}
+        {/* LEFT — sticky heading + scroll-linked year readout */}
         <div className="self-start md:sticky md:top-28">
           <SectionHeading
             index="04"
             eyebrow="LEADERSHIP"
-            accent="#6366f1"
+            accent="#dfe7ee"
             lines={["Where I", "lead."]}
           />
           <div className="mt-10">
             <p className="font-mono text-[10px] tracking-[0.25em] text-dim uppercase">
               Year
             </p>
-            <p className="mt-2 font-mono text-6xl text-[#6366f1] tabular-nums md:text-7xl">
+            <p className="mt-2 font-mono text-6xl text-[#dfe7ee] tabular-nums md:text-7xl">
               {reduced ? YEAR_MAX : year}
             </p>
           </div>
@@ -182,29 +249,29 @@ export default function Leadership() {
         <div className="relative">
           {/* static hairline track */}
           <div aria-hidden className="absolute top-0 bottom-0 left-0 w-px bg-bone/15" />
-          {/* amber scrub — scaleY is exactly section scroll progress */}
+          {/* scrub — scaleY is exactly section scroll progress */}
           <motion.div
             aria-hidden
-            className="absolute top-0 bottom-0 left-0 w-[2px] origin-top bg-[#6366f1] shadow-[0_0_10px_rgba(99,102,241,0.5)]"
+            className="absolute top-0 bottom-0 left-0 w-[2px] origin-top bg-[#dfe7ee] shadow-[0_0_10px_rgba(223,231,238,0.5)]"
             style={reduced ? { scaleY: 1 } : { scaleY: spineProgress }}
           />
           {/* glowing playhead riding the fill */}
           {!reduced && (
             <motion.div
               aria-hidden
-              className="absolute left-px z-10 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#6366f1]"
+              className="absolute left-px z-10 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#dfe7ee]"
               style={{
                 top: headTop,
                 opacity: headOpacity,
                 boxShadow:
-                  "0 0 16px 5px rgba(232,163,61,0.55), 0 0 5px 1px rgba(232,163,61,0.95)",
+                  "0 0 16px 5px rgba(223,231,238,0.55), 0 0 5px 1px rgba(223,231,238,0.95)",
               }}
             />
           )}
 
           {ENTRIES.map((entry) => (
             <motion.div
-              key={`${entry.year}-${entry.org}`}
+              key={entry.org}
               className="relative py-9 pl-10"
               initial={reduced ? "show" : "hidden"}
               whileInView="show"
@@ -214,26 +281,52 @@ export default function Leadership() {
               {/* node — diamond centered on the spine */}
               <motion.span
                 aria-hidden
-                className="absolute left-[-5px] top-[calc(3.3rem-5px)] h-2.5 w-2.5 rotate-45 border border-[#6366f1]"
+                className="absolute left-[-5px] top-[calc(2.6rem-5px)] h-2.5 w-2.5 rotate-45 border border-[#dfe7ee]"
                 variants={nodeVariants}
               />
               {/* connector tick from spine to text */}
               <motion.span
                 aria-hidden
-                className="absolute left-2 top-[3.3rem] h-px w-6 origin-left bg-[#6366f1]/60"
+                className="absolute left-2 top-[2.6rem] h-px w-6 origin-left bg-[#dfe7ee]/60"
                 variants={tickVariants}
               />
 
-              <p className="font-mono text-[11px] text-dim tabular-nums">{entry.year}</p>
-              <h3 className="font-serif text-[1.75rem] leading-tight font-semibold text-bone">
-                {entry.role}
-              </h3>
-              <p className="mt-1 font-mono text-[11px] tracking-[0.18em] text-[#6366f1] uppercase">
+              <p className="font-mono text-[11px] text-dim tabular-nums">
+                {entry.sortYear}
+              </p>
+              <p className="mt-1 font-mono text-[11px] tracking-[0.18em] text-[#dfe7ee] uppercase">
                 {entry.org}
               </p>
-              <p className="mt-3 max-w-md text-[15px] leading-relaxed text-bone/60">
-                {entry.desc}
-              </p>
+
+              {/* roles stacked newest first; a hairline rail links them when
+                  one organization holds more than one role */}
+              <div
+                className={
+                  entry.roles.length > 1
+                    ? "mt-4 space-y-6 border-l border-bone/15 pl-5"
+                    : "mt-4"
+                }
+              >
+                {entry.roles.map((role) => (
+                  <div key={role.title} className="relative">
+                    {entry.roles.length > 1 && (
+                      <span
+                        aria-hidden
+                        className="absolute top-[0.6rem] left-[-1.4rem] h-1.5 w-1.5 rounded-full bg-bone/35"
+                      />
+                    )}
+                    <h3 className="font-serif text-[1.6rem] leading-tight font-semibold text-bone md:text-[1.75rem]">
+                      {role.title}
+                    </h3>
+                    <p className="mt-0.5 font-mono text-[10px] tracking-[0.14em] text-dim uppercase">
+                      {role.period}
+                    </p>
+                    <p className="mt-2.5 max-w-md text-[15px] leading-relaxed text-bone/60">
+                      {role.desc}
+                    </p>
+                  </div>
+                ))}
+              </div>
             </motion.div>
           ))}
         </div>

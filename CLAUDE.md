@@ -2,8 +2,8 @@
 
 # CLAUDE.md - Personal website (Vinay Batra)
 
-Vinay's portfolio site. A high-end, motion-heavy single page: warm-noir aesthetic, a particle "VB"
-monogram, real 3D/WebGL pieces, interactive from-scratch CS demos, and a playground of WebGL toys.
+Vinay's portfolio site. A high-end, motion-heavy single page: monochrome noir aesthetic, a particle
+"VB" monogram, a 3D "map of me" constellation, and scroll-built canvas visuals for each product.
 Full prose lives in `README.md`; this file is the agent-facing state + conventions.
 
 ---
@@ -15,46 +15,37 @@ Full prose lives in `README.md`; this file is the agent-facing state + conventio
 - Vercel: project `personal-website` (`prj_4wuXlCiSODvD4eTrA2149H2vibP7`), team `vinay-batras-projects`
   (`team_UTbeulhjkNeFOErLm67AL65w`). No env vars (the GitHub heatmap fetch is public + client-side).
 - Stack: **Next.js 16** (App Router, TS, Tailwind v4), **React Three Fiber + three.js + @react-three/drei**
-  (gem transmission, About constellation, hero bloom), **raw WebGL2** (Aurora, ink fluid sim, lava +
-  kaleidoscope shaders), **Framer Motion**, **Lenis** (smooth scroll). gh/vercel CLIs are NOT installed
+  (About constellation, hero bloom), **raw WebGL2** (the Aurora background shader), **Framer
+  Motion**, **Lenis** (smooth scroll), 2D canvas for the four product visuals. gh/vercel CLIs are NOT installed
   on the machine; push via git (osxkeychain) and verify deploys via the Vercel MCP + curling the site.
 
-**State (June 2026):** Hero VB particles + click-shatter · About 3D "map of me" constellation ·
-Work (Corvo/Lark 2D visuals + FBLA One 2D dashboard) · a **"From scratch"** Work subsection
-(pathfinding visualizer + ray tracer + neural net, all hand-written) · GitHub heatmap · Leadership
-timeline / Community ledger / Recommendations · Contact · a **Playground** of 2 WebGL toys (ink fluid
-sim + obsidian gem; lava + kaleidoscope were removed) · Footer. The **hero is black & white** (white
-VB); section accents then run a **cyan → pink spectrum** across the 8 numbered chapters, and EVERY
-in-section accent (eyebrows, stat numerals, buttons, the GitHub heatmap, pathfinder markers, the
-aurora wash) is recoloured to its section's hue. **Amber is fully retired** from the page (only the
-brand token `--color-amber` remains in the theme, unused on the live page).
+**State (Aug 2026):** Hero VB particles + click-shatter · About 3D "map of me" constellation ·
+Work (Corvo → FBLA One → Moreco Properties → Lark) · GitHub heatmap · Leadership timeline ·
+Community ledger · Recommendations · Contact · Footer. **7 numbered chapters** (01 About, 02 Work,
+03 Lately, 04 Lead, 05 Serve, 06 Recommendations, 07 Contact).
+
+**The page is MONOCHROME (Aug 2026).** There is no colour spectrum any more:
+- Every section accent is `#dfe7ee` (the hero's cool near-white). `AccentTracker.tsx` still varies
+  the accent per section, but only by **shade** (`#b8c4d1` → `#dfe7ee`), never hue.
+- `Aurora.tsx` flattens `uAccent` to its **luminance** in the shader, so the background smoke can
+  only ever be grey. Sections change how light/dark it is, nothing else.
+- The highlight token is `--color-hi: #e6edf3` (a cool silver), used by `text-hi` for the nav
+  numerals, `::selection`, `.inklink:hover`, and the drop cap. **The old amber `#e8a33d` is gone
+  entirely** — the user explicitly rejected the yellow highlight.
+- Do NOT reintroduce blue / purple / pink / amber anywhere on the live page.
+
+### Archived, not deleted
+`components/archive/` holds the **"From scratch"** section (`Experiments.tsx` + the pathfinding
+visualizer, ray tracer, and neural net). Removed from the site Aug 2026 but kept intact so it can be
+dropped back in. See `components/archive/README.md` for the restore steps. The **Playground** (ink
+fluid sim + obsidian gem) was deleted outright in an earlier pass — recover it from git history.
 
 ### Open threads (deferred, explicitly requested, NOT done)
-1. **Text Adventure** - the 4th from-scratch demo (web terminal: rooms, inventory, combat, OOP).
-2. **Algo-grid on mobile** - cells are ~9px (works but cramped); give it fewer COLS on phones.
-3. **Raven companion** - `RavenCompanion.tsx` is built but **unmounted/inactive**; it renders null
+1. **Raven companion** - `RavenCompanion.tsx` is built but **unmounted/inactive**; it renders null
    until a real artist-made `raven.glb` is dropped in `/public`. Do NOT hand-build a raven from
    primitives (it always looks wrong; tried 10+ times) - load a real GLB.
-
-Done June 14 (2nd pass): **all 4 Playground toys now have control panels** and the **lava is a real
-cursor-push metaball sim** (CPU blob physics → `uBlobs[]` uniform; the cursor is a force field, not a
-blob). The **ray tracer** got a zoom-in + a sharp anti-aliased settle pass (medium res while
-dragging, no more pixelation) + a visible sun. The **neural net** got a finer decision field, slower
-watchable training, paint-your-own-data (Class A / B / Erase brushes), and 5 presets (spiral, circles,
-moons, xor, blobs).
-
-Done June 14 (3rd pass): **Maze** button now cycles **5 distinct solvable mazes** (seeded
-recursive-backtracker, not random fill). **Neural net** bumped to 16-wide hidden layers (100% on all
-presets) with the boundary drawn as a **crisp marching-squares vector contour** (no more pixelated
-band) + on-canvas "how it works" copy. **Ray tracer** drag pixelation fixed by capping the backing
-store near 1x (small upscale ratio) and keeping resolution high while dragging (only the shading is
-cheaper); settle is a 3x-AA pass. **Lava** now lets you **grab a blob and toss it** (press to pick up,
-release to fling with momentum) with a wider, less twitchy cursor. **Obsidian** "Fire" control renamed
-**"Tint"**. **Kaleidoscope** spin redone as **grab-and-turn** (pointer-angle drag + inertia, with a
-Spin auto-rotate control). **Lark** now has a live-site preview image like Corvo/FBLA
-(`public/lark-preview.png`). The **scroll spine** labels every section dot (clickable, Lenis scroll),
-shown only >=1400px so they don't overlap content. About "map of me" caption nudged down for
-separation.
+2. **Light mode** - asked for (system preference + manual toggle, natively designed light palette),
+   deferred. Nothing exists yet: the palette is hardcoded dark in `globals.css`.
 
 ---
 
@@ -62,17 +53,20 @@ separation.
 - **Push to `main` automatically** once a change is made and verified (build/preview clean) - don't
   ask for confirmation first. Standing instruction from Vinay (2026-07-21).
 - **No em dashes in visible copy.** Use commas / colons / periods. (Code comments are fine.)
-- **Section accents = a cyan → pink spectrum** across the 8 chapters (hero = near-white) via
-  `AccentTracker.tsx` `SECTION_ACCENT` + `lib/accent.ts` (`DEFAULT` = hero white). The chapters are
-  numbered 01-08 (About, Work, Lately, Lead, Serve, Words, Contact, Play) consistently across the top
-  nav, the scroll-spine labels, the section-heading eyebrows, and the page dividers. Amber stays only
-  on data/stats (heatmap, stat numerals) + action buttons, NOT the hero.
+- **Monochrome only.** Section accents are shades of one cool grey via `AccentTracker.tsx`
+  `SECTION_ACCENT` + `lib/accent.ts`. Chapters are numbered 01-07 (About, Work, Lately, Lead, Serve,
+  Recommendations, Contact) consistently across the top nav, the scroll-spine labels, the
+  section-heading eyebrows, and the page dividers. Note the Recommendations section still uses the
+  legacy `id="words"` / `data-section="WORDS"` key internally — the visible label is
+  "Recommendations" everywhere.
 - **No bloom / EffectComposer over the page** - an opaque pass renders a visible "box" over the
   non-black Aurora. Use **additive** materials for any 3D glow over the page bg.
 - **Don't hand-code organic 3D models** (raven, animals) from primitives - load an artist GLB.
 - Heavy WebGL canvases are mounted only near the viewport via `LazyVisual.tsx` (don't spin up 5+ GL
   contexts on load). Adaptive quality on mobile (e.g. the gem's transmission resolution).
 - Everything respects `prefers-reduced-motion`. Copy is plain/human (no AI-isms).
+- The **Leadership timeline groups roles under one organization** (LinkedIn-style: Member then
+  President under Environmental Action Club), newest first both within and across groups.
 
 ## Gotchas
 - **The Claude preview CANNOT verify motion.** It pauses rAF/`useFrame` AND `IntersectionObserver`
@@ -104,4 +98,12 @@ in Contact · `morph-spine` branch (parked, not adopted).
 npm run dev    # localhost:3002
 npm run build  # static production build (also the TS gate)
 ```
+
+**Verifying below-the-fold work in the Claude preview:** the pane only composites at `scrollY === 0`
+and Lenis blocks programmatic scroll, so a screenshot after scrolling comes back black. The trick
+that works: inject a style hiding every `[data-section]` except the one under test (plus the sibling
+dividers/footer), force `opacity:1 !important; transform:none !important` on it so the
+`whileInView` reveals don't hold it invisible, then `window.scrollTo(0,0)` and screenshot. For a
+canvas visual, extract the draw callback out of the component into a throwaway
+`public/__x-test.html` harness (strip the TS annotations) so it renders standalone at scroll 0.
 `DESIGN.md` documents the earlier "Corvid Ledger" design direction (kept for reference).

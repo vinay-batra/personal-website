@@ -7,9 +7,12 @@ import { motion, useScroll, type Variants } from "framer-motion";
 import SectionHeading from "./SectionHeading";
 import { EASE } from "@/lib/motion";
 
-// Every product shares the same core stack — shown identically on each block.
-const STACK = ["Next.js", "TypeScript", "FastAPI", "Python", "Supabase", "Claude API"];
+// Each product lists the stack it actually runs on (Corvo is the only one with a
+// separate Python service, so it's the only one tagged FastAPI/Python).
+const CORVO_STACK = ["Next.js", "TypeScript", "FastAPI", "Python", "Supabase", "Claude API"];
+const FBLA_STACK = ["Next.js", "TypeScript", "Supabase", "Claude API"];
 const MORECO_STACK = ["Next.js", "TypeScript", "Tailwind CSS", "Supabase", "Resend", "Claude API"];
+const LARK_STACK = ["Next.js", "TypeScript", "Web Audio API", "Supabase", "Claude API"];
 
 const container: Variants = {
   hidden: {},
@@ -45,16 +48,16 @@ const PROJECTS: Project[] = [
     name: "Corvo",
     mandate: "Portfolio intelligence platform",
     status: "LIVE · PRODUCT HUNT",
-    brand: "#c9a84c",
-    desc: "Institutional-grade portfolio analytics, free. Corvo models how a portfolio behaves under uncertainty: drawdown, volatility, correlation, and value-at-risk, instead of trying to predict it. I rebuilt the whole platform from user feedback.",
+    brand: "#dfe7ee",
+    desc: "Institutional-grade portfolio analytics, free. Corvo watches your holdings daily, flags the real risks, and tells you what to do, using Monte Carlo simulation, deep risk analytics, and an AI advisor that knows your exact portfolio. Built to show how a portfolio behaves under uncertainty, not to predict the market.",
     features: [
-      "Monte Carlo simulation",
-      "Correlation heatmaps + VaR",
-      "What-if allocation testing",
-      "AI analyst on your holdings",
-      "News sentiment + PDF reports",
+      "Monte Carlo simulation, 10,000 paths",
+      "Value at Risk, volatility, drawdown",
+      "Correlation + S&P 500 benchmarking",
+      "AI advisor on your holdings",
+      "What-if testing, alerts, PDF reports",
     ],
-    tags: STACK,
+    tags: CORVO_STACK,
     links: [
       { label: "Visit corvo.capital", href: "https://corvo.capital", primary: true },
     ],
@@ -63,48 +66,30 @@ const PROJECTS: Project[] = [
   },
   {
     index: "02",
-    name: "Lark",
-    mandate: "AI guitar coach",
-    status: "LIVE",
-    brand: "#22c55e",
-    desc: "An AI tutor for guitar. Lark pairs a library of real songs with a structured curriculum, a real-time practice mode, an AI coach you can chat with, and on-demand tab generation, so a beginner always knows what to play next.",
-    features: [
-      "83-song library",
-      "Structured curriculum",
-      "Real-time practice mode",
-      "AI coach + chat",
-      "On-demand tab generation",
-    ],
-    tags: STACK,
-    links: [{ label: "Visit lark.coach", href: "https://lark.coach", primary: true }],
-    preview: { src: "/lark-preview.png", href: "https://lark.coach" },
-    kind: "lark",
-  },
-  {
-    index: "03",
     name: "FBLA One",
     mandate: "All-in-one platform for FBLA chapters",
-    status: "IN PRODUCTION",
-    brand: "#5d9ce4",
-    desc: "A complete operating system for FBLA chapters: member management, events, and competitive-event prep in one place. Built for my own chapter and now used in production.",
+    status: "LIVE",
+    brand: "#dfe7ee",
+    desc: "A complete operating system for FBLA chapters. FBLA One generates unlimited AI practice tests calibrated to each event's exact topic outline, with a full explanation for every question, and brings study guides, prep tracking, and an advisor dashboard into one place. Built for my own chapter and live for any of the 230,000+ FBLA members nationally.",
     features: [
-      "Member management",
-      "Event scheduling",
-      "Competitive-prep resources",
-      "Chapter dashboards",
+      "Unlimited AI practice tests",
+      "Guaranteed-correct numeric answers",
+      "55 competition study guides",
+      "Advisor dashboard + leaderboard",
+      "Weak-topic drills, Road to Nationals",
     ],
-    tags: STACK,
+    tags: FBLA_STACK,
     links: [{ label: "Visit fbla.one", href: "https://fbla.one", primary: true }],
     preview: { src: "/fbla-preview.png", href: "https://fbla.one" },
     kind: "fbla",
   },
   {
-    index: "04",
+    index: "03",
     name: "Moreco Properties",
     mandate: "Rental listings site for a local property manager",
     status: "LIVE",
-    brand: "#b04426",
-    desc: "Moreco Properties needed a real website instead of word of mouth and paper flyers. I built the family's first site: live unit availability, an AI chat that answers renter questions, and one form covering both inquiries and maintenance. My first time building for someone else's business instead of my own. Next up: a private finance dashboard so the owner can track rent and bills in one place.",
+    brand: "#dfe7ee",
+    desc: "Moreco Properties needed a real website instead of word of mouth and paper flyers. I built the family's first site: live unit availability, an AI chat that answers renter questions, and one form that handles both rental inquiries and maintenance requests. It was my first time building for someone else's business instead of my own. Next up: a private finance dashboard so the owner can track rent and bills in one place.",
     features: [
       "Live unit availability",
       "AI chat for renter questions",
@@ -117,6 +102,25 @@ const PROJECTS: Project[] = [
     ],
     preview: { src: "/moreco-preview.png", href: "https://morecoproperties.com" },
     kind: "moreco",
+  },
+  {
+    index: "04",
+    name: "Lark",
+    mandate: "AI guitar coach",
+    status: "LIVE",
+    brand: "#dfe7ee",
+    desc: "An AI guitar tutor that actually listens. Lark hears you play through your mic, scores you in real time, and coaches you on your accuracy and timing, with 83 real songs, a structured curriculum, a slow-it-down practice mode, and on-demand AI tab generation.",
+    features: [
+      "Real-time pitch + chord detection",
+      "Note-by-note scoring across 83 songs",
+      "6-stage structured curriculum",
+      "AI coach on accuracy and timing",
+      "Tuner, metronome, chord library",
+    ],
+    tags: LARK_STACK,
+    links: [{ label: "Visit lark.coach", href: "https://lark.coach", primary: true }],
+    preview: { src: "/lark-preview.png", href: "https://lark.coach" },
+    kind: "lark",
   },
 ];
 
@@ -288,12 +292,12 @@ export default function Projects() {
     <section
       id="work"
       data-section="WORK"
-      className="relative mx-auto max-w-6xl px-6 pt-28 pb-10 md:pt-40 md:pb-12"
+      className="relative mx-auto max-w-6xl px-6 pt-28 pb-24 md:pt-40 md:pb-32"
     >
       <SectionHeading
         index="02"
         eyebrow="WORK"
-        accent="#38bdf8"
+        accent="#dfe7ee"
         lines={["What I've", "built."]}
       />
       <div className="mt-14">

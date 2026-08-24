@@ -5,8 +5,8 @@ import { getAccent, hexToRgb } from "@/lib/accent";
 
 /**
  * A fixed, full-page flowing-gradient aurora rendered with a single WebGL
- * fragment shader. Deliberately dark and slow — a hint of colored light over
- * the ink, not a light show. Renders at quarter resolution (soft + cheap) and
+ * fragment shader. Deliberately dark, slow and MONOCHROME — shades of the same
+ * cool grey, never a hue shift. Renders at quarter resolution (soft + cheap) and
  * pauses when the tab is hidden, so it never fights scrolling.
  */
 const FRAG = `
@@ -43,16 +43,19 @@ void main(){
   vec2 q = vec2(fbm(p + t), fbm(p + vec2(5.2,1.3) - t*0.8));
   float n = fbm(p + 2.2*q + t*0.6);
 
-  // The aurora is driven entirely by the section accent now (no fixed amber /
-  // teal / green washes — those tinted every section the same muddy grey-gold).
-  vec3 ink = vec3(0.05,0.05,0.06);
+  // Monochrome by design: the accent is flattened to its luminance so the smoke
+  // is always a shade of grey. Sections vary the SHADE (lighter / darker), never
+  // the hue, so no blue / purple / pink can ever wash the page.
+  float lum = dot(uAccent, vec3(0.2126, 0.7152, 0.0722));
+  vec3 grey = vec3(lum);
+  vec3 ink = vec3(0.05,0.05,0.055);
   vec3 col = ink;
-  // a faint neutral structure so the smoke still reads where the accent is white
-  col += vec3(0.09,0.10,0.12) * smoothstep(0.45,1.0,n) * 0.7;
-  // section accent wash — the dominant hue, clearly visible, follows the section
-  col += uAccent * smoothstep(0.36,1.0, n)        * 0.5;
-  col += uAccent * smoothstep(0.52,1.0, q.x)      * 0.30;
-  col += uAccent * smoothstep(0.6, 1.05, q.y*1.2) * 0.22;
+  // neutral structure so the smoke reads at any shade
+  col += vec3(0.10,0.10,0.11) * smoothstep(0.45,1.0,n) * 0.7;
+  // grey wash — the shade follows the section, the hue never changes
+  col += grey * smoothstep(0.36,1.0, n)        * 0.5;
+  col += grey * smoothstep(0.52,1.0, q.x)      * 0.30;
+  col += grey * smoothstep(0.6, 1.05, q.y*1.2) * 0.22;
 
   // keep edges dark
   float vig = smoothstep(1.25,0.25,length(uv-0.5));
